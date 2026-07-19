@@ -9,13 +9,75 @@ page 1 (
     navigation {
         cursorFocus: doNotFocusCursor
     }
+    css {
+        inline:
+            ```css
+            /* The below section is adjusting the bar items to be in middle, important lesson, margin-left and right 
+            only works if they have enough width to work with */
+            
+            .t-Header-navBar{
+              display: flex;
+              justify-content: center;
+              width: 100%;
+            }
+            .t-Header-navBar--center{
+                width: 100% !important;
+            }
+            .t-NavigationBar{
+                width: 100% !important;
+            }
+            /* .mid-items-last{
+                margin-right:150px;
+            } */
+            .t-Header-navBar--start{
+                display: none;
+            }
+            
+            .t-Header-navBar--end{
+                display:none;
+            }
+            
+            .mid-items > a > span.t-Icon{
+                display: none;
+            }
+            .mid-item-first{
+                margin-left: auto;
+            }
+            .ven-bar-item > a > span.t-Icon{
+                display: none;
+            }
+            .ven-bar-item{
+                margin-left: auto;
+            }
+            
+            
+            /* The above section is adjusting the bar items to be in middle, important lesson, margin-left and right 
+            only works if they have enough width to work with */
+            
+            .mid-items > a{
+                font-size: 0.8rem;
+            }
+            
+            .ven-bar-item > a{
+               background-color:white ;
+               color:black;
+               font-weight: bold;
+               border: 1px solid rgba(0, 0, 0, 0.01);
+            }
+            .ven-bar-item > a:hover{
+                background-color:black;
+                color:white;
+            }
+            ```
+    }
     security {
+        authentication: public
         pageAccessProtection: argumentsMustHaveChecksum
         formAutoComplete: false
     }
 
     region freightsbook (
-        name: FreightsBook
+        name: FreightsBridge
         type: staticContent
         layout {
             sequence: 10
@@ -27,6 +89,30 @@ page 1 (
         }
         image {
             fileUrl: #APP_FILES#icons/app-icon-512.png
+        }
+    )
+
+    process new (
+        name: New
+        type: sendEMail
+        emailHeader {
+            to: emmanueljosephjean@gmail.com
+        }
+        emailTemplate {
+            emailTemplate: @vendor-registration-acknowledgement-mail
+            placeholderValues: {"VENDOR_NAME":"Masterpiece LLC"}
+        }
+        emailDispatchMode {
+            sendImmediately: true
+        }
+        execution {
+            sequence: 10
+        }
+        successMessage {
+            successMessage: Test Mail Sent Successfully!
+        }
+        advanced {
+            executionMappingIdentifier: 9114711987555549
         }
     )
 

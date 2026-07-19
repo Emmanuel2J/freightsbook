@@ -1,0 +1,1760 @@
+page 3 (
+    name: Vendor Dashboard
+    alias: VENDOR-DASHBOARD
+    title: Vendor Dashboard
+    appearance {
+        pageTemplate: @/standard
+        templateOptions: #DEFAULT#
+    }
+    navigation {
+        cursorFocus: doNotFocusCursor
+    }
+    css {
+        inline:
+            ```css
+            #dash-tabs .t-Tabs-link:focus {
+                outline: none;
+                outline-offset: none;
+            }
+            
+            
+            
+            .main-heading .t-HeroRegion-title{
+                font-size: 1.6rem !important;
+                    line-height: 1.3;
+            }
+            
+            .subtitle{
+                font-size: 0.9rem !important;
+            
+            
+            }
+            
+            #add-rate > span.t-Icon.t-Icon--right.fa.fa-plus-square{
+                display: none;
+            }
+            ```
+    }
+    security {
+        pageAccessProtection: argumentsMustHaveChecksum
+        formAutoComplete: false
+    }
+
+    region approvals (
+        name: Approvals
+        type: staticContent
+        layout {
+            sequence: 30
+            parentRegion: @dash-tabs
+            slot: tabs
+        }
+        appearance {
+            template: @/standard
+            templateOptions: [
+                #DEFAULT#
+                t-Region--scrollBody
+            ]
+            icon: fa-tasks
+        }
+        serverSideCondition {
+            type: expression
+            plsqlExpression: :APP_USER = 'ADMIN'
+        }
+    )
+
+    region dash-tabs (
+        name: Tabs Container
+        type: staticContent
+        layout {
+            sequence: 30
+            slot: body
+        }
+        appearance {
+            template: @/tabs-container
+            templateOptions: [
+                #DEFAULT#
+                js-useLocalStorage
+                t-TabsRegion-mod--fillLabels
+                t-Tabs--inlineIcons
+                t-TabsRegion-mod--pill
+            ]
+        }
+        advanced {
+            htmlDomId: dash-tabs
+        }
+    )
+
+    region manage-rates (
+        name: Manage Rates
+        title: Manage Rates
+        type: staticContent
+        layout {
+            sequence: 20
+            parentRegion: @dash-tabs
+            slot: tabs
+        }
+        appearance {
+            template: @/standard
+            templateOptions: [
+                #DEFAULT#
+                t-Region--noPadding
+                t-Region--removeHeader js-removeLandmark
+                t-Region--scrollBody
+            ]
+            icon: fa-ship
+        }
+    )
+
+    region manage-your-rates (
+        name: Manage your Rates
+        type: staticContent
+        source {
+            htmlCode: <p class = 'subtitle'>Add, edit, and delete your freight rates directly from this interface</p>
+        }
+        layout {
+            sequence: 10
+            parentRegion: @manage-rates
+            slot: subRegions
+        }
+        appearance {
+            template: @/hero
+            templateOptions: [
+                #DEFAULT#
+                t-HeroRegion--hideIcon
+                js-headingLevel-5
+            ]
+            cssClasses: main-heading
+        }
+    )
+
+    region my-tasks-report (
+        name: My Tasks - Report
+        type: themeTemplateComponent/contentRow
+        source {
+            location: localDatabase
+            type: sqlQuery
+            sqlQuery:
+                ```sql
+                select task_id,
+                       task_type,
+                       task_def_name,
+                       (select param_value from apex_task_parameters ap_task where 
+                       ap_task.task_id = t.task_id
+                 and param_static_id = 'P_DOC_REQ_ID') as doc_req_id,
+                       details_app_name,
+                       details_link_target,
+                       subject,
+                       initiator,
+                       actual_owner,
+                       priority,
+                       due_on,
+                       due_in,
+                       due_in_hours,
+                       due_code,
+                       state_code,
+                       is_completed,
+                       outcome,
+                       created_on,
+                       created_ago,
+                       created_ago_hours,
+                       last_updated_on,
+                       badge_text,
+                       badge_state
+                  from table ( apex_human_task.get_tasks (
+                                   p_context            => 'MY_TASKS',
+                                   p_show_expired_tasks => :P3_SHOW_EXPIRED
+                                   --, p_application_id => :APP_ID
+                                   ) ) t
+                ```
+            pageItemsToSubmit: P3_SHOW_EXPIRED
+            optimizerHint: APEX$USE_NO_GROUPING_SETS
+        }
+        orderBy {
+            type: item
+            item: {
+                itemName: P3_SORT_BY
+                orderBys: {
+                    CREATED_ON: created_on desc
+                    DUE_ON: priority asc, due_on asc nulls last
+                }
+            }
+        }
+        layout {
+            sequence: 50
+            parentRegion: @approvals
+            slot: regionBody
+        }
+        appearance {
+            template: @/cards-container
+            templateOptions: #DEFAULT#
+        }
+        accessibility {
+            landmarkType: main
+        }
+        componentAppearance {
+            display: report
+        }
+        settings {
+            title: &SUBJECT.
+            description:
+                ```html
+                <strong>&TASK_DEF_NAME!HTML.</strong>
+                {if INITIATOR/}
+                    <span role="separator" aria-label="&middot;"> &middot; </span>
+                    &{APEX.TASK.INITIATED_BY_USER_SINCE 0=&INITIATOR!HTML. 1=&CREATED_AGO.}.
+                {endif/}
+                {if !IS_COMPLETED/}
+                    {case DUE_CODE/}
+                        {when OVERDUE/}
+                            <span role="separator" aria-label="&middot;"> &middot; </span>
+                            <strong class="u-danger-text">&{APEX.TASK.DUE_SINCE 0=&DUE_IN.}.</strong>
+                        {when NEXT_HOUR/}
+                            <span role="separator" aria-label="&middot;"> &middot; </span>
+                            <strong class="u-danger-text">&{APEX.TASK.DUE_SINCE 0=&DUE_IN.}.</strong>
+                        {when NEXT_24_HOURS/}
+                            <span role="separator" aria-label="&middot;"> &middot; </span>
+                            <span class="u-danger-text">&{APEX.TASK.DUE_SINCE 0=&DUE_IN.}.</span>
+                        {otherwise/}
+                            {if DUE_IN/}
+                                <span role="separator" aria-label="&middot;"> &middot; </span>
+                                &{APEX.TASK.DUE_SINCE 0=&DUE_IN.}.
+                            {endif/}
+                    {endcase/}
+                {endif/}
+                {if !IS_COMPLETED/}
+                    <span role="separator" aria-label="&middot;"> &middot; </span>
+                    {case PRIORITY/}
+                        {when 1/}
+                            <strong class="u-danger-text">&{APEX.TASK.PRIORITY.1.DESCRIPTION}.</strong>
+                        {when 2/}
+                            <span class="u-danger-text">&{APEX.TASK.PRIORITY.2.DESCRIPTION}.</span>
+                        {when 3/}
+                            &{APEX.TASK.PRIORITY.3.DESCRIPTION}.
+                        {when 4/}
+                            &{APEX.TASK.PRIORITY.4.DESCRIPTION}.
+                        {when 5/}
+                            &{APEX.TASK.PRIORITY.5.DESCRIPTION}.
+                    {endcase/}
+                {endif/}
+                
+                ```
+            displayBadge: true
+        }
+        plugin-badge {
+            label: State
+            value: BADGE_TEXT
+            state: BADGE_STATE
+        }
+        plugin-appearance {
+            applyThemeColors: false
+        }
+        pagination {
+            type: scroll
+        }
+        entityTitle {
+            singular: task
+            plural: tasks
+        }
+        messages {
+            whenNoDataFound: No Tasks
+            noDataFoundIcon: fa-clipboard-check-alt fa-lg
+        }
+
+        column ACTUAL_OWNER (
+            layout {
+                sequence: 80
+            }
+            source {
+                databaseColumn: ACTUAL_OWNER
+                dataType: varchar2
+            }
+        )
+
+        column BADGE_STATE (
+            layout {
+                sequence: 220
+            }
+            source {
+                databaseColumn: BADGE_STATE
+                dataType: varchar2
+            }
+        )
+
+        column BADGE_TEXT (
+            layout {
+                sequence: 210
+            }
+            source {
+                databaseColumn: BADGE_TEXT
+                dataType: varchar2
+            }
+        )
+
+        column CREATED_AGO (
+            layout {
+                sequence: 180
+            }
+            source {
+                databaseColumn: CREATED_AGO
+                dataType: varchar2
+            }
+        )
+
+        column CREATED_AGO_HOURS (
+            layout {
+                sequence: 190
+            }
+            source {
+                databaseColumn: CREATED_AGO_HOURS
+                dataType: number
+            }
+        )
+
+        column CREATED_ON (
+            layout {
+                sequence: 170
+            }
+            source {
+                databaseColumn: CREATED_ON
+                dataType: timestampWithTimeZone
+            }
+            appearance {
+                formatMask: SINCE
+            }
+        )
+
+        column DETAILS_APP_NAME (
+            layout {
+                sequence: 40
+            }
+            source {
+                databaseColumn: DETAILS_APP_NAME
+                dataType: varchar2
+            }
+        )
+
+        column DETAILS_LINK_TARGET (
+            layout {
+                sequence: 50
+            }
+            source {
+                databaseColumn: DETAILS_LINK_TARGET
+                dataType: varchar2
+            }
+        )
+
+        column DOC_REQ_ID (
+            layout {
+                sequence: 230
+            }
+            source {
+                databaseColumn: DOC_REQ_ID
+                dataType: varchar2
+            }
+        )
+
+        column DUE_CODE (
+            layout {
+                sequence: 130
+            }
+            source {
+                databaseColumn: DUE_CODE
+                dataType: varchar2
+            }
+        )
+
+        column DUE_IN (
+            layout {
+                sequence: 110
+            }
+            source {
+                databaseColumn: DUE_IN
+                dataType: varchar2
+            }
+        )
+
+        column DUE_IN_HOURS (
+            layout {
+                sequence: 120
+            }
+            source {
+                databaseColumn: DUE_IN_HOURS
+                dataType: number
+            }
+        )
+
+        column DUE_ON (
+            layout {
+                sequence: 100
+            }
+            source {
+                databaseColumn: DUE_ON
+                dataType: timestampWithTimeZone
+            }
+            appearance {
+                formatMask: SINCE
+            }
+        )
+
+        column INITIATOR (
+            layout {
+                sequence: 70
+            }
+            source {
+                databaseColumn: INITIATOR
+                dataType: varchar2
+            }
+        )
+
+        column IS_COMPLETED (
+            layout {
+                sequence: 150
+            }
+            source {
+                databaseColumn: IS_COMPLETED
+                dataType: varchar2
+            }
+        )
+
+        column LAST_UPDATED_ON (
+            layout {
+                sequence: 200
+            }
+            source {
+                databaseColumn: LAST_UPDATED_ON
+                dataType: timestampWithTimeZone
+            }
+            appearance {
+                formatMask: SINCE
+            }
+        )
+
+        column OUTCOME (
+            layout {
+                sequence: 160
+            }
+            source {
+                databaseColumn: OUTCOME
+                dataType: varchar2
+            }
+        )
+
+        column PRIORITY (
+            layout {
+                sequence: 90
+            }
+            source {
+                databaseColumn: PRIORITY
+                dataType: number
+            }
+        )
+
+        column STATE_CODE (
+            layout {
+                sequence: 140
+            }
+            source {
+                databaseColumn: STATE_CODE
+                dataType: varchar2
+            }
+        )
+
+        column SUBJECT (
+            layout {
+                sequence: 60
+            }
+            source {
+                databaseColumn: SUBJECT
+                dataType: varchar2
+            }
+            accessibility {
+                valueIdentifiesRow: true
+            }
+        )
+
+        column TASK_DEF_NAME (
+            layout {
+                sequence: 30
+            }
+            source {
+                databaseColumn: TASK_DEF_NAME
+                dataType: varchar2
+            }
+        )
+
+        column TASK_ID (
+            layout {
+                sequence: 10
+            }
+            source {
+                databaseColumn: TASK_ID
+                dataType: number
+                primaryKey: true
+            }
+        )
+
+        column TASK_TYPE (
+            layout {
+                sequence: 20
+            }
+            source {
+                databaseColumn: TASK_TYPE
+                dataType: varchar2
+            }
+        )
+
+        action action (
+            position: titleLink
+            layout {
+                sequence: 10
+            }
+            behavior {
+                target: {
+                    page: 10
+                    items: {
+                        P10_PK_ID: &DOC_REQ_ID.
+                    }
+                }
+            }
+        )
+
+        action approve (
+            position: primaryActions
+            template: button
+            label: Approve
+            layout {
+                sequence: 30
+            }
+            behavior {
+                type: redirectUrl
+                targetUrl: #
+                linkAttributes: data-id="&TASK_ID."
+            }
+            appearance {
+                displayType: textWithIcon
+                icon: fa-check-square u-success-text
+                cssClasses: approve
+            }
+            serverSideCondition {
+                type: expression
+                plsqlExpression: :TASK_TYPE = 'APPROVAL' and :STATE_CODE != 'INFO_REQUESTED'
+            }
+        )
+
+        action claim (
+            position: primaryActions
+            template: button
+            label: Claim
+            layout {
+                sequence: 20
+            }
+            behavior {
+                type: redirectUrl
+                targetUrl: #
+                linkAttributes: data-id="&TASK_ID."
+            }
+            appearance {
+                displayType: textWithIcon
+                icon: fa-user-plus u-hot-text
+                cssClasses: claim
+            }
+            serverSideCondition {
+                type: expression
+                plsqlExpression: :STATE_CODE = 'UNASSIGNED'
+            }
+        )
+
+        action reject (
+            position: primaryActions
+            template: button
+            label: Reject
+            layout {
+                sequence: 40
+            }
+            behavior {
+                type: redirectUrl
+                targetUrl: #
+                linkAttributes: data-id="&TASK_ID."
+            }
+            appearance {
+                displayType: textWithIcon
+                icon: fa-times u-danger-text
+                cssClasses: reject
+            }
+            serverSideCondition {
+                type: expression
+                plsqlExpression: :TASK_TYPE = 'APPROVAL' and :STATE_CODE != 'INFO_REQUESTED'
+            }
+        )
+
+    )
+
+    region new (
+        name: New
+        type: interactiveGrid
+        source {
+            location: localDatabase
+            tableName: RATE_MST
+            whereClause: VENDOR_ID = :A_VENDOR_ID
+        }
+        layout {
+            sequence: 20
+            parentRegion: @manage-rates
+            slot: subRegions
+        }
+        appearance {
+            template: @/interactive-report
+            templateOptions: [
+                #DEFAULT#
+                t-IRR-region--hideHeader js-addHiddenHeadingRoleDesc
+            ]
+        }
+        edit {
+            enabled: true
+            allowedOperations: [
+                add
+                update
+                delete
+            ]
+        }
+        toolbar {
+            controls: [
+                searchCol
+                searchField
+                actionsMenu
+                resetButton
+                saveButton
+            ]
+        }
+        download {
+            formats: [
+                csv
+                html
+                excel
+                pdf
+            ]
+        }
+        advanced {
+            savedReportMappingIdentifier: 11378820869871148
+        }
+
+        savedReport primary (
+            visibility: primary
+            view {
+                default: grid
+            }
+            singleRowView {
+                displayedColumns: true
+            }
+
+            displayColumn (
+                column: @PK_ID
+                layout {
+                    sequence: 1
+                }
+            )
+
+            displayColumn (
+                column: @VENDOR_ID
+                layout {
+                    sequence: 2
+                }
+            )
+
+            displayColumn (
+                column: @RATE_REF_NO
+                layout {
+                    sequence: 3
+                }
+            )
+
+            displayColumn (
+                column: @RATE_FROM_COUN
+                layout {
+                    sequence: 4
+                }
+            )
+
+            displayColumn (
+                column: @RATE_FROM_PORT
+                layout {
+                    sequence: 5
+                }
+            )
+
+            displayColumn (
+                column: @RATE_TO_COUN
+                layout {
+                    sequence: 6
+                }
+            )
+
+            displayColumn (
+                column: @RATE_TO_PORT
+                layout {
+                    sequence: 7
+                }
+            )
+
+            displayColumn (
+                column: @FCL_LCL_FLAG
+                layout {
+                    sequence: 8
+                }
+            )
+
+            displayColumn (
+                column: @FCL_CONTAINER_TYPE
+                layout {
+                    sequence: 9
+                }
+            )
+
+            displayColumn (
+                column: @FCL_RATE
+                layout {
+                    sequence: 10
+                }
+            )
+
+            displayColumn (
+                column: @LCL_RATE
+                layout {
+                    sequence: 11
+                }
+            )
+
+            displayColumn (
+                column: @TRANSIT_TIME
+                layout {
+                    sequence: 12
+                }
+            )
+
+            displayColumn (
+                column: @VALID_FROM
+                layout {
+                    sequence: 13
+                }
+            )
+
+            displayColumn (
+                column: @VALID_TO
+                layout {
+                    sequence: 14
+                }
+            )
+
+            displayColumn (
+                column: @CUSER
+                layout {
+                    sequence: 15
+                }
+            )
+
+            displayColumn (
+                column: @CDATE
+                layout {
+                    sequence: 16
+                }
+            )
+
+            displayColumn (
+                column: @UUSER
+                layout {
+                    sequence: 17
+                }
+            )
+
+            displayColumn (
+                column: @UDATE
+                layout {
+                    sequence: 18
+                }
+            )
+
+            displayColumn (
+                column: @APEX$ROW_ACTION
+                layout {
+                    sequence: 0
+                }
+            )
+
+        )
+
+        column APEX$ROW_ACTION (
+            type: actionsMenu
+            layout {
+                sequence: 20
+            }
+        )
+
+        column APEX$ROW_SELECTOR (
+            type: rowSelector
+            layout {
+                sequence: 10
+            }
+        )
+
+        column CDATE (
+            type: datePicker
+            heading {
+                heading: Cdate
+            }
+            layout {
+                sequence: 180
+            }
+            source {
+                databaseColumn: CDATE
+                dataType: timestamp
+            }
+        )
+
+        column CUSER (
+            type: textarea
+            heading {
+                heading: Cuser
+            }
+            layout {
+                sequence: 170
+            }
+            validation {
+                maxLength: 300
+            }
+            source {
+                databaseColumn: CUSER
+                dataType: varchar2
+            }
+            columnFilter {
+                performanceImpactingOperators: [
+                    contains
+                    startsWith
+                    caseInsensitive
+                    regexp
+                ]
+                lovType: none
+            }
+            enableUsersTo {
+                sort: false
+            }
+        )
+
+        column FCL_CONTAINER_TYPE (
+            type: numberField
+            heading {
+                heading: Fcl Container Type
+                alignment: end
+            }
+            layout {
+                sequence: 110
+                columnAlignment: end
+            }
+            source {
+                databaseColumn: FCL_CONTAINER_TYPE
+                dataType: number
+            }
+            columnFilter {
+                lovType: none
+            }
+        )
+
+        column FCL_LCL_FLAG (
+            type: textField
+            heading {
+                heading: Fcl Lcl Flag
+            }
+            layout {
+                sequence: 100
+            }
+            validation {
+                maxLength: 30
+            }
+            source {
+                databaseColumn: FCL_LCL_FLAG
+                dataType: varchar2
+            }
+            columnFilter {
+                performanceImpactingOperators: [
+                    contains
+                    startsWith
+                    caseInsensitive
+                    regexp
+                ]
+            }
+        )
+
+        column FCL_RATE (
+            type: numberField
+            heading {
+                heading: Fcl Rate
+                alignment: end
+            }
+            layout {
+                sequence: 120
+                columnAlignment: end
+            }
+            source {
+                databaseColumn: FCL_RATE
+                dataType: number
+            }
+            columnFilter {
+                lovType: none
+            }
+        )
+
+        column LCL_RATE (
+            type: numberField
+            heading {
+                heading: Lcl Rate
+                alignment: end
+            }
+            layout {
+                sequence: 130
+                columnAlignment: end
+            }
+            source {
+                databaseColumn: LCL_RATE
+                dataType: number
+            }
+            columnFilter {
+                lovType: none
+            }
+        )
+
+        column PK_ID (
+            type: hidden
+            layout {
+                sequence: 30
+            }
+            source {
+                databaseColumn: PK_ID
+                dataType: number
+                queryOnly: true
+                primaryKey: true
+            }
+            exportPrinting {
+                includeInExportPrint: false
+            }
+        )
+
+        column RATE_FROM_COUN (
+            type: numberField
+            heading {
+                heading: Rate From Coun
+                alignment: end
+            }
+            layout {
+                sequence: 60
+                columnAlignment: end
+            }
+            source {
+                databaseColumn: RATE_FROM_COUN
+                dataType: number
+            }
+            columnFilter {
+                lovType: none
+            }
+        )
+
+        column RATE_FROM_PORT (
+            type: numberField
+            heading {
+                heading: Rate From Port
+                alignment: end
+            }
+            layout {
+                sequence: 70
+                columnAlignment: end
+            }
+            source {
+                databaseColumn: RATE_FROM_PORT
+                dataType: number
+            }
+            columnFilter {
+                lovType: none
+            }
+        )
+
+        column RATE_REF_NO (
+            type: textarea
+            heading {
+                heading: Rate Ref No
+            }
+            layout {
+                sequence: 50
+            }
+            validation {
+                maxLength: 300
+            }
+            source {
+                databaseColumn: RATE_REF_NO
+                dataType: varchar2
+            }
+            columnFilter {
+                performanceImpactingOperators: [
+                    contains
+                    startsWith
+                    caseInsensitive
+                    regexp
+                ]
+                lovType: none
+            }
+            enableUsersTo {
+                sort: false
+            }
+        )
+
+        column RATE_TO_COUN (
+            type: numberField
+            heading {
+                heading: Rate To Coun
+                alignment: end
+            }
+            layout {
+                sequence: 80
+                columnAlignment: end
+            }
+            source {
+                databaseColumn: RATE_TO_COUN
+                dataType: number
+            }
+            columnFilter {
+                lovType: none
+            }
+        )
+
+        column RATE_TO_PORT (
+            type: numberField
+            heading {
+                heading: Rate To Port
+                alignment: end
+            }
+            layout {
+                sequence: 90
+                columnAlignment: end
+            }
+            source {
+                databaseColumn: RATE_TO_PORT
+                dataType: number
+            }
+            columnFilter {
+                lovType: none
+            }
+        )
+
+        column TRANSIT_TIME (
+            type: numberField
+            heading {
+                heading: Transit Time
+                alignment: end
+            }
+            layout {
+                sequence: 140
+                columnAlignment: end
+            }
+            source {
+                databaseColumn: TRANSIT_TIME
+                dataType: number
+            }
+            columnFilter {
+                lovType: none
+            }
+        )
+
+        column UDATE (
+            type: datePicker
+            heading {
+                heading: Udate
+            }
+            layout {
+                sequence: 200
+            }
+            source {
+                databaseColumn: UDATE
+                dataType: timestamp
+            }
+        )
+
+        column UUSER (
+            type: textarea
+            heading {
+                heading: Uuser
+            }
+            layout {
+                sequence: 190
+            }
+            validation {
+                maxLength: 300
+            }
+            source {
+                databaseColumn: UUSER
+                dataType: varchar2
+            }
+            columnFilter {
+                performanceImpactingOperators: [
+                    contains
+                    startsWith
+                    caseInsensitive
+                    regexp
+                ]
+                lovType: none
+            }
+            enableUsersTo {
+                sort: false
+            }
+        )
+
+        column VALID_FROM (
+            type: datePicker
+            heading {
+                heading: Valid From
+            }
+            layout {
+                sequence: 150
+            }
+            source {
+                databaseColumn: VALID_FROM
+                dataType: date
+            }
+        )
+
+        column VALID_TO (
+            type: datePicker
+            heading {
+                heading: Valid To
+            }
+            layout {
+                sequence: 160
+            }
+            source {
+                databaseColumn: VALID_TO
+                dataType: date
+            }
+        )
+
+        column VENDOR_ID (
+            type: numberField
+            heading {
+                heading: Vendor Id
+                alignment: end
+            }
+            layout {
+                sequence: 40
+                columnAlignment: end
+            }
+            source {
+                databaseColumn: VENDOR_ID
+                dataType: number
+            }
+            columnFilter {
+                lovType: none
+            }
+        )
+
+        page {
+            borderWidth: 0.5
+            borderColor: #666666
+        }
+    )
+
+    region overview (
+        name: Overview
+        type: staticContent
+        layout {
+            sequence: 10
+            parentRegion: @dash-tabs
+            slot: tabs
+        }
+        appearance {
+            template: @/standard
+            templateOptions: [
+                #DEFAULT#
+                t-Region--scrollBody
+            ]
+            icon: fa-analytics
+        }
+    )
+
+    region profile (
+        name: Profile
+        type: staticContent
+        layout {
+            sequence: 40
+            parentRegion: @dash-tabs
+            slot: tabs
+        }
+        appearance {
+            template: @/standard
+            templateOptions: [
+                #DEFAULT#
+                t-Region--scrollBody
+            ]
+            icon: fa-user
+        }
+    )
+
+    region rejection-reason (
+        name: Rejection Reason
+        type: staticContent
+        layout {
+            sequence: 40
+            slot: dialogsDrawersAndPopups
+        }
+        appearance {
+            template: @/inline-popup
+            templateOptions: [
+                #DEFAULT#
+                js-dialog-size480x320
+            ]
+        }
+    )
+
+    region vendor-dashboard (
+        name: Vendor Dashboard
+        type: staticContent
+        source {
+            htmlCode: Welcome Back, &APP_USER.
+        }
+        layout {
+            sequence: 20
+            slot: breadcrumbBar
+        }
+        appearance {
+            template: @/hero
+            templateOptions: [
+                #DEFAULT#
+                t-HeroRegion--hideIcon
+            ]
+        }
+    )
+
+    pageItem P3_REJ_REASON (
+        type: textarea
+        label {
+            label: Reason for Rejection
+            alignment: left
+        }
+        layout {
+            sequence: 10
+            region: @rejection-reason
+            slot: regionBody
+            alignment: left
+        }
+        appearance {
+            template: @/required-above
+            templateOptions: [
+                #DEFAULT#
+                t-Form-fieldContainer--stretchInputs
+                t-Form-fieldContainer--indicatorAsterisk
+            ]
+            width: 30
+            height: 5
+            valuePlaceholder: Please enter a reason for rejection...
+        }
+        source {
+            used: always
+        }
+    )
+
+    pageItem P3_SHOW_EXPIRED (
+        type: checkbox
+        label {
+            label: Show expired tasks
+            alignment: left
+        }
+        settings {
+            useDefaults: false
+            checkedValue: Y
+            uncheckedValue: N
+        }
+        layout {
+            sequence: 20
+            region: @my-tasks-report
+            slot: sortOrder
+            alignment: left
+        }
+        appearance {
+            template: @/optional
+            templateOptions: #DEFAULT#
+            cssClasses: u-nowrap
+        }
+        advanced {
+            warnOnUnsavedChanges: ignore
+        }
+        source {
+            type: staticValue
+            staticValue: N
+        }
+        sessionState {
+            storage: user
+        }
+    )
+
+    pageItem P3_SORT_BY (
+        type: selectList
+        label {
+            label: Sort by
+            alignment: left
+        }
+        lov {
+            type: staticValues
+            staticValues: STATIC2:Create Date;CREATED_ON,Due Date;DUE_ON
+            displayExtraValues: false
+            displayNullValue: false
+        }
+        layout {
+            sequence: 10
+            region: @my-tasks-report
+            slot: sortOrder
+            alignment: left
+            labelColumnSpan: 0
+        }
+        appearance {
+            template: @/hidden
+            templateOptions: #DEFAULT#
+            icon: fa-sort-amount-desc
+            height: 1
+        }
+        advanced {
+            cssClasses: mnw160
+            warnOnUnsavedChanges: ignore
+        }
+        source {
+            type: staticValue
+            staticValue: DUE_ON
+        }
+        sessionState {
+            storage: user
+        }
+    )
+
+    pageItem P3_TASK_ID (
+        type: hidden
+        settings {
+            valueProtected: false
+        }
+        layout {
+            sequence: 30
+            region: @approvals
+            slot: regionBody
+        }
+        sessionState {
+            storage: request
+        }
+        security {
+            encryptSessionState: false
+        }
+    )
+
+    button add-rate (
+        buttonName: ADD_RATE
+        label: Add Rate
+        layout {
+            sequence: 10
+            region: @manage-your-rates
+            slot: next
+        }
+        appearance {
+            buttonTemplate: @/text-with-icon
+            hot: true
+            templateOptions: [
+                #DEFAULT#
+                t-Button--primary
+                t-Button--iconLeft
+            ]
+            icon: fa-plus-square
+        }
+        behavior {
+            action: redirectThisApp
+            target: {
+                page: 11
+                clearCache: 11
+            }
+        }
+        advanced {
+            htmlDomId: add-rate
+        }
+    )
+
+    button cancel (
+        buttonName: CANCEL
+        label: Cancel
+        layout {
+            sequence: 10
+            region: @rejection-reason
+            slot: close
+        }
+        appearance {
+            buttonTemplate: @/text
+            templateOptions: #DEFAULT#
+        }
+        behavior {
+            action: definedByDynamicAction
+        }
+    )
+
+    button submit (
+        buttonName: SUBMIT
+        label: Submit Reason
+        layout {
+            sequence: 10
+            region: @rejection-reason
+            slot: create
+        }
+        appearance {
+            buttonTemplate: @/text
+            hot: true
+            templateOptions: #DEFAULT#
+        }
+        behavior {
+            action: definedByDynamicAction
+        }
+    )
+
+    dynamicAction approve (
+        name: Approve
+        execution {
+            sequence: 20
+            eventScope: dynamic
+            staticContainer: body
+        }
+        when {
+            event: click
+            selectionType: jQuerySelector
+            jquerySelector: a.approve
+        }
+
+        action native-execute-plsql-code (
+            action: executeServerSideCode
+            settings {
+                plsqlCode:
+                    ```plsql
+                    apex_human_task.approve_task (
+                        p_task_id   => :P3_TASK_ID,
+                        p_autoclaim => true );
+                    ```
+                itemsToSubmit: P3_TASK_ID
+            }
+            execution {
+                sequence: 30
+                fireOnInit: false
+            }
+        )
+
+        action native-refresh (
+            action: refresh
+            affectedElements {
+                selectionType: region
+                region: @my-tasks-report
+            }
+            execution {
+                sequence: 50
+                fireOnInit: false
+            }
+        )
+
+        action native-set-value (
+            action: setValue
+            settings {
+                type: jsExpression
+                jsExpression: this.triggeringElement.dataset.id
+            }
+            affectedElements {
+                selectionType: items
+                items: P3_TASK_ID
+            }
+            execution {
+                sequence: 10
+                fireOnInit: false
+            }
+        )
+
+        action native-show-success-message (
+            action: showSuccessMessage
+            settings {
+                message: &{APEXAPP.UNIFIED_TASK_LIST.PROCESS.APPROVE.SUCCESS_MESSAGE}.
+            }
+            execution {
+                sequence: 40
+                fireOnInit: false
+            }
+        )
+
+    )
+
+    dynamicAction claim (
+        name: Claim
+        execution {
+            sequence: 10
+        }
+        when {
+            event: click
+            selectionType: jQuerySelector
+            jquerySelector: a.claim
+        }
+
+        action native-execute-plsql-code (
+            action: executeServerSideCode
+            settings {
+                plsqlCode:
+                    ```plsql
+                    apex_human_task.claim_task (
+                        p_task_id   => :P3_TASK_ID );
+                    
+                    ```
+                itemsToSubmit: P3_TASK_ID
+            }
+            execution {
+                sequence: 20
+                fireOnInit: false
+            }
+        )
+
+        action native-refresh (
+            action: refresh
+            affectedElements {
+                selectionType: region
+                region: @my-tasks-report
+            }
+            execution {
+                sequence: 40
+                fireOnInit: false
+            }
+        )
+
+        action native-set-value (
+            action: setValue
+            settings {
+                type: jsExpression
+                jsExpression: this.triggeringElement.dataset.id
+            }
+            affectedElements {
+                selectionType: items
+                items: P3_TASK_ID
+            }
+            execution {
+                sequence: 10
+                fireOnInit: false
+            }
+        )
+
+        action native-show-success-message (
+            action: showSuccessMessage
+            settings {
+                message: &{APEXAPP.UNIFIED_TASK_LIST.PROCESS.CLAIM.SUCCESS_MESSAGE}.
+            }
+            execution {
+                sequence: 30
+                fireOnInit: false
+            }
+        )
+
+    )
+
+    dynamicAction close-dialog (
+        name: Close Dialog
+        execution {
+            sequence: 50
+        }
+        when {
+            event: click
+            selectionType: button
+            button: @cancel
+        }
+
+        action native-close-region (
+            action: closeRegion
+            affectedElements {
+                selectionType: region
+                region: @rejection-reason
+            }
+            execution {
+                sequence: 10
+                fireOnInit: false
+            }
+        )
+
+    )
+
+    dynamicAction new (
+        name: New
+        execution {
+            sequence: 70
+            eventScope: dynamic
+            staticContainer: body
+        }
+        when {
+            event: click
+            selectionType: jQuerySelector
+            jquerySelector: .t-ContentRow-actions a.reject
+        }
+
+        action native-open-region (
+            action: openRegion
+            affectedElements {
+                selectionType: region
+                region: @rejection-reason
+            }
+            execution {
+                sequence: 20
+                fireOnInit: false
+            }
+        )
+
+        action native-set-value_1 (
+            action: setValue
+            settings {
+                type: jsExpression
+                jsExpression: this.triggeringElement.dataset.id
+            }
+            affectedElements {
+                selectionType: items
+                items: P3_TASK_ID
+            }
+            execution {
+                sequence: 10
+                fireOnInit: false
+            }
+        )
+
+    )
+
+    dynamicAction real-reject (
+        name: Real Reject
+        execution {
+            sequence: 60
+        }
+        when {
+            event: click
+            selectionType: button
+            button: @submit
+        }
+
+        action native-close-region (
+            action: closeRegion
+            affectedElements {
+                selectionType: region
+                region: @rejection-reason
+            }
+            execution {
+                sequence: 40
+                fireOnInit: false
+            }
+        )
+
+        action native-execute-plsql-code (
+            action: executeServerSideCode
+            settings {
+                plsqlCode:
+                    ```plsql
+                    BEGIN
+                    
+                        apex_human_task.set_task_parameter_values(
+                            p_task_id            => :P3_TASK_ID,
+                            p_parameters         => apex_human_task.t_task_parameters(
+                                1 => apex_human_task.t_task_parameter(static_id => 'P_REJ_REASON',
+                                                                        string_value => :P3_REJ_REASON)));
+                    
+                            apex_human_task.reject_task (
+                        p_task_id   => :P3_TASK_ID,
+                        p_autoclaim => true );
+                        
+                    END;
+                    ```
+                itemsToSubmit: [
+                    P3_TASK_ID
+                    P3_REJ_REASON
+                ]
+            }
+            execution {
+                sequence: 20
+                fireOnInit: false
+            }
+        )
+
+        action native-refresh (
+            action: refresh
+            affectedElements {
+                selectionType: region
+                region: @my-tasks-report
+            }
+            execution {
+                sequence: 50
+                fireOnInit: false
+            }
+        )
+
+        action native-show-success-message (
+            action: showSuccessMessage
+            settings {
+                message: &{APEXAPP.UNIFIED_TASK_LIST.PROCESS.REJECT.SUCCESS_MESSAGE}.
+            }
+            execution {
+                sequence: 30
+                fireOnInit: false
+            }
+        )
+
+    )
+
+    dynamicAction refresh (
+        name: Refresh
+        execution {
+            sequence: 40
+        }
+        when {
+            event: apexafterclosecanceldialog
+            selectionType: region
+            region: @my-tasks-report
+        }
+
+        action native-refresh (
+            action: refresh
+            affectedElements {
+                selectionType: region
+                region: @my-tasks-report
+            }
+            execution {
+                sequence: 10
+                fireOnInit: false
+            }
+        )
+
+    )
+
+    process clear-user-theme-style-perference (
+        name: Clear User Theme Style Perference
+        type: executeCode
+        source {
+            plsqlCode:
+                ```plsql
+                apex_theme.clear_user_style(
+                    p_application_id => :APP_ID,
+                    p_user           => :APP_USER,
+                    p_theme_number   => 42
+                );
+                ```
+        }
+        execution {
+            sequence: 10
+            point: beforeHeader
+        }
+        advanced {
+            executionMappingIdentifier: 3905325367550647
+        }
+    )
+
+    process new-save-interactive-grid-data (
+        name: New - Save Interactive Grid Data
+        type: interactiveGridAutoRowProcessing
+        editableRegion: @new
+        execution {
+            sequence: 10
+        }
+        advanced {
+            executionMappingIdentifier: 11759458607483619
+        }
+    )
+
+)
+
