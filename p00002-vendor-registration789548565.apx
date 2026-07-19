@@ -1,0 +1,1177 @@
+page 2 (
+    name: Vendor Registration
+    alias: VENDOR-REGISTRATION789548565
+    title: Vendor Registration
+    appearance {
+        pageTemplate: @/standard
+        templateOptions: #DEFAULT#
+    }
+    navigationMenu {
+        overrideUserInterfaceLevel: true
+    }
+    navigation {
+        cursorFocus: doNotFocusCursor
+    }
+    css {
+        inline:
+            ```css
+            .inc-font{
+                font-size: large;
+            }
+            
+            .t-Header{
+                display: none;
+            }
+            
+            body{
+                background-color: #E3EAFF;
+            }
+            
+            .main-headings > .t-Region-header > .t-Region-headerItems > .t-Region-title{
+                font-size: 1.5rem;
+            }
+            .main-headings .head-sub-heading{
+                font-size: 0.8rem;
+                color:grey;
+            }
+            
+            .sub-headings  > .t-Region-header > .t-Region-headerItems > .t-Region-title{
+                font-size:1.2rem;
+            }
+            .sub-headings{
+                border-bottom: 1px solid rgb(205, 205, 205);
+                border-radius: 0;
+            }
+            
+            .success-sub{
+                text-align: center;
+            
+            }
+            ```
+    }
+    security {
+        authentication: public
+        pageAccessProtection: argumentsMustHaveChecksum
+        formAutoComplete: false
+    }
+
+    region business-registration-certificate (
+        name: Business Registration Certificate
+        title: Business Registration Certificate
+        type: staticContent
+        layout {
+            sequence: 200
+            parentRegion: @registration-form
+            slot: regionBody
+        }
+        appearance {
+            template: @/standard
+            templateOptions: [
+                #DEFAULT#
+                t-Region--noPadding
+                t-Region--noUI
+                js-headingLevel-3
+                t-Region--scrollBody
+                margin-top-none
+                margin-bottom-none
+                margin-left-none
+                margin-right-none
+            ]
+            cssClasses: sub-headings
+        }
+    )
+
+    region company-details (
+        name: Company Details
+        title: Company Details
+        type: staticContent
+        layout {
+            sequence: 20
+            parentRegion: @registration-form
+            slot: regionBody
+        }
+        appearance {
+            template: @/standard
+            templateOptions: [
+                #DEFAULT#
+                t-Region--noPadding
+                t-Region--noUI
+                js-headingLevel-3
+                t-Region--scrollBody
+                margin-top-md
+                margin-bottom-none
+                margin-left-none
+                margin-right-none
+            ]
+            cssClasses: sub-headings
+        }
+    )
+
+    region company-information (
+        name: Company Information
+        title: Company Information
+        type: staticContent
+        source {
+            htmlCode: <p class ='head-sub-heading'>Please provide accurate information about your company and contact details</p>
+        }
+        layout {
+            sequence: 10
+            parentRegion: @registration-form
+            slot: regionBody
+        }
+        appearance {
+            template: @/standard
+            templateOptions: [
+                #DEFAULT#
+                t-Region--noPadding
+                t-Region--noUI
+                t-Region--scrollBody
+                margin-top-none
+                margin-bottom-none
+                margin-left-none
+                margin-right-none
+            ]
+            cssClasses: main-headings
+        }
+    )
+
+    region new (
+        name: Vendor Registration
+        type: staticContent
+        source {
+            htmlCode: Join our network of trusted freight vendors
+        }
+        layout {
+            sequence: 30
+            parentRegion: @new-vendor-registraion
+            slot: regionBody
+        }
+        appearance {
+            template: @/hero
+            templateOptions: [
+                #DEFAULT#
+                t-HeroRegion--hideIcon
+            ]
+        }
+    )
+
+    region new-vendor-registraion (
+        name: New Vendor Registraion
+        type: staticContent
+        layout {
+            sequence: 20
+            slot: body
+        }
+        appearance {
+            template: @/standard
+            templateOptions: [
+                #DEFAULT#
+                t-Region--noPadding
+                t-Region--removeHeader js-removeLandmark
+                t-Region--noUI
+                t-Region--scrollBody
+            ]
+        }
+        serverSideCondition {
+            type: itemIsNull
+            item: P2_PK_ID
+        }
+    )
+
+    region primary-contact (
+        name: Primary Contact
+        title: Primary Contact
+        type: staticContent
+        layout {
+            sequence: 150
+            parentRegion: @registration-form
+            slot: regionBody
+        }
+        appearance {
+            template: @/standard
+            templateOptions: [
+                #DEFAULT#
+                t-Region--noPadding
+                t-Region--noUI
+                js-headingLevel-3
+                t-Region--scrollBody
+                margin-top-none
+                margin-bottom-none
+                margin-left-none
+                margin-right-none
+            ]
+            cssClasses: sub-headings
+        }
+    )
+
+    region registration-form (
+        name: Registration Form
+        type: form
+        source {
+            location: localDatabase
+            tableName: VENDOR_MST
+        }
+        layout {
+            sequence: 40
+            parentRegion: @new-vendor-registraion
+            slot: regionBody
+        }
+        appearance {
+            template: @/standard
+            templateOptions: [
+                #DEFAULT#
+                t-Region--removeHeader js-removeLandmark
+                t-Region--scrollBody
+                t-Form--standardPadding
+            ]
+        }
+        edit {
+            enabled: true
+            allowedOperations: add
+        }
+    )
+
+    region success-message (
+        name: Vendor Application Submitted
+        type: staticContent
+        source {
+            htmlCode:
+                ```html
+                <div class = 'success-sub'>Thank you for applying with FreightsBook!</div>
+                <div class = 'success-sub'>We will be getting back to you within 2-3 buisness days, about the status of your application.
+                </div>
+                ```
+        }
+        layout {
+            sequence: 40
+            slot: body
+        }
+        appearance {
+            template: @/alert
+            templateOptions: [
+                #DEFAULT#
+                t-Alert--wizard
+                t-Alert--defaultIcons
+                t-Alert--success
+            ]
+        }
+        serverSideCondition {
+            type: itemIsNotNull
+            item: P2_PK_ID
+        }
+    )
+
+    pageItem P2_CDATE (
+        type: hidden
+        settings {
+            valueProtected: false
+        }
+        layout {
+            sequence: 300
+            region: @registration-form
+            slot: regionBody
+        }
+        source {
+            formRegion: @registration-form
+            column: CDATE
+            dataType: timestamp
+        }
+    )
+
+    pageItem P2_COMP_ADDRESS (
+        type: textField
+        label {
+            label: Company Address
+            alignment: left
+        }
+        layout {
+            sequence: 80
+            region: @registration-form
+            slot: regionBody
+            alignment: left
+        }
+        appearance {
+            template: @/required-above
+            templateOptions: [
+                #DEFAULT#
+                t-Form-fieldContainer--stretchInputs
+                t-Form-fieldContainer--indicatorAsterisk
+                t-Form-fieldContainer--large
+                margin-top-none
+            ]
+            width: 30
+            valuePlaceholder: Enter company address
+        }
+        validation {
+            valueRequired: true
+            maxLength: 3000
+        }
+        source {
+            formRegion: @registration-form
+            column: COMP_ADDRESS
+            dataType: varchar2
+        }
+    )
+
+    pageItem P2_COMP_CITY (
+        type: textField
+        label {
+            label: City
+            alignment: left
+        }
+        layout {
+            sequence: 90
+            region: @registration-form
+            slot: regionBody
+            alignment: left
+        }
+        appearance {
+            template: @/required-above
+            templateOptions: [
+                #DEFAULT#
+                t-Form-fieldContainer--stretchInputs
+                t-Form-fieldContainer--indicatorAsterisk
+                t-Form-fieldContainer--large
+                margin-top-none
+            ]
+            width: 30
+            valuePlaceholder: Kollam
+        }
+        validation {
+            valueRequired: true
+            maxLength: 3000
+        }
+        source {
+            formRegion: @registration-form
+            column: COMP_CITY
+            dataType: varchar2
+        }
+    )
+
+    pageItem P2_COMP_COUNTRY (
+        type: selectOne
+        label {
+            label: Country
+            alignment: left
+        }
+        settings {
+            infiniteScroll: false
+            maxValuesInList: 300
+        }
+        lov {
+            type: sharedComponent
+            lov: @countries
+        }
+        layout {
+            sequence: 110
+            region: @registration-form
+            slot: regionBody
+            alignment: left
+            startNewRow: false
+        }
+        appearance {
+            template: @/required-above
+            templateOptions: [
+                #DEFAULT#
+                t-Form-fieldContainer--stretchInputs
+                t-Form-fieldContainer--indicatorAsterisk
+                t-Form-fieldContainer--large
+                margin-top-none
+            ]
+            width: 30
+            valuePlaceholder: India
+        }
+        validation {
+            valueRequired: true
+        }
+        source {
+            formRegion: @registration-form
+            column: COMP_COUNTRY
+            dataType: varchar2
+        }
+    )
+
+    pageItem P2_COMP_DOCUMENT (
+        type: fileUpload
+        label {
+            label: Upload Document
+            alignment: left
+        }
+        storage {
+            mimeTypeColumn: COMP_DOCUMENT_MIME_TYPE
+            fileTypes: .pdf,.jpg,.png
+            maxFileSize: 2048
+        }
+        layout {
+            sequence: 250
+            region: @registration-form
+            slot: regionBody
+            alignment: left
+        }
+        appearance {
+            template: @/required-above
+            templateOptions: [
+                #DEFAULT#
+                t-Form-fieldContainer--stretchInputs
+                t-Form-fieldContainer--indicatorAsterisk
+                t-Form-fieldContainer--large
+            ]
+            width: 30
+        }
+        source {
+            formRegion: @registration-form
+            column: COMP_DOCUMENT
+            dataType: blob
+        }
+        help {
+            inlineHelpText: Please upload your business registration document (PDF, JPG, or PNG format). Must not exceed 2 MB.
+        }
+    )
+
+    pageItem P2_COMP_EMAIL (
+        type: textField
+        label {
+            label: Company Email
+            alignment: left
+        }
+        layout {
+            sequence: 70
+            region: @registration-form
+            slot: regionBody
+            alignment: left
+            startNewRow: false
+        }
+        appearance {
+            template: @/required-above
+            templateOptions: [
+                #DEFAULT#
+                t-Form-fieldContainer--stretchInputs
+                t-Form-fieldContainer--indicatorAsterisk
+                t-Form-fieldContainer--large
+                margin-top-none
+            ]
+            width: 30
+            valuePlaceholder: company@example.com
+        }
+        validation {
+            valueRequired: true
+            maxLength: 3000
+        }
+        source {
+            formRegion: @registration-form
+            column: COMP_EMAIL
+            dataType: varchar2
+        }
+    )
+
+    pageItem P2_COMP_LOGO (
+        type: fileUpload
+        label {
+            label: Upload Company Logo
+            alignment: left
+        }
+        storage {
+            mimeTypeColumn: COMP_LOGO_MIME_TYPE
+            fileTypes: .jpg,.png
+            maxFileSize: 2048
+        }
+        layout {
+            sequence: 260
+            region: @registration-form
+            slot: regionBody
+            alignment: left
+        }
+        appearance {
+            template: @/optional-above
+            templateOptions: [
+                #DEFAULT#
+                t-Form-fieldContainer--stretchInputs
+                t-Form-fieldContainer--large
+                margin-top-none
+            ]
+            width: 30
+        }
+        source {
+            formRegion: @registration-form
+            column: COMP_LOGO
+            dataType: blob
+        }
+        help {
+            inlineHelpText: Upload your company logo in PNG or JPG format. This will be displayed alongside your company name in search results. Must not exceed 2 MB.
+        }
+    )
+
+    pageItem P2_COMP_NAME (
+        type: textField
+        label {
+            label: Company Name
+            alignment: left
+        }
+        layout {
+            sequence: 60
+            region: @registration-form
+            slot: regionBody
+            alignment: left
+        }
+        appearance {
+            template: @/required-above
+            templateOptions: [
+                #DEFAULT#
+                t-Form-fieldContainer--stretchInputs
+                t-Form-fieldContainer--indicatorAsterisk
+                t-Form-fieldContainer--large
+                margin-top-none
+            ]
+            width: 30
+            valuePlaceholder: Enter your company name
+        }
+        validation {
+            valueRequired: true
+            maxLength: 3000
+        }
+        source {
+            formRegion: @registration-form
+            column: COMP_NAME
+            dataType: varchar2
+        }
+    )
+
+    pageItem P2_COMP_PHONE (
+        type: textField
+        label {
+            label: Company Telephone Phone
+            alignment: left
+        }
+        layout {
+            sequence: 130
+            region: @registration-form
+            slot: regionBody
+            alignment: left
+        }
+        appearance {
+            template: @/required-above
+            templateOptions: [
+                #DEFAULT#
+                t-Form-fieldContainer--stretchInputs
+                t-Form-fieldContainer--indicatorAsterisk
+                t-Form-fieldContainer--large
+                margin-top-none
+            ]
+            width: 30
+            valuePlaceholder: +910123456789
+        }
+        validation {
+            valueRequired: true
+            maxLength: 3000
+        }
+        source {
+            formRegion: @registration-form
+            column: COMP_PHONE
+            dataType: varchar2
+        }
+    )
+
+    pageItem P2_COMP_PRIM_CONT_EMAIL (
+        type: textField
+        label {
+            label: Primary Contact Email
+            alignment: left
+        }
+        layout {
+            sequence: 180
+            region: @registration-form
+            slot: regionBody
+            alignment: left
+            startNewRow: false
+        }
+        appearance {
+            template: @/required-above
+            templateOptions: [
+                #DEFAULT#
+                t-Form-fieldContainer--stretchInputs
+                t-Form-fieldContainer--indicatorAsterisk
+                t-Form-fieldContainer--large
+                margin-top-none
+            ]
+            width: 30
+            valuePlaceholder: primary@email.com
+        }
+        validation {
+            maxLength: 3000
+        }
+        source {
+            formRegion: @registration-form
+            column: COMP_PRIM_CONT_EMAIL
+            dataType: varchar2
+        }
+    )
+
+    pageItem P2_COMP_PRIM_CONT_NAME (
+        type: textField
+        label {
+            label: Primary Contact Name
+            alignment: left
+        }
+        layout {
+            sequence: 170
+            region: @registration-form
+            slot: regionBody
+            alignment: left
+        }
+        appearance {
+            template: @/required-above
+            templateOptions: [
+                #DEFAULT#
+                t-Form-fieldContainer--stretchInputs
+                t-Form-fieldContainer--indicatorAsterisk
+                t-Form-fieldContainer--large
+                margin-top-none
+            ]
+            width: 30
+            valuePlaceholder: Enter Contact Person Name
+        }
+        validation {
+            maxLength: 3000
+        }
+        source {
+            formRegion: @registration-form
+            column: COMP_PRIM_CONT_NAME
+            dataType: varchar2
+        }
+    )
+
+    pageItem P2_COMP_PRIM_CONT_PHONE (
+        type: textField
+        label {
+            label: Primary Contact Phone No.
+            alignment: left
+        }
+        layout {
+            sequence: 190
+            region: @registration-form
+            slot: regionBody
+            alignment: left
+        }
+        appearance {
+            template: @/required-above
+            templateOptions: [
+                #DEFAULT#
+                t-Form-fieldContainer--stretchInputs
+                t-Form-fieldContainer--indicatorAsterisk
+                t-Form-fieldContainer--large
+                margin-top-none
+            ]
+            width: 30
+            valuePlaceholder: +910123456789
+        }
+        validation {
+            maxLength: 3000
+        }
+        source {
+            formRegion: @registration-form
+            column: COMP_PRIM_CONT_PHONE
+            dataType: varchar2
+        }
+    )
+
+    pageItem P2_COMP_REG_EXPIRY_DATE (
+        type: datePicker
+        label {
+            label: Expiry Date
+            alignment: left
+        }
+        layout {
+            sequence: 240
+            region: @registration-form
+            slot: regionBody
+            alignment: left
+            startNewRow: false
+        }
+        appearance {
+            template: @/required-above
+            templateOptions: [
+                #DEFAULT#
+                t-Form-fieldContainer--stretchInputs
+                t-Form-fieldContainer--indicatorAsterisk
+                t-Form-fieldContainer--large
+                margin-top-none
+            ]
+            formatMask: DD-MON-YYYY
+            width: 30
+            valuePlaceholder: DD-MON-YYYY
+        }
+        source {
+            formRegion: @registration-form
+            column: COMP_REG_EXPIRY_DATE
+            dataType: date
+        }
+    )
+
+    pageItem P2_COMP_REG_ISSUE_DATE (
+        type: datePicker
+        label {
+            label: Issue Date
+            alignment: left
+        }
+        layout {
+            sequence: 230
+            region: @registration-form
+            slot: regionBody
+            alignment: left
+            startNewRow: false
+        }
+        appearance {
+            template: @/required-above
+            templateOptions: [
+                #DEFAULT#
+                t-Form-fieldContainer--stretchInputs
+                t-Form-fieldContainer--indicatorAsterisk
+                t-Form-fieldContainer--large
+                margin-top-none
+            ]
+            formatMask: DD-MON-YYYY
+            width: 30
+            valuePlaceholder: DD-MON-YYYY
+        }
+        source {
+            formRegion: @registration-form
+            column: COMP_REG_ISSUE_DATE
+            dataType: date
+        }
+    )
+
+    pageItem P2_COMP_REG_NO (
+        type: textField
+        label {
+            label: Registration No.
+            alignment: left
+        }
+        layout {
+            sequence: 220
+            region: @registration-form
+            slot: regionBody
+            alignment: left
+        }
+        appearance {
+            template: @/required-above
+            templateOptions: [
+                #DEFAULT#
+                t-Form-fieldContainer--stretchInputs
+                t-Form-fieldContainer--indicatorAsterisk
+                t-Form-fieldContainer--large
+                margin-top-none
+            ]
+            width: 30
+            valuePlaceholder: REG123456789
+        }
+        validation {
+            maxLength: 3000
+        }
+        source {
+            formRegion: @registration-form
+            column: COMP_REG_NO
+            dataType: varchar2
+        }
+    )
+
+    pageItem P2_COMP_REG_TYPE (
+        type: selectOne
+        label {
+            label: Registration Type
+            alignment: left
+        }
+        settings {
+            infiniteScroll: false
+            maxValuesInList: 10
+        }
+        lov {
+            type: sharedComponent
+            lov: @vendor-reg-types
+        }
+        layout {
+            sequence: 210
+            region: @registration-form
+            slot: regionBody
+            alignment: left
+        }
+        appearance {
+            template: @/required-above
+            templateOptions: [
+                #DEFAULT#
+                t-Form-fieldContainer--stretchInputs
+                t-Form-fieldContainer--indicatorAsterisk
+                t-Form-fieldContainer--large
+                margin-top-none
+            ]
+            width: 30
+            valuePlaceholder: Select Registration Type
+        }
+        validation {
+            maxLength: 3000
+        }
+        source {
+            formRegion: @registration-form
+            column: COMP_REG_TYPE
+            dataType: varchar2
+        }
+    )
+
+    pageItem P2_COMP_STATE (
+        type: hidden
+        layout {
+            sequence: 120
+            region: @registration-form
+            slot: regionBody
+        }
+        source {
+            formRegion: @registration-form
+            column: COMP_STATE
+            dataType: varchar2
+        }
+    )
+
+    pageItem P2_COMP_WEBSITE (
+        type: textField
+        label {
+            label: Company Website
+            alignment: left
+        }
+        layout {
+            sequence: 140
+            region: @registration-form
+            slot: regionBody
+            alignment: left
+            startNewRow: false
+        }
+        appearance {
+            template: @/required-above
+            templateOptions: [
+                #DEFAULT#
+                t-Form-fieldContainer--stretchInputs
+                t-Form-fieldContainer--indicatorAsterisk
+                t-Form-fieldContainer--large
+                margin-top-none
+            ]
+            width: 30
+            valuePlaceholder: www.freightsbridge.com
+        }
+        validation {
+            valueRequired: true
+            maxLength: 3000
+        }
+        source {
+            formRegion: @registration-form
+            column: COMP_WEBSITE
+            dataType: varchar2
+        }
+    )
+
+    pageItem P2_COMP_ZIP_CODE (
+        type: numberField
+        label {
+            label: Zip Code
+            alignment: left
+        }
+        layout {
+            sequence: 100
+            region: @registration-form
+            slot: regionBody
+            alignment: left
+            startNewRow: false
+        }
+        appearance {
+            template: @/required-above
+            templateOptions: [
+                #DEFAULT#
+                t-Form-fieldContainer--stretchInputs
+                t-Form-fieldContainer--indicatorAsterisk
+                t-Form-fieldContainer--large
+                margin-top-none
+            ]
+            width: 30
+            valuePlaceholder: 123456
+        }
+        validation {
+            valueRequired: true
+        }
+        source {
+            formRegion: @registration-form
+            column: COMP_ZIP_CODE
+            dataType: number
+        }
+    )
+
+    pageItem P2_CUSER (
+        type: hidden
+        settings {
+            valueProtected: false
+        }
+        layout {
+            sequence: 290
+            region: @registration-form
+            slot: regionBody
+        }
+        source {
+            formRegion: @registration-form
+            column: CUSER
+            dataType: varchar2
+        }
+    )
+
+    pageItem P2_PK_ID (
+        type: hidden
+        layout {
+            sequence: 40
+            region: @registration-form
+            slot: regionBody
+        }
+        source {
+            formRegion: @registration-form
+            column: PK_ID
+            dataType: number
+            queryOnly: true
+            primaryKey: true
+        }
+        security {
+            sessionStateProtection: checksumRequiredSessionLevel
+        }
+    )
+
+    pageItem P2_UDATE (
+        type: hidden
+        settings {
+            valueProtected: false
+        }
+        layout {
+            sequence: 320
+            region: @registration-form
+            slot: regionBody
+        }
+        source {
+            formRegion: @registration-form
+            column: UDATE
+            dataType: timestamp
+        }
+    )
+
+    pageItem P2_UUSER (
+        type: hidden
+        settings {
+            valueProtected: false
+        }
+        layout {
+            sequence: 310
+            region: @registration-form
+            slot: regionBody
+        }
+        source {
+            formRegion: @registration-form
+            column: UUSER
+            dataType: varchar2
+        }
+    )
+
+    pageItem P2_VENDOR_APR_STATUS (
+        type: hidden
+        settings {
+            valueProtected: false
+        }
+        layout {
+            sequence: 280
+            region: @registration-form
+            slot: regionBody
+        }
+        source {
+            formRegion: @registration-form
+            column: VENDOR_APR_STATUS
+            dataType: varchar2
+        }
+    )
+
+    pageItem P2_VENDOR_REF_NO (
+        type: hidden
+        layout {
+            sequence: 50
+            region: @registration-form
+            slot: regionBody
+        }
+        source {
+            formRegion: @registration-form
+            column: VENDOR_REF_NO
+            dataType: varchar2
+        }
+    )
+
+    button new (
+        buttonName: BACK
+        label: Back to Home
+        layout {
+            sequence: 10
+            slot: body
+        }
+        appearance {
+            buttonTemplate: @/text-with-icon
+            templateOptions: [
+                #DEFAULT#
+                t-Button--link
+                t-Button--iconLeft
+            ]
+            icon: fa-arrow-left
+        }
+        behavior {
+            action: redirectThisApp
+            target: {
+                page: 1
+            }
+        }
+    )
+
+    button submit (
+        buttonName: SUBMIT
+        label: Submit Application
+        layout {
+            sequence: 270
+            region: @registration-form
+            slot: regionBody
+            startNewRow: false
+            newColumn: false
+        }
+        appearance {
+            buttonTemplate: @/text
+            hot: true
+            templateOptions: [
+                #DEFAULT#
+                t-Button--primary
+                t-Button--stretch
+                t-Button--gapTop
+            ]
+        }
+        behavior {
+            showProcessing: true
+            warnOnUnsavedChanges: doNotCheck
+            databaseAction: insert
+            requiresConfirmation: true
+        }
+        confirmation {
+            message: If the details entered here are accurate, please click the below to submit.
+            style: warning
+        }
+    )
+
+    process initialize-form-vendor-registration (
+        name: Initialize form Vendor Registration
+        type: formInitialization
+        formRegion: @registration-form
+        execution {
+            sequence: 20
+            point: beforeHeader
+        }
+        advanced {
+            executionMappingIdentifier: 3901332402550607
+        }
+    )
+
+    process new (
+        name: Start Workflow
+        type: workflow
+        workflow {
+            definition: @vendor-registration
+        }
+        execution {
+            sequence: 30
+        }
+        advanced {
+            executionMappingIdentifier: 9114319332555545
+        }
+
+        parameter (
+            name: @P_DOC_ID
+            value {
+                type: staticValue
+                staticValue: 1
+            }
+        )
+
+        parameter (
+            name: @P_DOC_REQ_ID
+            value {
+                item: P2_PK_ID
+            }
+        )
+
+    )
+
+    process pre-insert (
+        name: Pre-Insert
+        type: executeCode
+        source {
+            plsqlCode:
+                ```plsql
+                DECLARE
+                    V_REF_ID NUMBER;
+                    V_REF_NO VARCHAR2(3000);
+                BEGIN
+                    SELECT NVL(MAX(TO_NUMBER(REPLACE(VENDOR_REF_NO,'V',''))),0) + 1 --Assuming all vendor ref no. starts with V
+                    INTO V_REF_ID
+                    FROM VENDOR_MST;
+                
+                    V_REF_NO := 'V' || V_REF_ID;
+                
+                    :P2_VENDOR_REF_NO := V_REF_NO; --Set this before form processing
+                END;
+                ```
+        }
+        execution {
+            sequence: 10
+        }
+        advanced {
+            executionMappingIdentifier: 3904712467550641
+        }
+        serverSideCondition {
+            whenButtonPressed: @submit
+        }
+    )
+
+    process process-form-registration-form (
+        name: Process form Registration Form
+        type: formAutoRowProcessing
+        formRegion: @registration-form
+        execution {
+            sequence: 20
+        }
+        successMessage {
+            successMessage: &N.
+        }
+        advanced {
+            executionMappingIdentifier: 3904614461550640
+        }
+        serverSideCondition {
+            whenButtonPressed: @submit
+        }
+    )
+
+    process set-theme-style-for-forms (
+        name: Set Theme Style for Forms
+        type: executeCode
+        source {
+            plsqlCode:
+                ```plsql
+                apex_theme.set_user_style (
+                     p_application_id => :APP_ID,
+                     p_user           => :APP_USER,
+                     p_theme_number   => 42,
+                     p_id             => 6908983470058345 
+                );
+                ```
+        }
+        execution {
+            sequence: 10
+            point: beforeHeader
+        }
+        advanced {
+            executionMappingIdentifier: 3905125294550645
+        }
+    )
+
+)
+

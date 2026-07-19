@@ -1,0 +1,892 @@
+page 11 (
+    name: Rate Entry Form
+    alias: RATE-ENTRY-FORM
+    title: Rate Entry Form
+    appearance {
+        pageMode: modalDialog
+        dialogTemplate: @/modal-dialog
+        templateOptions: #DEFAULT#
+    }
+    navigation {
+        cursorFocus: doNotFocusCursor
+    }
+    css {
+        inline:
+            ```css
+            .fcl-lcl-rad{
+                font-size: 2rem;
+            }
+            
+            #P11_FCL_LCL_FLAG{
+                margin-top: 7px;
+                margin-bottom: 7px;
+            }
+            ```
+    }
+    security {
+        pageAccessProtection: argumentsMustHaveChecksum
+        formAutoComplete: false
+    }
+
+    region button-container (
+        name: Button Container
+        type: staticContent
+        layout {
+            sequence: 10
+            slot: dialogFooter
+        }
+        appearance {
+            template: @/buttons-container
+            templateOptions: #DEFAULT#
+        }
+    )
+
+    region new (
+        name: Form
+        type: form
+        source {
+            location: localDatabase
+            tableName: RATE_MST
+        }
+        layout {
+            sequence: 10
+            slot: contentBody
+        }
+        appearance {
+            template: @/standard
+            templateOptions: [
+                #DEFAULT#
+                t-Region--removeHeader js-removeLandmark
+                t-Region--noUI
+                t-Region--scrollBody
+            ]
+        }
+        edit {
+            enabled: true
+            allowedOperations: [
+                add
+                update
+                delete
+            ]
+        }
+    )
+
+    pageItem P11_CDATE (
+        type: hidden
+        layout {
+            sequence: 170
+            region: @new
+            slot: regionBody
+        }
+        source {
+            formRegion: @new
+            column: CDATE
+            dataType: timestamp
+        }
+    )
+
+    pageItem P11_CUSER (
+        type: hidden
+        layout {
+            sequence: 160
+            region: @new
+            slot: regionBody
+        }
+        source {
+            formRegion: @new
+            column: CUSER
+            dataType: varchar2
+        }
+    )
+
+    pageItem P11_FCL_LCL_FLAG (
+        type: radioGroup
+        label {
+            label: &N.
+            alignment: left
+        }
+        settings {
+            noOfCols: 2
+        }
+        lov {
+            type: staticValues
+            staticValues: STATIC:FCL;FCL,LCL;LCL
+            displayExtraValues: false
+            displayNullValue: false
+        }
+        layout {
+            sequence: 60
+            region: @new
+            slot: regionBody
+            alignment: left
+        }
+        appearance {
+            template: @/optional-floating
+            templateOptions: [
+                #DEFAULT#
+                t-Form-fieldContainer--stretchInputs
+                margin-top-none
+                t-Form-fieldContainer--radioButtonGroup
+                t-Form-fieldContainer--noPadding
+            ]
+            cssClasses: fcl-lcl-rad
+        }
+        validation {
+            valueRequired: true
+        }
+        source {
+            formRegion: @new
+            column: FCL_LCL_FLAG
+            dataType: varchar2
+        }
+    )
+
+    pageItem P11_FCL_RATE (
+        type: numberField
+        label {
+            label: FCL Rate (USD)
+            alignment: left
+        }
+        layout {
+            sequence: 100
+            region: @new
+            slot: regionBody
+            alignment: left
+            startNewRow: false
+        }
+        appearance {
+            template: @/optional-floating
+            templateOptions: #DEFAULT#
+            formatMask: FML999G999G999G999G990D00
+            width: 30
+        }
+        source {
+            formRegion: @new
+            column: FCL_RATE
+            dataType: number
+        }
+    )
+
+    pageItem P11_LCL_RATE (
+        type: numberField
+        label {
+            label: LCL Rate (MT/CBM) (USD)
+            alignment: left
+        }
+        layout {
+            sequence: 110
+            region: @new
+            slot: regionBody
+            alignment: left
+        }
+        appearance {
+            template: @/optional-floating
+            templateOptions: #DEFAULT#
+            formatMask: FML999G999G999G999G990D00
+            width: 30
+        }
+        source {
+            formRegion: @new
+            column: LCL_RATE
+            dataType: number
+        }
+    )
+
+    pageItem P11_NEW (
+        type: popupLov
+        label {
+            label: Container Type
+            alignment: left
+        }
+        lov {
+            type: sqlQuery
+            sqlQuery:
+                ```sql
+                SELECT CONT_TYPE D, pk_id R
+                FROM CONTAINER_MST
+                
+                ```
+        }
+        layout {
+            sequence: 90
+            region: @new
+            slot: regionBody
+            alignment: left
+        }
+        appearance {
+            template: @/optional-floating
+            templateOptions: #DEFAULT#
+            width: 30
+        }
+        validation {
+            valueRequired: true
+        }
+        source {
+            formRegion: @new
+            column: FCL_CONTAINER_TYPE
+            dataType: number
+        }
+    )
+
+    pageItem P11_PK_ID (
+        type: hidden
+        layout {
+            sequence: 10
+            region: @new
+            slot: regionBody
+        }
+        source {
+            formRegion: @new
+            column: PK_ID
+            dataType: number
+            queryOnly: true
+            primaryKey: true
+        }
+        sessionState {
+            storage: session
+        }
+        security {
+            sessionStateProtection: checksumRequiredSessionLevel
+        }
+    )
+
+    pageItem P11_RATE_FROM_COUN (
+        type: popupLov
+        label {
+            label: From Country
+            alignment: left
+        }
+        settings {
+            fetchOnSearch: true
+        }
+        lov {
+            type: sqlQuery
+            sqlQuery:
+                ```sql
+                SELECT DISTINCT COUN_NAME, COUN_PK_ID
+                FROM V_COUN_WITH_PORT
+                ORDER BY COUN_NAME
+                ```
+        }
+        layout {
+            sequence: 10
+            region: @new
+            slot: regionBody
+            alignment: left
+        }
+        appearance {
+            template: @/optional-floating
+            templateOptions: #DEFAULT#
+            width: 30
+        }
+        validation {
+            valueRequired: true
+        }
+        source {
+            formRegion: @new
+            column: RATE_FROM_COUN
+            dataType: number
+        }
+    )
+
+    pageItem P11_RATE_FROM_PORT (
+        type: popupLov
+        label {
+            label: From Port
+            alignment: left
+        }
+        settings {
+            fetchOnSearch: true
+        }
+        lov {
+            type: sqlQuery
+            sqlQuery:
+                ```sql
+                SELECT DISTINCT INITCAP(PORT_NAME) || ' - ' || PORT_CODE AS PORT_NAME, PORT_PK_ID
+                FROM V_COUN_WITH_PORT WHERE COUN_PK_ID = :P11_RATE_FROM_COUN
+                order by PORT_NAME;
+                ```
+        }
+        cascadingLov {
+            parentItems: P11_RATE_FROM_COUN
+            itemsToSubmit: P11_RATE_FROM_COUN
+            parentRequired: false
+        }
+        layout {
+            sequence: 30
+            region: @new
+            slot: regionBody
+            alignment: left
+        }
+        appearance {
+            template: @/optional-floating
+            templateOptions: #DEFAULT#
+            width: 30
+        }
+        validation {
+            valueRequired: true
+        }
+        source {
+            formRegion: @new
+            column: RATE_FROM_PORT
+            dataType: number
+        }
+    )
+
+    pageItem P11_RATE_REF_NO (
+        type: hidden
+        layout {
+            sequence: 10
+            region: @new
+            slot: regionBody
+        }
+        source {
+            formRegion: @new
+            column: RATE_REF_NO
+            dataType: varchar2
+        }
+    )
+
+    pageItem P11_RATE_TO_COUN (
+        type: popupLov
+        label {
+            label: To Country
+            alignment: left
+        }
+        settings {
+            fetchOnSearch: true
+        }
+        lov {
+            type: sqlQuery
+            sqlQuery:
+                ```sql
+                SELECT DISTINCT COUN_NAME, COUN_PK_ID
+                FROM V_COUN_WITH_PORT
+                WHERE COUN_PK_ID != :P11_RATE_FROM_COUN
+                ORDER BY COUN_NAME
+                ```
+        }
+        cascadingLov {
+            parentItems: P11_RATE_FROM_COUN
+            itemsToSubmit: P11_RATE_FROM_COUN
+            parentRequired: false
+        }
+        layout {
+            sequence: 20
+            region: @new
+            slot: regionBody
+            alignment: left
+            startNewRow: false
+        }
+        appearance {
+            template: @/optional-floating
+            templateOptions: #DEFAULT#
+            width: 30
+        }
+        validation {
+            valueRequired: true
+        }
+        source {
+            formRegion: @new
+            column: RATE_TO_COUN
+            dataType: number
+        }
+    )
+
+    pageItem P11_RATE_TO_PORT (
+        type: popupLov
+        label {
+            label: To Port
+            alignment: left
+        }
+        settings {
+            fetchOnSearch: true
+        }
+        lov {
+            type: sqlQuery
+            sqlQuery:
+                ```sql
+                SELECT DISTINCT INITCAP(PORT_NAME) || ' - ' || PORT_CODE AS PORT_NAME, PORT_PK_ID
+                FROM V_COUN_WITH_PORT WHERE COUN_PK_ID = :P11_RATE_TO_COUN
+                order by PORT_NAME;
+                ```
+        }
+        cascadingLov {
+            parentItems: P11_RATE_TO_COUN
+            itemsToSubmit: P11_RATE_TO_COUN
+            parentRequired: false
+        }
+        layout {
+            sequence: 40
+            region: @new
+            slot: regionBody
+            alignment: left
+            startNewRow: false
+        }
+        appearance {
+            template: @/optional-floating
+            templateOptions: #DEFAULT#
+            width: 30
+        }
+        validation {
+            valueRequired: true
+        }
+        source {
+            formRegion: @new
+            column: RATE_TO_PORT
+            dataType: number
+        }
+    )
+
+    pageItem P11_TRANSIT_TIME (
+        type: numberField
+        label {
+            label: Transit Time (days)
+            alignment: left
+        }
+        layout {
+            sequence: 130
+            region: @new
+            slot: regionBody
+            alignment: left
+        }
+        appearance {
+            template: @/optional-floating
+            templateOptions: #DEFAULT#
+            width: 30
+        }
+        source {
+            formRegion: @new
+            column: TRANSIT_TIME
+            dataType: number
+        }
+    )
+
+    pageItem P11_UDATE (
+        type: hidden
+        layout {
+            sequence: 190
+            region: @new
+            slot: regionBody
+        }
+        source {
+            formRegion: @new
+            column: UDATE
+            dataType: timestamp
+        }
+    )
+
+    pageItem P11_UUSER (
+        type: hidden
+        layout {
+            sequence: 180
+            region: @new
+            slot: regionBody
+        }
+        source {
+            formRegion: @new
+            column: UUSER
+            dataType: varchar2
+        }
+    )
+
+    pageItem P11_VALID_FROM (
+        type: datePicker
+        label {
+            label: Valid From
+            alignment: left
+        }
+        settings {
+            useDefaults: false
+            appearanceBehavior: [
+                monthPicker
+                yearPicker
+                showTodayButton
+            ]
+        }
+        layout {
+            sequence: 140
+            region: @new
+            slot: regionBody
+            alignment: left
+            startNewRow: false
+        }
+        appearance {
+            template: @/optional-floating
+            templateOptions: #DEFAULT#
+            formatMask: DD-MON-YYYY
+            width: 30
+        }
+        validation {
+            valueRequired: true
+        }
+        source {
+            formRegion: @new
+            column: VALID_FROM
+            dataType: date
+        }
+    )
+
+    pageItem P11_VALID_TO (
+        type: datePicker
+        label {
+            label: Valid To
+            alignment: left
+        }
+        settings {
+            minDate: item
+            minItem: P11_VALID_FROM
+            useDefaults: false
+            appearanceBehavior: [
+                monthPicker
+                yearPicker
+                showTodayButton
+            ]
+        }
+        layout {
+            sequence: 150
+            region: @new
+            slot: regionBody
+            alignment: left
+            startNewRow: false
+        }
+        appearance {
+            template: @/optional-floating
+            templateOptions: #DEFAULT#
+            formatMask: DD-MON-YYYY
+            width: 30
+        }
+        validation {
+            valueRequired: true
+        }
+        source {
+            formRegion: @new
+            column: VALID_TO
+            dataType: date
+        }
+    )
+
+    pageItem P11_VENDOR_ID (
+        type: hidden
+        settings {
+            valueProtected: false
+        }
+        layout {
+            sequence: 10
+            region: @new
+            slot: regionBody
+        }
+        source {
+            formRegion: @new
+            column: VENDOR_ID
+            dataType: number
+        }
+        default {
+            type: item
+            item: A_VENDOR_ID
+        }
+    )
+
+    button create (
+        buttonName: CREATE
+        label: Create
+        layout {
+            sequence: 30
+            region: @button-container
+            slot: create
+        }
+        appearance {
+            buttonTemplate: @/text
+            hot: true
+            templateOptions: #DEFAULT#
+        }
+        behavior {
+            showProcessing: true
+            warnOnUnsavedChanges: doNotCheck
+            databaseAction: insert
+            requiresConfirmation: true
+        }
+        confirmation {
+            message: Plasee confirm the entry of this rate.
+            style: information
+        }
+        serverSideCondition {
+            type: itemIsNull
+            item: P11_PK_ID
+        }
+    )
+
+    button delete (
+        buttonName: DELETE
+        label: Delete
+        layout {
+            sequence: 10
+            region: @button-container
+            slot: close
+        }
+        appearance {
+            buttonTemplate: @/text
+            hot: true
+            templateOptions: #DEFAULT#
+        }
+        behavior {
+            showProcessing: true
+            warnOnUnsavedChanges: doNotCheck
+            requiresConfirmation: true
+        }
+        confirmation {
+            message: "Please confirm the deletion of this rate. "
+            style: danger
+        }
+        serverSideCondition {
+            type: itemIsNotNull
+            item: P11_PK_ID
+        }
+    )
+
+    button save (
+        buttonName: SAVE
+        label: Save
+        layout {
+            sequence: 10
+            region: @button-container
+            slot: create
+        }
+        appearance {
+            buttonTemplate: @/text
+            hot: true
+            templateOptions: #DEFAULT#
+        }
+        behavior {
+            showProcessing: true
+            warnOnUnsavedChanges: doNotCheck
+            requiresConfirmation: true
+        }
+        confirmation {
+            message:
+                ```html
+                This will save over the existing data. Please confirm.
+                
+                ```
+            style: warning
+        }
+        serverSideCondition {
+            type: itemIsNotNull
+            item: P11_PK_ID
+        }
+    )
+
+    dynamicAction initially-hide-fcl-and-lcl-items (
+        name: Initially HIde FCL and LCL items
+        execution {
+            sequence: 20
+        }
+        when {
+            event: ready
+        }
+        serverSideCondition {
+            type: itemIsNull
+            item: P11_FCL_LCL_FLAG
+        }
+
+        action native-hide (
+            action: hide
+            affectedElements {
+                selectionType: items
+                items: [
+                    P11_NEW
+                    P11_FCL_RATE
+                    P11_LCL_RATE
+                ]
+            }
+            execution {
+                sequence: 10
+            }
+        )
+
+    )
+
+    dynamicAction show-hide-fcl-and-lcl (
+        name: Show / HIde FCL and LCL
+        execution {
+            sequence: 10
+        }
+        when {
+            selectionType: items
+            items: P11_FCL_LCL_FLAG
+        }
+        clientSideCondition {
+            type: item=value
+            item: P11_FCL_LCL_FLAG
+            value: FCL
+        }
+
+        action native-clear (
+            action: clear
+            affectedElements {
+                selectionType: items
+                items: P11_LCL_RATE
+            }
+            execution {
+                sequence: 30
+                fireOnInit: false
+            }
+        )
+
+        action native-clear_1 (
+            action: clear
+            affectedElements {
+                selectionType: items
+                items: [
+                    P11_NEW
+                    P11_FCL_RATE
+                ]
+            }
+            execution {
+                sequence: 30
+                fireWhenEventResultIs: false
+                fireOnInit: false
+            }
+        )
+
+        action native-hide (
+            action: hide
+            affectedElements {
+                selectionType: items
+                items: [
+                    P11_NEW
+                    P11_FCL_RATE
+                ]
+            }
+            execution {
+                sequence: 20
+                fireWhenEventResultIs: false
+            }
+        )
+
+        action native-hide_1 (
+            action: hide
+            affectedElements {
+                selectionType: items
+                items: P11_LCL_RATE
+            }
+            execution {
+                sequence: 20
+            }
+        )
+
+        action native-show (
+            action: show
+            affectedElements {
+                selectionType: items
+                items: [
+                    P11_NEW
+                    P11_FCL_RATE
+                ]
+            }
+            execution {
+                sequence: 10
+            }
+        )
+
+        action native-show_1 (
+            action: show
+            affectedElements {
+                selectionType: items
+                items: P11_LCL_RATE
+            }
+            execution {
+                sequence: 10
+                fireWhenEventResultIs: false
+            }
+        )
+
+    )
+
+    validation container-type-not-null_1 (
+        name: Container Type - Not NULL
+        execution {
+            sequence: 20
+        }
+        validation {
+            type: itemIsNotNull
+            item: P11_NEW
+        }
+        error {
+            errorMessage: #LABEL# must have soem value.
+            associatedItem: @P11_NEW
+        }
+        serverSideCondition {
+            type: item=value
+            item: P11_FCL_LCL_FLAG
+            value: FCL
+        }
+    )
+
+    validation fcl-rate-not-null_1 (
+        name: FCL Rate - Not NULL
+        execution {
+            sequence: 30
+        }
+        validation {
+            type: itemIsNotNull
+            item: P11_FCL_RATE
+        }
+        error {
+            errorMessage: #LABEL# must have soem value.
+            associatedItem: @P11_FCL_RATE
+        }
+        serverSideCondition {
+            type: item=value
+            item: P11_FCL_LCL_FLAG
+            value: FCL
+        }
+    )
+
+    validation lcl-not-null (
+        name: LCL - Not NULL
+        execution {
+            sequence: 10
+        }
+        validation {
+            type: itemIsNotNull
+            item: P11_LCL_RATE
+        }
+        error {
+            errorMessage: #LABEL# must have soem value.
+            associatedItem: @P11_LCL_RATE
+        }
+        serverSideCondition {
+            type: item=value
+            item: P11_FCL_LCL_FLAG
+            value: LCL
+        }
+    )
+
+    process initialize-form-rate-entry-form (
+        name: Initialize form Rate Entry Form
+        type: formInitialization
+        formRegion: @new
+        execution {
+            sequence: 20
+            point: beforeHeader
+        }
+        advanced {
+            executionMappingIdentifier: 10710838278662350
+        }
+    )
+
+    process process-form-form (
+        name: Process form Form
+        type: formAutoRowProcessing
+        formRegion: @new
+        execution {
+            sequence: 10
+        }
+        advanced {
+            executionMappingIdentifier: 11378468958871144
+        }
+    )
+
+)
+
