@@ -218,9 +218,6 @@ page 11 (
             templateOptions: #DEFAULT#
             width: 30
         }
-        validation {
-            valueRequired: true
-        }
         source {
             formRegion: @new
             column: FCL_CONTAINER_TYPE

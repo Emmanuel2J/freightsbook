@@ -1,4 +1,25 @@
 page 0 (
     name: Global Page
+
+    button vendor-login (
+        buttonName: VENDOR_LOGIN
+        label: Vendor Login
+        layout {
+            sequence: 10
+            slot: afterNavigationBar
+        }
+        appearance {
+            buttonTemplate: @/text
+            hot: true
+            templateOptions: #DEFAULT#
+        }
+        behavior {
+            warnOnUnsavedChanges: doNotCheck
+        }
+        serverSideCondition {
+            type: never
+        }
+    )
+
 )
 
