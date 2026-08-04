@@ -590,11 +590,11 @@ page 3 (
     )
 
     region new (
-        name: New
+        name: Rates
         type: interactiveGrid
         source {
             location: localDatabase
-            tableName: RATE_MST
+            tableName: V_RATE_MST
             whereClause: VENDOR_ID = :A_VENDOR_ID
         }
         layout {
@@ -609,13 +609,8 @@ page 3 (
                 t-IRR-region--hideHeader js-addHiddenHeadingRoleDesc
             ]
         }
-        edit {
-            enabled: true
-            allowedOperations: [
-                add
-                update
-                delete
-            ]
+        componentAppearance {
+            fixedRowHeight: false
         }
         toolbar {
             controls: [
@@ -648,65 +643,130 @@ page 3 (
             }
 
             displayColumn (
-                column: @PK_ID
+                column: @RATE_PK_ID
                 layout {
-                    sequence: 1
+                    sequence: 24
+                }
+            )
+
+            displayColumn (
+                column: @FROM_COUN_NAME
+                layout {
+                    width: 125.28
+                    sequence: 11
+                }
+            )
+
+            displayColumn (
+                column: @FROM_PORT_NAME
+                layout {
+                    width: 89.28
+                    sequence: 14
+                }
+            )
+
+            displayColumn (
+                column: @FROM_PORT_CODE
+                layout {
+                    sequence: 25
+                }
+            )
+
+            displayColumn (
+                column: @TO_COUN_NAME
+                layout {
+                    width: 139.64
+                    sequence: 13
+                }
+            )
+
+            displayColumn (
+                column: @TO_PORT_NAME
+                layout {
+                    width: 102.28
+                    sequence: 15
+                }
+            )
+
+            displayColumn (
+                column: @TO_PORT_CODE
+                layout {
+                    sequence: 26
+                }
+            )
+
+            displayColumn (
+                column: @CONT_TYPE_NAME
+                layout {
+                    width: 107.28
+                    sequence: 9
+                }
+            )
+
+            displayColumn (
+                column: @RATE
+                layout {
+                    width: 88.28
+                    sequence: 16
                 }
             )
 
             displayColumn (
                 column: @VENDOR_ID
                 layout {
-                    sequence: 2
+                    show: false
+                    sequence: 1
                 }
             )
 
             displayColumn (
                 column: @RATE_REF_NO
                 layout {
-                    sequence: 3
+                    show: false
+                    sequence: 2
                 }
             )
 
             displayColumn (
                 column: @RATE_FROM_COUN
                 layout {
-                    sequence: 4
+                    sequence: 3
                 }
             )
 
             displayColumn (
                 column: @RATE_FROM_PORT
                 layout {
-                    sequence: 5
+                    sequence: 4
                 }
             )
 
             displayColumn (
                 column: @RATE_TO_COUN
                 layout {
-                    sequence: 6
+                    sequence: 5
                 }
             )
 
             displayColumn (
                 column: @RATE_TO_PORT
                 layout {
-                    sequence: 7
+                    sequence: 6
                 }
             )
 
             displayColumn (
                 column: @FCL_LCL_FLAG
                 layout {
-                    sequence: 8
+                    width: 65.2
+                    sequence: 7
                 }
             )
 
             displayColumn (
                 column: @FCL_CONTAINER_TYPE
                 layout {
-                    sequence: 9
+                    sequence: 8
                 }
             )
 
@@ -720,109 +780,94 @@ page 3 (
             displayColumn (
                 column: @LCL_RATE
                 layout {
-                    sequence: 11
+                    sequence: 12
                 }
             )
 
             displayColumn (
                 column: @TRANSIT_TIME
                 layout {
-                    sequence: 12
+                    width: 89.28
+                    sequence: 17
                 }
             )
 
             displayColumn (
                 column: @VALID_FROM
                 layout {
-                    sequence: 13
+                    width: 88.28
+                    sequence: 18
                 }
             )
 
             displayColumn (
                 column: @VALID_TO
                 layout {
-                    sequence: 14
+                    width: 95.19999999999999
+                    sequence: 19
                 }
             )
 
             displayColumn (
                 column: @CUSER
                 layout {
-                    sequence: 15
+                    sequence: 20
                 }
             )
 
             displayColumn (
                 column: @CDATE
                 layout {
-                    sequence: 16
+                    sequence: 21
                 }
             )
 
             displayColumn (
                 column: @UUSER
                 layout {
-                    sequence: 17
+                    sequence: 22
                 }
             )
 
             displayColumn (
                 column: @UDATE
                 layout {
-                    sequence: 18
+                    sequence: 23
                 }
             )
 
-            displayColumn (
-                column: @APEX$ROW_ACTION
-                layout {
-                    sequence: 0
-                }
-            )
-
-        )
-
-        column APEX$ROW_ACTION (
-            type: actionsMenu
-            layout {
-                sequence: 20
-            }
-        )
-
-        column APEX$ROW_SELECTOR (
-            type: rowSelector
-            layout {
-                sequence: 10
-            }
         )
 
         column CDATE (
-            type: datePicker
+            type: hidden
             heading {
                 heading: Cdate
             }
             layout {
-                sequence: 180
+                sequence: 170
             }
             source {
                 databaseColumn: CDATE
                 dataType: timestamp
             }
+            exportPrinting {
+                includeInExportPrint: false
+            }
         )
 
-        column CUSER (
+        column CONT_TYPE_NAME (
             type: textarea
             heading {
-                heading: Cuser
+                heading: Container Type
             }
             layout {
-                sequence: 170
+                sequence: 270
             }
             validation {
-                maxLength: 300
+                maxLength: 3000
             }
             source {
-                databaseColumn: CUSER
+                databaseColumn: CONT_TYPE_NAME
                 dataType: varchar2
             }
             columnFilter {
@@ -832,39 +877,53 @@ page 3 (
                     caseInsensitive
                     regexp
                 ]
-                lovType: none
             }
             enableUsersTo {
                 sort: false
             }
         )
 
-        column FCL_CONTAINER_TYPE (
-            type: numberField
+        column CUSER (
+            type: hidden
             heading {
-                heading: Fcl Container Type
-                alignment: end
+                heading: Cuser
             }
             layout {
-                sequence: 110
-                columnAlignment: end
+                sequence: 160
+            }
+            source {
+                databaseColumn: CUSER
+                dataType: varchar2
+            }
+            exportPrinting {
+                includeInExportPrint: false
+            }
+        )
+
+        column FCL_CONTAINER_TYPE (
+            type: hidden
+            heading {
+                heading: Fcl Container Type
+            }
+            layout {
+                sequence: 100
             }
             source {
                 databaseColumn: FCL_CONTAINER_TYPE
                 dataType: number
             }
-            columnFilter {
-                lovType: none
+            exportPrinting {
+                includeInExportPrint: false
             }
         )
 
         column FCL_LCL_FLAG (
             type: textField
             heading {
-                heading: Fcl Lcl Flag
+                heading: Type
             }
             layout {
-                sequence: 100
+                sequence: 90
             }
             validation {
                 maxLength: 30
@@ -884,52 +943,174 @@ page 3 (
         )
 
         column FCL_RATE (
-            type: numberField
+            type: hidden
             heading {
                 heading: Fcl Rate
-                alignment: end
             }
             layout {
-                sequence: 120
-                columnAlignment: end
+                sequence: 110
             }
             source {
                 databaseColumn: FCL_RATE
                 dataType: number
             }
+            exportPrinting {
+                includeInExportPrint: false
+            }
+        )
+
+        column FROM_COUN_NAME (
+            type: textarea
+            heading {
+                heading: From Country
+            }
+            layout {
+                sequence: 210
+            }
+            validation {
+                maxLength: 3000
+            }
+            source {
+                databaseColumn: FROM_COUN_NAME
+                dataType: varchar2
+            }
             columnFilter {
-                lovType: none
+                performanceImpactingOperators: [
+                    contains
+                    startsWith
+                    caseInsensitive
+                    regexp
+                ]
+            }
+            enableUsersTo {
+                sort: false
+            }
+        )
+
+        column FROM_PORT_CODE (
+            type: hidden
+            heading {
+                heading: From Port Code
+            }
+            layout {
+                sequence: 230
+            }
+            source {
+                databaseColumn: FROM_PORT_CODE
+                dataType: varchar2
+            }
+            exportPrinting {
+                includeInExportPrint: false
+            }
+        )
+
+        column FROM_PORT_NAME (
+            type: textarea
+            heading {
+                heading: From Port
+            }
+            layout {
+                sequence: 220
+            }
+            validation {
+                maxLength: 3000
+            }
+            source {
+                databaseColumn: FROM_PORT_NAME
+                dataType: varchar2
+            }
+            columnFilter {
+                performanceImpactingOperators: [
+                    contains
+                    startsWith
+                    caseInsensitive
+                    regexp
+                ]
+            }
+            enableUsersTo {
+                sort: false
             }
         )
 
         column LCL_RATE (
-            type: numberField
+            type: hidden
             heading {
                 heading: Lcl Rate
-                alignment: end
             }
             layout {
-                sequence: 130
-                columnAlignment: end
+                sequence: 120
             }
             source {
                 databaseColumn: LCL_RATE
                 dataType: number
             }
-            columnFilter {
-                lovType: none
+            exportPrinting {
+                includeInExportPrint: false
             }
         )
 
-        column PK_ID (
-            type: hidden
+        column RATE (
+            type: numberField
+            heading {
+                heading: Rate
+            }
             layout {
-                sequence: 30
+                sequence: 280
+            }
+            appearance {
+                formatMask: 999G999G999G999G990D00
             }
             source {
-                databaseColumn: PK_ID
+                databaseColumn: RATE
                 dataType: number
-                queryOnly: true
+            }
+        )
+
+        column RATE_FROM_COUN (
+            type: hidden
+            heading {
+                heading: Rate From Coun
+            }
+            layout {
+                sequence: 50
+            }
+            source {
+                databaseColumn: RATE_FROM_COUN
+                dataType: number
+            }
+            exportPrinting {
+                includeInExportPrint: false
+            }
+        )
+
+        column RATE_FROM_PORT (
+            type: hidden
+            heading {
+                heading: Rate From Port
+            }
+            layout {
+                sequence: 60
+            }
+            source {
+                databaseColumn: RATE_FROM_PORT
+                dataType: number
+            }
+            exportPrinting {
+                includeInExportPrint: false
+            }
+        )
+
+        column RATE_PK_ID (
+            type: hidden
+            heading {
+                heading: Rate Pk Id
+            }
+            layout {
+                sequence: 200
+            }
+            source {
+                databaseColumn: RATE_PK_ID
+                dataType: number
                 primaryKey: true
             }
             exportPrinting {
@@ -937,57 +1118,70 @@ page 3 (
             }
         )
 
-        column RATE_FROM_COUN (
-            type: numberField
-            heading {
-                heading: Rate From Coun
-                alignment: end
-            }
-            layout {
-                sequence: 60
-                columnAlignment: end
-            }
-            source {
-                databaseColumn: RATE_FROM_COUN
-                dataType: number
-            }
-            columnFilter {
-                lovType: none
-            }
-        )
-
-        column RATE_FROM_PORT (
-            type: numberField
-            heading {
-                heading: Rate From Port
-                alignment: end
-            }
-            layout {
-                sequence: 70
-                columnAlignment: end
-            }
-            source {
-                databaseColumn: RATE_FROM_PORT
-                dataType: number
-            }
-            columnFilter {
-                lovType: none
-            }
-        )
-
         column RATE_REF_NO (
-            type: textarea
+            type: hidden
             heading {
                 heading: Rate Ref No
             }
             layout {
-                sequence: 50
-            }
-            validation {
-                maxLength: 300
+                sequence: 40
             }
             source {
                 databaseColumn: RATE_REF_NO
+                dataType: varchar2
+            }
+            exportPrinting {
+                includeInExportPrint: false
+            }
+        )
+
+        column RATE_TO_COUN (
+            type: hidden
+            heading {
+                heading: Rate To Coun
+            }
+            layout {
+                sequence: 70
+            }
+            source {
+                databaseColumn: RATE_TO_COUN
+                dataType: number
+            }
+            exportPrinting {
+                includeInExportPrint: false
+            }
+        )
+
+        column RATE_TO_PORT (
+            type: hidden
+            heading {
+                heading: Rate To Port
+            }
+            layout {
+                sequence: 80
+            }
+            source {
+                databaseColumn: RATE_TO_PORT
+                dataType: number
+            }
+            exportPrinting {
+                includeInExportPrint: false
+            }
+        )
+
+        column TO_COUN_NAME (
+            type: textarea
+            heading {
+                heading: To Country
+            }
+            layout {
+                sequence: 240
+            }
+            validation {
+                maxLength: 3000
+            }
+            source {
+                databaseColumn: TO_COUN_NAME
                 dataType: varchar2
             }
             columnFilter {
@@ -997,48 +1191,54 @@ page 3 (
                     caseInsensitive
                     regexp
                 ]
-                lovType: none
             }
             enableUsersTo {
                 sort: false
             }
         )
 
-        column RATE_TO_COUN (
-            type: numberField
+        column TO_PORT_CODE (
+            type: hidden
             heading {
-                heading: Rate To Coun
-                alignment: end
+                heading: To Port Code
             }
             layout {
-                sequence: 80
-                columnAlignment: end
+                sequence: 260
             }
             source {
-                databaseColumn: RATE_TO_COUN
-                dataType: number
+                databaseColumn: TO_PORT_CODE
+                dataType: varchar2
             }
-            columnFilter {
-                lovType: none
+            exportPrinting {
+                includeInExportPrint: false
             }
         )
 
-        column RATE_TO_PORT (
-            type: numberField
+        column TO_PORT_NAME (
+            type: textarea
             heading {
-                heading: Rate To Port
-                alignment: end
+                heading: To Port
             }
             layout {
-                sequence: 90
-                columnAlignment: end
+                sequence: 250
+            }
+            validation {
+                maxLength: 3000
             }
             source {
-                databaseColumn: RATE_TO_PORT
-                dataType: number
+                databaseColumn: TO_PORT_NAME
+                dataType: varchar2
             }
             columnFilter {
-                lovType: none
+                performanceImpactingOperators: [
+                    contains
+                    startsWith
+                    caseInsensitive
+                    regexp
+                ]
+            }
+            enableUsersTo {
+                sort: false
             }
         )
 
@@ -1046,61 +1246,47 @@ page 3 (
             type: numberField
             heading {
                 heading: Transit Time
-                alignment: end
             }
             layout {
-                sequence: 140
-                columnAlignment: end
+                sequence: 130
             }
             source {
                 databaseColumn: TRANSIT_TIME
                 dataType: number
             }
-            columnFilter {
-                lovType: none
-            }
         )
 
         column UDATE (
-            type: datePicker
+            type: hidden
             heading {
                 heading: Udate
             }
             layout {
-                sequence: 200
+                sequence: 190
             }
             source {
                 databaseColumn: UDATE
                 dataType: timestamp
             }
+            exportPrinting {
+                includeInExportPrint: false
+            }
         )
 
         column UUSER (
-            type: textarea
+            type: hidden
             heading {
                 heading: Uuser
             }
             layout {
-                sequence: 190
-            }
-            validation {
-                maxLength: 300
+                sequence: 180
             }
             source {
                 databaseColumn: UUSER
                 dataType: varchar2
             }
-            columnFilter {
-                performanceImpactingOperators: [
-                    contains
-                    startsWith
-                    caseInsensitive
-                    regexp
-                ]
-                lovType: none
-            }
-            enableUsersTo {
-                sort: false
+            exportPrinting {
+                includeInExportPrint: false
             }
         )
 
@@ -1110,7 +1296,10 @@ page 3 (
                 heading: Valid From
             }
             layout {
-                sequence: 150
+                sequence: 140
+            }
+            appearance {
+                formatMask: DD-MON-YYYY
             }
             source {
                 databaseColumn: VALID_FROM
@@ -1124,7 +1313,10 @@ page 3 (
                 heading: Valid To
             }
             layout {
-                sequence: 160
+                sequence: 150
+            }
+            appearance {
+                formatMask: DD-MON-YYYY
             }
             source {
                 databaseColumn: VALID_TO
@@ -1133,21 +1325,19 @@ page 3 (
         )
 
         column VENDOR_ID (
-            type: numberField
+            type: hidden
             heading {
                 heading: Vendor Id
-                alignment: end
             }
             layout {
-                sequence: 40
-                columnAlignment: end
+                sequence: 30
             }
             source {
                 databaseColumn: VENDOR_ID
                 dataType: number
             }
-            columnFilter {
-                lovType: none
+            exportPrinting {
+                includeInExportPrint: false
             }
         )
 
@@ -1213,7 +1403,7 @@ page 3 (
         name: Vendor Dashboard
         type: staticContent
         source {
-            htmlCode: Welcome Back, &APP_USER.
+            htmlCode: Welcome Back, &A_VEND_NAME.
         }
         layout {
             sequence: 20
@@ -1619,6 +1809,31 @@ page 3 (
 
     )
 
+    dynamicAction new_1 (
+        name: New
+        execution {
+            sequence: 80
+        }
+        when {
+            event: apexafterclosecanceldialog
+            selectionType: button
+            button: @add-rate
+        }
+
+        action native-refresh (
+            action: refresh
+            affectedElements {
+                selectionType: region
+                region: @new
+            }
+            execution {
+                sequence: 10
+                fireOnInit: false
+            }
+        )
+
+    )
+
     dynamicAction real-reject (
         name: Real Reject
         execution {
@@ -1741,18 +1956,6 @@ page 3 (
         }
         advanced {
             executionMappingIdentifier: 3905325367550647
-        }
-    )
-
-    process new-save-interactive-grid-data (
-        name: New - Save Interactive Grid Data
-        type: interactiveGridAutoRowProcessing
-        editableRegion: @new
-        execution {
-            sequence: 10
-        }
-        advanced {
-            executionMappingIdentifier: 11759458607483619
         }
     )
 

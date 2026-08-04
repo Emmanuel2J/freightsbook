@@ -12,62 +12,127 @@ page 1 (
     css {
         inline:
             ```css
-            /* The below section is adjusting the bar items to be in middle, important lesson, margin-left and right 
-            only works if they have enough width to work with */
-            
-            .t-Header-navBar{
-              display: flex;
-              justify-content: center;
-              width: 100%;
-            }
-            .t-Header-navBar--center{
-                width: 100% !important;
-            }
-            .t-NavigationBar{
-                width: 100% !important;
-            }
-            /* .mid-items-last{
-                margin-right:150px;
-            } */
-            .t-Header-navBar--start{
-                display: none;
+            .t-Body-contentInner{
+                padding: 0;
+                
             }
             
-            .t-Header-navBar--end{
-                display:none;
+            #main-hero{
+                height: fit-content;
+                margin: 0;
+                background-color: #00698c88;
+                border-radius: 0;
             }
             
-            .mid-items > a > span.t-Icon{
-                display: none;
-            }
-            .mid-item-first{
-                margin-left: auto;
-            }
-            .ven-bar-item > a > span.t-Icon{
-                display: none;
-            }
-            .ven-bar-item{
-                margin-left: auto;
+            .hero-r{
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                padding-top: 4rem;
+                height:max-content;
+                font-family: "Roboto", sans-serif;
             }
             
-            
-            /* The above section is adjusting the bar items to be in middle, important lesson, margin-left and right 
-            only works if they have enough width to work with */
-            
-            .mid-items > a{
-                font-size: 0.8rem;
-            }
-            
-            .ven-bar-item > a{
-               background-color:white ;
-               color:black;
-               font-weight: bold;
-               border: 1px solid rgba(0, 0, 0, 0.01);
-            }
-            .ven-bar-item > a:hover{
-                background-color:black;
+            .hero-title{
+                font-size:4.0rem;
+                font-weight: 600;
+                text-align: center;
+                text-wrap:balance;
+                line-height:1;
+                margin-inline: auto;
                 color:white;
+                padding-bottom:1rem;
+                width:50%;
+            
+            } 
+            
+            .hero-sub-title{
+                font-size:1.125rem;
+                font-weight: 1;
+                text-align: center;
+                text-wrap:balance;
+                line-height:1;
+                width: 50%;
+                color:rgba(255, 255, 255, 0.85);
+                font-family: sans-serif;
+                margin-top:0.5rem;
+                margin-inline:auto;
+            }   
+            
+            #search-area{
+                margin:2.5rem;
             }
+            
+            .hero-image{
+                object-fit:cover;
+                top:0 !important;
+                width: 100%;
+                height: 100%;
+                z-index:-10;
+                inset:0;
+                position: absolute;
+                max-width: 100%;
+                display: block;
+                overflow-clip-margin: content-box;
+                overflow: clip;
+            }
+            
+            #search-area{
+                padding: 0.5rem 1rem 1rem 1rem; /* top right bottom left */
+                border-radius: 1.125rem;
+            }
+            
+            #P1_RATE_TYPE{
+                margin-top: 0;
+            }
+            #P1_RATE_TYPE label{
+                padding: 0.5rem;
+            }
+            #P1_RATE_TYPE label > span{
+                    font-size: 0.8rem;
+            }
+            .apex-item-group--rc input:checked+label, .apex-item-single-checkbox input:checked+label {
+                background-color: var(--ut-header-background-color);
+                outline: none !important;
+                border:none !important;
+                font-weight: 500!important;
+            }
+            
+            #P1_RATE_TYPE > div > div{
+                display:grid !important;
+                grid-template-columns: 1fr 1fr !important;
+            }
+            
+            .t-Button--gapTop{
+                margin-top: 1.9rem !important;
+            }
+            
+            .search-footer{
+                color: rgba(0, 0, 0, 0.696);
+                font-size: 0.75rem;
+            }
+            .metric-cards{
+                background-color: transparent;
+                border:0;
+            }
+            .metric-cards .a-CardView-title {
+                color:white;
+                font-size: 2.5rem;
+            }
+            .metric-cards .a-CardView-subTitle  {
+                color:white;
+                font-weight: 100;
+                font-size:0.8rem;
+                margin-top:0.9rem;
+            }
+            ```
+    }
+    htmlHeader {
+        htmlHeader:
+            ```html
+            <style>
+                @import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap');
+            </style>
             ```
     }
     security {
@@ -76,43 +141,316 @@ page 1 (
         formAutoComplete: false
     }
 
-    region freightsbook (
-        name: FreightsBridge
+    region hero-region (
+        name: Hero Region
+        type: staticContent
+        source {
+            htmlCode:
+                ```html
+                <img src="#APP_FILES#hero-ocean-freight.png" class = "hero-image">
+                <div class = 'hero-r'>
+                    <div class = 'hero-title'>Find the cheapest ocean freight rate in seconds</div>
+                    <div class = 'hero-sub-title'>Compare freight rates from trusted FCL & LCL vendors, all in one place.</div>
+                </div>
+                ```
+        }
+        layout {
+            sequence: 20
+            slot: body
+        }
+        appearance {
+            template: @/standard
+            templateOptions: [
+                #DEFAULT#
+                t-Region--removeHeader js-removeLandmark
+                t-Region--noUI
+                t-Region--scrollBody
+            ]
+        }
+        advanced {
+            htmlDomId: main-hero
+        }
+    )
+
+    region metrics (
+        name: Metrics
+        type: cards
+        source {
+            location: localDatabase
+            type: sqlQuery
+            sqlQuery:
+                ```sql
+                SELECT '120+' AS METRIC, 'Verified Vendors' as Label from dual
+                UNION ALL
+                SELECT '4800+' AS METRIC, 'Live Rates' as Label from dual
+                UNION ALL
+                SELECT '600+' AS METRIC, 'Global Ports' as Label from dual
+                ;
+                ```
+        }
+        layout {
+            sequence: 20
+            parentRegion: @hero-region
+            slot: subRegions
+            startNewRow: false
+            newColumn: false
+        }
+        appearance {
+            template: @/cards-container
+            templateOptions: [
+                #DEFAULT#
+                t-CardsRegion--hideHeader js-addHiddenHeadingRoleDesc
+                t-CardsRegion--styleB
+            ]
+        }
+        componentAppearance {
+            gridColumns: 3
+        }
+        card {
+            cssClasses: metric-cards
+        }
+        title {
+            column: METRIC
+        }
+        subtitle {
+            column: LABEL
+        }
+    )
+
+    region parent (
+        name: Parent
         type: staticContent
         layout {
             sequence: 10
-            slot: breadcrumbBar
+            parentRegion: @hero-region
+            slot: subRegions
+            column: 3
+            columnSpan: 8
         }
         appearance {
-            template: @/hero
-            templateOptions: #DEFAULT#
+            template: @/standard
+            templateOptions: [
+                #DEFAULT#
+                t-Region--noPadding
+                t-Region--removeHeader js-removeLandmark
+                t-Region--scrollBody
+            ]
         }
-        image {
-            fileUrl: #APP_FILES#icons/app-icon-512.png
+        advanced {
+            htmlDomId: search-area
+        }
+        headerAndFooter {
+            footerText: <span class='search-footer'>Compare live rates from <b>120+ verified vendors</b> — no booking fees, no sign-up required.</span>
+        }
+    )
+
+    pageItem P1_CONTAINER_TYPE (
+        type: selectList
+        label {
+            label: Container Type
+            alignment: left
+        }
+        lov {
+            type: sqlQuery
+            sqlQuery:
+                ```sql
+                SELECT CONT_TYPE D, pk_id R
+                FROM CONTAINER_MST
+                order by CONT_TYPE
+                
+                ```
+        }
+        layout {
+            sequence: 60
+            region: @parent
+            slot: regionBody
+            alignment: left
+        }
+        appearance {
+            template: @/optional-above
+            templateOptions: [
+                #DEFAULT#
+                t-Form-fieldContainer--stretchInputs
+                t-Form-fieldContainer--large
+            ]
+            height: 1
+        }
+    )
+
+    pageItem P1_DESTINATION_PORT (
+        type: popupLov
+        label {
+            label: Destination Port
+            alignment: left
+        }
+        settings {
+            displayAs: modalDialog
+            fetchOnSearch: true
+            title: Destination Port
+        }
+        lov {
+            type: sharedComponent
+            lov: @ports-with-couns
+        }
+        layout {
+            sequence: 50
+            region: @parent
+            slot: regionBody
+            alignment: left
+            startNewRow: false
+        }
+        appearance {
+            template: @/optional-above
+            templateOptions: [
+                #DEFAULT#
+                t-Form-fieldContainer--stretchInputs
+                t-Form-fieldContainer--large
+            ]
+            icon: fa-map-marker
+            width: 30
+        }
+    )
+
+    pageItem P1_ORIGIN_PORT (
+        type: popupLov
+        label {
+            label: Origin Port
+            alignment: left
+        }
+        settings {
+            displayAs: modalDialog
+            fetchOnSearch: true
+            title: Origin Port
+        }
+        lov {
+            type: sharedComponent
+            lov: @ports-with-couns
+        }
+        layout {
+            sequence: 30
+            region: @parent
+            slot: regionBody
+            alignment: left
+        }
+        appearance {
+            template: @/optional-above
+            templateOptions: [
+                #DEFAULT#
+                t-Form-fieldContainer--stretchInputs
+                t-Form-fieldContainer--large
+            ]
+            icon: fa-ship
+            width: 30
+        }
+    )
+
+    pageItem P1_QTY (
+        type: numberField
+        label {
+            label: Qty
+            alignment: left
+        }
+        layout {
+            sequence: 70
+            region: @parent
+            slot: regionBody
+            alignment: left
+            startNewRow: false
+        }
+        appearance {
+            template: @/optional-above
+            templateOptions: [
+                #DEFAULT#
+                t-Form-fieldContainer--stretchInputs
+                t-Form-fieldContainer--large
+            ]
+            width: 30
+        }
+    )
+
+    pageItem P1_RATE_TYPE (
+        type: radioGroup
+        label {
+            label: &N.
+            alignment: left
+        }
+        settings {
+            noOfCols: 2
+        }
+        lov {
+            type: staticValues
+            staticValues: STATIC2:<span aria-hidden="true" class="fa fa-truck-container">      Full Container (FCL)</span>;FCL,<span aria-hidden="true" class="fa fa-package">      Less than Container (LCL)</span>;LCL
+            displayNullValue: false
+        }
+        layout {
+            sequence: 20
+            region: @parent
+            slot: regionBody
+            alignment: left
+        }
+        appearance {
+            template: @/optional-floating
+            templateOptions: [
+                #DEFAULT#
+                t-Form-fieldContainer--stretchInputs
+                t-Form-fieldContainer--radioButtonGroup
+            ]
+        }
+        default {
+            type: static
+            staticValue: FCL
+        }
+        security {
+            escapeSpecialChars: false
+        }
+    )
+
+    button search (
+        buttonName: SEARCH
+        label: Search Rates
+        layout {
+            sequence: 80
+            region: @parent
+            slot: regionBody
+            startNewRow: false
+            columnCssClasses: u-align-self-center
+        }
+        appearance {
+            buttonTemplate: @/text-with-icon
+            hot: true
+            templateOptions: [
+                #DEFAULT#
+                t-Button--iconLeft
+                t-Button--stretch
+                t-Button--gapTop
+            ]
+            icon: fa-search
+        }
+        behavior {
+            warnOnUnsavedChanges: doNotCheck
         }
     )
 
     process new (
         name: New
-        type: sendEMail
-        emailHeader {
-            to: emmanueljosephjean@gmail.com
-        }
-        emailTemplate {
-            emailTemplate: @vendor-registration-acknowledgement-mail
-            placeholderValues: {"VENDOR_NAME":"Masterpiece LLC"}
-        }
-        emailDispatchMode {
-            sendImmediately: true
+        type: executeCode
+        source {
+            plsqlCode:
+                ```plsql
+                apex_theme.clear_user_style(
+                    p_application_id => 100,
+                    p_user           => :APP_USER,
+                    p_theme_number   => 42
+                );
+                
+                ```
         }
         execution {
             sequence: 10
-        }
-        successMessage {
-            successMessage: Test Mail Sent Successfully!
+            point: beforeHeader
         }
         advanced {
-            executionMappingIdentifier: 9114711987555549
+            executionMappingIdentifier: 15734384582613101
         }
     )
 
