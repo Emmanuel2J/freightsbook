@@ -8,6 +8,7 @@ page 1 (
     }
     navigation {
         cursorFocus: doNotFocusCursor
+        warnOnUnsavedChanges: false
     }
     css {
         inline:
@@ -125,6 +126,17 @@ page 1 (
                 font-size:0.8rem;
                 margin-top:0.9rem;
             }
+            
+            #P1_ORIGIN_PORT_LABEL::before{
+                display: none;
+            }
+            #P1_DESTINATION_PORT_LABEL::before{
+                display: none;
+            }
+            
+            .a-Form-error{
+                display: none !important;
+            }
             ```
     }
     htmlHeader {
@@ -140,6 +152,29 @@ page 1 (
         pageAccessProtection: argumentsMustHaveChecksum
         formAutoComplete: false
     }
+
+    region fcl-items (
+        name: FCL Items
+        type: staticContent
+        layout {
+            sequence: 70
+            parentRegion: @parent
+            slot: regionBody
+        }
+        appearance {
+            template: @/standard
+            templateOptions: [
+                t-Region--noPadding
+                t-Region--removeHeader js-removeLandmark
+                t-Region--noUI
+                t-Region--scrollBody
+                margin-top-none
+                margin-bottom-none
+                margin-left-none
+                margin-right-none
+            ]
+        }
+    )
 
     region hero-region (
         name: Hero Region
@@ -169,6 +204,33 @@ page 1 (
         }
         advanced {
             htmlDomId: main-hero
+        }
+    )
+
+    region lcl-items (
+        name: LCL Items
+        type: staticContent
+        layout {
+            sequence: 100
+            parentRegion: @parent
+            slot: regionBody
+        }
+        appearance {
+            template: @/standard
+            templateOptions: [
+                #DEFAULT#
+                t-Region--noPadding
+                t-Region--removeHeader js-removeLandmark
+                t-Region--noUI
+                t-Region--scrollBody
+                margin-top-none
+                margin-bottom-none
+                margin-left-none
+                margin-right-none
+            ]
+        }
+        advanced {
+            customAttributes: style="display:none;"
         }
     )
 
@@ -215,6 +277,9 @@ page 1 (
         subtitle {
             column: LABEL
         }
+        performance {
+            lazyLoading: true
+        }
     )
 
     region parent (
@@ -244,6 +309,30 @@ page 1 (
         }
     )
 
+    pageItem P1_CBM (
+        type: numberField
+        label {
+            label: Total CBM
+            alignment: left
+        }
+        layout {
+            sequence: 90
+            region: @lcl-items
+            slot: regionBody
+            alignment: left
+        }
+        appearance {
+            template: @/optional-above
+            templateOptions: [
+                #DEFAULT#
+                t-Form-fieldContainer--stretchInputs
+                t-Form-fieldContainer--large
+            ]
+            formatMask: 999G999G999G999G990D00
+            width: 30
+        }
+    )
+
     pageItem P1_CONTAINER_TYPE (
         type: selectList
         label {
@@ -261,8 +350,8 @@ page 1 (
                 ```
         }
         layout {
-            sequence: 60
-            region: @parent
+            sequence: 10
+            region: @fcl-items
             slot: regionBody
             alignment: left
         }
@@ -309,6 +398,111 @@ page 1 (
             icon: fa-map-marker
             width: 30
         }
+        validation {
+            valueRequired: true
+        }
+    )
+
+    pageItem P1_DIM_UNIT (
+        type: selectList
+        label {
+            label: Dimension Unit
+            alignment: left
+        }
+        lov {
+            type: staticValues
+            staticValues: STATIC:Meters;1,Feet;3.28084,Inches;39.3701,Centimetres;100
+        }
+        layout {
+            sequence: 10
+            region: @lcl-items
+            slot: regionBody
+            alignment: left
+        }
+        appearance {
+            template: @/optional-above
+            templateOptions: [
+                #DEFAULT#
+                t-Form-fieldContainer--stretchInputs
+                t-Form-fieldContainer--large
+            ]
+            height: 1
+        }
+    )
+
+    pageItem P1_HEIGHT (
+        type: numberField
+        label {
+            label: Height
+            alignment: left
+        }
+        layout {
+            sequence: 50
+            region: @lcl-items
+            slot: regionBody
+            alignment: left
+            startNewRow: false
+        }
+        appearance {
+            template: @/optional-above
+            templateOptions: [
+                #DEFAULT#
+                t-Form-fieldContainer--stretchInputs
+                t-Form-fieldContainer--large
+            ]
+            formatMask: 999G999G999G999G990D00
+            width: 30
+        }
+    )
+
+    pageItem P1_LCL_QTY (
+        type: numberField
+        label {
+            label: Qty
+            alignment: left
+        }
+        layout {
+            sequence: 80
+            region: @lcl-items
+            slot: regionBody
+            alignment: left
+            startNewRow: false
+            columnSpan: 3
+        }
+        appearance {
+            template: @/optional-above
+            templateOptions: [
+                #DEFAULT#
+                t-Form-fieldContainer--stretchInputs
+                t-Form-fieldContainer--large
+            ]
+            formatMask: 999G999G999G999G990D00
+            width: 30
+        }
+    )
+
+    pageItem P1_LENGTH (
+        type: numberField
+        label {
+            label: Length
+            alignment: left
+        }
+        layout {
+            sequence: 30
+            region: @lcl-items
+            slot: regionBody
+            alignment: left
+        }
+        appearance {
+            template: @/optional-above
+            templateOptions: [
+                #DEFAULT#
+                t-Form-fieldContainer--stretchInputs
+                t-Form-fieldContainer--large
+            ]
+            formatMask: 999G999G999G999G990D00
+            width: 30
+        }
     )
 
     pageItem P1_ORIGIN_PORT (
@@ -342,6 +536,9 @@ page 1 (
             icon: fa-ship
             width: 30
         }
+        validation {
+            valueRequired: true
+        }
     )
 
     pageItem P1_QTY (
@@ -351,8 +548,8 @@ page 1 (
             alignment: left
         }
         layout {
-            sequence: 70
-            region: @parent
+            sequence: 20
+            region: @fcl-items
             slot: regionBody
             alignment: left
             startNewRow: false
@@ -405,12 +602,130 @@ page 1 (
         }
     )
 
+    pageItem P1_SEARCH_ID (
+        type: hidden
+        settings {
+            valueProtected: false
+        }
+        layout {
+            sequence: 30
+            slot: body
+        }
+        source {
+            used: always
+        }
+    )
+
+    pageItem P1_TOTAL_WEIGHT (
+        type: numberField
+        label {
+            label: Total Weight (kg)
+            alignment: left
+        }
+        layout {
+            sequence: 100
+            region: @lcl-items
+            slot: regionBody
+            alignment: left
+            startNewRow: false
+        }
+        appearance {
+            template: @/optional-above
+            templateOptions: [
+                #DEFAULT#
+                t-Form-fieldContainer--stretchInputs
+                t-Form-fieldContainer--large
+            ]
+            formatMask: 999G999G999G999G990D00
+            width: 30
+        }
+    )
+
+    pageItem P1_WEIGHT (
+        type: numberField
+        label {
+            label: Weight
+            alignment: left
+        }
+        layout {
+            sequence: 70
+            region: @lcl-items
+            slot: regionBody
+            alignment: left
+            startNewRow: false
+            columnSpan: 3
+        }
+        appearance {
+            template: @/optional-above
+            templateOptions: [
+                #DEFAULT#
+                t-Form-fieldContainer--stretchInputs
+                t-Form-fieldContainer--large
+            ]
+            formatMask: 999G999G999G999G990D00
+            width: 30
+        }
+    )
+
+    pageItem P1_WEI_UNIT (
+        type: selectList
+        label {
+            label: Weight Unit
+            alignment: left
+        }
+        lov {
+            type: staticValues
+            staticValues: STATIC:Kilograms;1,Pounds;2.20462,Tons;1000
+        }
+        layout {
+            sequence: 20
+            region: @lcl-items
+            slot: regionBody
+            alignment: left
+            startNewRow: false
+        }
+        appearance {
+            template: @/optional-above
+            templateOptions: [
+                #DEFAULT#
+                t-Form-fieldContainer--stretchInputs
+                t-Form-fieldContainer--large
+            ]
+            height: 1
+        }
+    )
+
+    pageItem P1_WIDTH (
+        type: numberField
+        label {
+            label: Width
+            alignment: left
+        }
+        layout {
+            sequence: 60
+            region: @lcl-items
+            slot: regionBody
+            alignment: left
+            startNewRow: false
+        }
+        appearance {
+            template: @/optional-above
+            templateOptions: [
+                #DEFAULT#
+                t-Form-fieldContainer--stretchInputs
+                t-Form-fieldContainer--large
+            ]
+            formatMask: 999G999G999G999G990D00
+            width: 30
+        }
+    )
+
     button search (
         buttonName: SEARCH
         label: Search Rates
         layout {
-            sequence: 80
-            region: @parent
+            sequence: 40
+            region: @fcl-items
             slot: regionBody
             startNewRow: false
             columnCssClasses: u-align-self-center
@@ -427,7 +742,578 @@ page 1 (
             icon: fa-search
         }
         behavior {
-            warnOnUnsavedChanges: doNotCheck
+            action: definedByDynamicAction
+        }
+    )
+
+    button search-1 (
+        buttonName: SEARCH_1
+        label: Search Rates
+        layout {
+            sequence: 110
+            region: @lcl-items
+            slot: regionBody
+            startNewRow: false
+            columnCssClasses: u-align-self-center
+        }
+        appearance {
+            buttonTemplate: @/text-with-icon
+            hot: true
+            templateOptions: [
+                #DEFAULT#
+                t-Button--iconLeft
+                t-Button--stretch
+                t-Button--gapTop
+            ]
+            icon: fa-search
+        }
+        behavior {
+            action: definedByDynamicAction
+        }
+    )
+
+    dynamicAction calculate-cbm (
+        name: Calculate CBM
+        execution {
+            sequence: 40
+        }
+        when {
+            selectionType: items
+            items: [
+                P1_DIM_UNIT
+                P1_LENGTH
+                P1_HEIGHT
+                P1_WIDTH
+                P1_LCL_QTY
+            ]
+        }
+
+        action native-set-value (
+            action: setValue
+            settings {
+                type: sqlQuery
+                sqlQuery:
+                    ```sql
+                    SELECT CASE WHEN NVL(:P1_DIM_UNIT,0) = 0 THEN 0 ELSE
+                     ((REPLACE(NVL(:P1_LENGTH,0),',','') / :P1_DIM_UNIT)
+                    *(REPLACE(NVL(:P1_HEIGHT,0),',','') / :P1_DIM_UNIT) 
+                    * (REPLACE(NVL(:P1_WIDTH,0),',','') / :P1_DIM_UNIT)) * nvl(:P1_LCL_QTY,0)
+                    END AS CBM
+                    FROM DUAL
+                    ```
+                itemsToSubmit: [
+                    P1_DIM_UNIT
+                    P1_LENGTH
+                    P1_WIDTH
+                    P1_HEIGHT
+                    P1_LCL_QTY
+                ]
+            }
+            affectedElements {
+                selectionType: items
+                items: P1_CBM
+            }
+            execution {
+                sequence: 10
+            }
+        )
+
+    )
+
+    dynamicAction disable (
+        name: Disable
+        execution {
+            sequence: 20
+        }
+        when {
+            event: ready
+        }
+
+        action native-javascript-code (
+            action: executeJsCode
+            settings {
+                jsCode:
+                    ```javascript-browser
+                    $("#P1_CBM").attr('readonly','readonly');
+                    $("#P1_CBM").addClass('apex_disabled');
+                    
+                    $("#P1_TOTAL_WEIGHT").addClass('apex_disabled');
+                    $("#P1_TOTAL_WEIGHT").attr('readonly','readonly');
+                    
+                    
+                    
+                    
+                    ```
+            }
+            execution {
+                sequence: 10
+            }
+        )
+
+    )
+
+    dynamicAction enable (
+        name: Enable
+        execution {
+            sequence: 30
+        }
+        when {
+            event: apexbeforepagesubmit
+        }
+        serverSideCondition {
+            type: never
+        }
+
+        action native-javascript-code (
+            action: executeJsCode
+            settings {
+                jsCode:
+                    ```javascript-browser
+                    $("#P1_CBM").removeAttr('readonly');
+                    $("#P1_CBM").removeClass('apex_disabled');
+                    
+                    $("#P1_TOTAL_WEIGHT").removeAttr('readonly');
+                    $("#P1_TOTAL_WEIGHT").removeClass('apex_disabled');
+                    ```
+            }
+            execution {
+                sequence: 10
+                fireOnInit: false
+            }
+        )
+
+    )
+
+    dynamicAction new (
+        name: New
+        execution {
+            sequence: 10
+        }
+        when {
+            selectionType: items
+            items: P1_RATE_TYPE
+        }
+        clientSideCondition {
+            type: item=value
+            item: P1_RATE_TYPE
+            value: FCL
+        }
+
+        action hide-fcl (
+            name: Hide FCL
+            action: hide
+            affectedElements {
+                selectionType: region
+                region: @fcl-items
+            }
+            execution {
+                sequence: 10
+                fireWhenEventResultIs: false
+            }
+        )
+
+        action hide-lcl (
+            name: Hide LCL
+            action: hide
+            affectedElements {
+                selectionType: region
+                region: @lcl-items
+            }
+            execution {
+                sequence: 20
+            }
+        )
+
+        action show-fcl (
+            name: Show FCL
+            action: show
+            affectedElements {
+                selectionType: region
+                region: @fcl-items
+            }
+            execution {
+                sequence: 10
+            }
+        )
+
+        action show-lcl (
+            name: Show LCL
+            action: show
+            affectedElements {
+                selectionType: region
+                region: @lcl-items
+            }
+            execution {
+                sequence: 20
+                fireWhenEventResultIs: false
+            }
+        )
+
+    )
+
+    dynamicAction new_1 (
+        name: New
+        execution {
+            sequence: 50
+        }
+        when {
+            selectionType: items
+            items: [
+                P1_WEIGHT
+                P1_WEI_UNIT
+                P1_LCL_QTY
+            ]
+        }
+
+        action native-set-value (
+            action: setValue
+            settings {
+                type: sqlQuery
+                sqlQuery:
+                    ```sql
+                    SELECT NVL(:P1_WEI_UNIT,0) * REPLACE(NVL(:P1_LCL_QTY,0),' ','') * 
+                     REPLACE(NVL(:P1_WEIGHT,0),',','')
+                    FROM  DUAL;
+                    ```
+                itemsToSubmit: [
+                    P1_WEI_UNIT
+                    P1_LCL_QTY
+                    P1_WEIGHT
+                ]
+            }
+            affectedElements {
+                selectionType: items
+                items: P1_TOTAL_WEIGHT
+            }
+            execution {
+                sequence: 10
+            }
+        )
+
+    )
+
+    dynamicAction new_2 (
+        name: New
+        execution {
+            sequence: 60
+        }
+        when {
+            event: click
+            selectionType: button
+            button: @search
+        }
+
+        action native-javascript-code (
+            action: executeJsCode
+            settings {
+                jsCode:
+                    ```javascript-browser
+                    $("#P1_CBM").attr('readonly','readonly');
+                    $("#P1_CBM").addClass('apex_disabled');
+                    
+                    $("#P1_TOTAL_WEIGHT").attr('readonly','readonly');
+                    $("#P1_TOTAL_WEIGHT").addClass('apex_disabled');
+                    
+                    
+                    
+                    
+                    ```
+            }
+            execution {
+                sequence: 10
+                fireOnInit: false
+            }
+        )
+
+        action native-submit-page (
+            action: submitPage
+            settings {
+                requestButtonName: SEARCH
+            }
+            execution {
+                sequence: 20
+                fireOnInit: false
+            }
+        )
+
+    )
+
+    dynamicAction new_2_1 (
+        name: New
+        execution {
+            sequence: 70
+        }
+        when {
+            event: click
+            selectionType: button
+            button: @search-1
+        }
+
+        action native-javascript-code (
+            action: executeJsCode
+            settings {
+                jsCode:
+                    ```javascript-browser
+                    $("#P1_CBM").attr('readonly','readonly');
+                    $("#P1_CBM").addClass('apex_disabled');
+                    
+                    $("#P1_TOTAL_WEIGHT").attr('readonly','readonly');
+                    $("#P1_TOTAL_WEIGHT").addClass('apex_disabled');
+                    
+                    
+                    
+                    
+                    ```
+            }
+            execution {
+                sequence: 10
+                fireOnInit: false
+            }
+        )
+
+        action native-submit-page (
+            action: submitPage
+            settings {
+                requestButtonName: SEARCH_1
+            }
+            execution {
+                sequence: 20
+                fireOnInit: false
+            }
+        )
+
+    )
+
+    validation new (
+        name: P1_CONTAINER_TYPE
+        execution {
+            sequence: 10
+        }
+        validation {
+            type: itemIsNotNull
+            item: P1_CONTAINER_TYPE
+        }
+        error {
+            errorMessage: #LABEL# must have some value.
+            associatedItem: @P1_CONTAINER_TYPE
+        }
+        serverSideCondition {
+            whenButtonPressed: @search
+        }
+    )
+
+    validation p1-dim-unit (
+        name: P1_DIM_UNIT
+        execution {
+            sequence: 90
+        }
+        validation {
+            type: itemIsNotNull
+            item: P1_DIM_UNIT
+        }
+        error {
+            errorMessage: #LABEL# must have some value.
+            associatedItem: @P1_DIM_UNIT
+        }
+        serverSideCondition {
+            whenButtonPressed: @search-1
+        }
+    )
+
+    validation p1-height (
+        name: P1_HEIGHT
+        execution {
+            sequence: 80
+        }
+        validation {
+            type: itemIsNotNull
+            item: P1_HEIGHT
+        }
+        error {
+            errorMessage: #LABEL# must have some value.
+            associatedItem: @P1_HEIGHT
+        }
+        serverSideCondition {
+            whenButtonPressed: @search-1
+        }
+    )
+
+    validation p1-lcl-qty (
+        name: P1_LCL_QTY
+        execution {
+            sequence: 100
+        }
+        validation {
+            type: itemIsNotNull
+            item: P1_LCL_QTY
+        }
+        error {
+            errorMessage: #LABEL# must have some value.
+            associatedItem: @P1_LCL_QTY
+        }
+        serverSideCondition {
+            whenButtonPressed: @search-1
+        }
+    )
+
+    validation p1-length (
+        name: P1_LENGTH
+        execution {
+            sequence: 60
+        }
+        validation {
+            type: itemIsNotNull
+            item: P1_LENGTH
+        }
+        error {
+            errorMessage: #LABEL# must have some value.
+            associatedItem: @P1_LENGTH
+        }
+        serverSideCondition {
+            whenButtonPressed: @search-1
+        }
+    )
+
+    validation p1-qty (
+        name: P1_QTY
+        execution {
+            sequence: 30
+        }
+        validation {
+            type: itemIsNotNull
+            item: P1_QTY
+        }
+        error {
+            errorMessage: #LABEL# must have some value.
+            associatedItem: @P1_QTY
+        }
+        serverSideCondition {
+            whenButtonPressed: @search
+        }
+    )
+
+    validation p1-wei-unit (
+        name: P1_WEI_UNIT
+        execution {
+            sequence: 40
+        }
+        validation {
+            type: itemIsNotNull
+            item: P1_WEI_UNIT
+        }
+        error {
+            errorMessage: #LABEL# must have some value.
+            associatedItem: @P1_WEI_UNIT
+        }
+        serverSideCondition {
+            whenButtonPressed: @search-1
+        }
+    )
+
+    validation p1-weight (
+        name: P1_WEIGHT
+        execution {
+            sequence: 50
+        }
+        validation {
+            type: itemIsNotNull
+            item: P1_WEIGHT
+        }
+        error {
+            errorMessage: #LABEL# must have some value.
+            associatedItem: @P1_WEIGHT
+        }
+        serverSideCondition {
+            whenButtonPressed: @search-1
+        }
+    )
+
+    validation p1-width (
+        name: P1_WIDTH
+        execution {
+            sequence: 70
+        }
+        validation {
+            type: itemIsNotNull
+            item: P1_WIDTH
+        }
+        error {
+            errorMessage: #LABEL# must have some value.
+            associatedItem: @P1_WIDTH
+        }
+        serverSideCondition {
+            whenButtonPressed: @search-1
+        }
+    )
+
+    process insert-into-search-log (
+        name: Insert into Search Log
+        type: executeCode
+        source {
+            plsqlCode:
+                ```plsql
+                BEGIN
+                    IF :P1_RATE_TYPE = 'FCL' THEN
+                        INSERT INTO RATE_SEARCH_LOG (
+                            SEARCH_TIME,
+                            ORIGIN_PORT_ID,
+                            DESTINATION_PORT_ID,
+                            SEARCH_TYPE,
+                            CONT_TYPE,
+                            QTY
+                        )
+                        VALUES (
+                            SYSTIMESTAMP,
+                            :P1_ORIGIN_PORT,
+                            :P1_DESTINATION_PORT,
+                            :P1_RATE_TYPE,
+                            :P1_CONTAINER_TYPE,
+                            REPLACE(:P1_QTY, ',', '')
+                        )
+                        RETURNING PK_ID INTO :P1_SEARCH_ID;
+                
+                    ELSE
+                        INSERT INTO RATE_SEARCH_LOG (
+                            SEARCH_TIME,
+                            ORIGIN_PORT_ID,
+                            DESTINATION_PORT_ID,
+                            SEARCH_TYPE,
+                            QTY,
+                            DIM_UNIT,
+                            WEI_UNIT,
+                            ITEM_LENGTH,
+                            ITEM_WIDTH,
+                            ITEM_HEIGHT,
+                            CBM,
+                            WEIGHT
+                        )
+                        VALUES (
+                            SYSTIMESTAMP,
+                            :P1_ORIGIN_PORT,
+                            :P1_DESTINATION_PORT,
+                            :P1_RATE_TYPE,
+                            REPLACE(:P1_LCL_QTY, ',', ''),
+                            :P1_DIM_UNIT,
+                            :P1_WEI_UNIT,
+                            REPLACE(:P1_LENGTH, ',', ''),
+                            REPLACE(:P1_WIDTH, ',', ''),
+                            REPLACE(:P1_HEIGHT, ',', ''),
+                            REPLACE(:P1_CBM, ',', ''),
+                            REPLACE(:P1_TOTAL_WEIGHT, ',', '')
+                        )
+                        RETURNING PK_ID INTO :P1_SEARCH_ID;
+                    END IF;
+                
+                
+                    SEARCH_RATES(:P1_SEARCH_ID);
+                END;
+                ```
+        }
+        execution {
+            sequence: 10
+        }
+        advanced {
+            executionMappingIdentifier: 15946680265363718
         }
     )
 
@@ -451,6 +1337,20 @@ page 1 (
         }
         advanced {
             executionMappingIdentifier: 15734384582613101
+        }
+    )
+
+    branch (
+        execution {
+            sequence: 10
+        }
+        behavior {
+            target: {
+                page: 12
+                items: {
+                    P12_PK_ID: &P1_SEARCH_ID.
+                }
+            }
         }
     )
 

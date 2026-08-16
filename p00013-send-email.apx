@@ -1,0 +1,194 @@
+page 13 (
+    name: Send Email
+    alias: SEND-EMAIL
+    title: Send Email
+    appearance {
+        pageMode: modalDialog
+        dialogTemplate: @/modal-dialog
+        templateOptions: #DEFAULT#
+    }
+    navigation {
+        cursorFocus: doNotFocusCursor
+    }
+    security {
+        authentication: public
+        pageAccessProtection: argumentsMustHaveChecksum
+        formAutoComplete: false
+    }
+
+    region button-container (
+        name: Button Container
+        type: staticContent
+        layout {
+            sequence: 10
+            slot: dialogFooter
+        }
+        appearance {
+            template: @/buttons-container
+            templateOptions: #DEFAULT#
+        }
+    )
+
+    pageItem P13_BODY (
+        type: textarea
+        label {
+            label: Message to Vendor
+            alignment: left
+        }
+        layout {
+            sequence: 40
+            slot: contentBody
+            alignment: left
+        }
+        appearance {
+            template: @/optional-above
+            templateOptions: [
+                #DEFAULT#
+                t-Form-fieldContainer--stretchInputs
+            ]
+            width: 30
+            height: 5
+            valuePlaceholder: Enter a custom message to the vendor...
+        }
+        validation {
+            valueRequired: true
+        }
+    )
+
+    pageItem P13_CONTACT_EMAIL (
+        type: textField
+        label {
+            label: Contact Email
+            alignment: left
+        }
+        settings {
+            subtype: email
+        }
+        layout {
+            sequence: 30
+            slot: contentBody
+            alignment: left
+        }
+        appearance {
+            template: @/optional-floating
+            templateOptions: #DEFAULT#
+            width: 30
+            valuePlaceholder: Please enter your contact email...
+        }
+    )
+
+    pageItem P13_RATE_PK_ID (
+        type: hidden
+        settings {
+            valueProtected: false
+        }
+        layout {
+            sequence: 50
+            slot: contentBody
+        }
+    )
+
+    pageItem P13_SEARCH_PK_ID (
+        type: hidden
+        layout {
+            sequence: 20
+            slot: contentBody
+        }
+    )
+
+    button cancel (
+        buttonName: CANCEL
+        label: Cancel
+        layout {
+            sequence: 10
+            region: @button-container
+            slot: close
+        }
+        appearance {
+            buttonTemplate: @/text
+            templateOptions: #DEFAULT#
+        }
+        behavior {
+            action: triggerAction
+        }
+
+        triggerAction native-dialog-close (
+            action: closeDialog
+            execution {
+                sequence: 10
+            }
+        )
+
+    )
+
+    button send (
+        buttonName: SEND
+        label: Send Email
+        layout {
+            sequence: 10
+            region: @button-container
+            slot: create
+        }
+        appearance {
+            buttonTemplate: @/text
+            hot: true
+            templateOptions: #DEFAULT#
+        }
+        behavior {
+            warnOnUnsavedChanges: doNotCheck
+        }
+    )
+
+    process close-dialog (
+        name: Close Dialog
+        type: closeDialog
+        execution {
+            sequence: 20
+        }
+        advanced {
+            executionMappingIdentifier: 16025813980245225
+        }
+        serverSideCondition {
+            whenButtonPressed: @send
+        }
+    )
+
+    process send-email (
+        name: Send Email
+        type: executeCode
+        source {
+            plsqlCode:
+                ```plsql
+                DECLARE
+                V_SUB VARCHAR2(3000) := GET_RATE_ENQUIRY_SUBJECT(:P13_SEARCH_PK_ID);
+                V_BODY CLOB := GET_RATE_ENQUIRY_EMAIL_BODY(:P13_SEARCH_PK_ID,:P13_CONTACT_EMAIL,:P13_BODY, :P13_RATE_PK_ID);
+                BEGIN
+                    APEX_MAIL.SEND(
+                        p_to        => :P13_CONTACT_EMAIL,
+                        p_from      => 'freightsbridge@gmail.com',
+                        p_subj      => V_SUB,
+                        p_body      => null,
+                        p_body_html => V_BODY);
+                    APEX_MAIL.PUSH_QUEUE;
+                
+                    INSERT INTO EMAIL_SENT_LOG(SEARCH_PK_ID, RATE_PK_ID, SENT_TIME)
+                    VALUES(:P13_SEARCH_PK_ID,:P13_RATE_PK_ID, SYSTIMESTAMP);
+                END;
+                ```
+        }
+        execution {
+            sequence: 10
+        }
+        successMessage {
+            successMessage: Email Sent Successfully!
+        }
+        advanced {
+            executionMappingIdentifier: 16025780492245224
+        }
+        serverSideCondition {
+            whenButtonPressed: @send
+        }
+    )
+
+)
+

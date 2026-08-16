@@ -1,0 +1,3995 @@
+page 16 (
+    name: KPI Details
+    alias: KPI-DETAILS
+    title: KPI Details
+    appearance {
+        pageMode: modalDialog
+        dialogTemplate: @/modal-dialog
+        templateOptions: [
+            #DEFAULT#
+            ui-dialog--stretch
+        ]
+    }
+    navigation {
+        cursorFocus: doNotFocusCursor
+    }
+    security {
+        pageAccessProtection: argumentsMustHaveChecksum
+        formAutoComplete: false
+    }
+
+    region enquiries (
+        name: Enquiries
+        type: interactiveGrid
+        source {
+            location: localDatabase
+            type: sqlQuery
+            sqlQuery:
+                ```sql
+                select V.RATE_PK_ID,
+                       V.VENDOR_ID,
+                       V.RATE_REF_NO,
+                       V.RATE_FROM_COUN,
+                       V.FROM_COUN_NAME,
+                       V.RATE_FROM_PORT,
+                       V.FROM_PORT_NAME,
+                       V.FROM_PORT_CODE,
+                       V.RATE_TO_COUN,
+                       V.TO_COUN_NAME,
+                       V.RATE_TO_PORT,
+                       V.TO_PORT_NAME,
+                       V.TO_PORT_CODE,
+                       V.FCL_LCL_FLAG,
+                       V.FCL_CONTAINER_TYPE,
+                       V.CONT_TYPE_NAME,
+                       V.RATE,
+                       V.FCL_RATE,
+                       V.LCL_RATE,
+                       V.TRANSIT_TIME,
+                       V.VALID_FROM,
+                       V.VALID_TO,
+                       V.CUSER,
+                       V.CDATE,
+                       V.UUSER,
+                       V.UDATE,
+                       E.SENT_TIME
+                  from V_RATE_MST V
+                  JOIN email_sent_log E ON V.RATE_PK_ID = E.RATE_PK_ID
+                 where (V.VENDOR_ID =:A_VENDOR_ID OR :APP_USER = 'ADMIN') 
+                ```
+        }
+        layout {
+            sequence: 50
+            slot: contentBody
+        }
+        appearance {
+            template: @/interactive-report
+            templateOptions: [
+                #DEFAULT#
+                t-IRR-region--hideHeader js-addHiddenHeadingRoleDesc
+            ]
+        }
+        serverSideCondition {
+            type: item=value
+            item: P16_TAG
+            value: 3
+        }
+        componentAppearance {
+            fixedRowHeight: false
+        }
+        pagination {
+            type: page
+        }
+        toolbar {
+            controls: [
+                searchCol
+                searchField
+                actionsMenu
+                resetButton
+                saveButton
+            ]
+        }
+        download {
+            formats: [
+                csv
+                html
+                excel
+                pdf
+            ]
+        }
+        advanced {
+            savedReportMappingIdentifier: 61778031091427978
+        }
+
+        savedReport expired-rates (
+            visibility: alternative
+            name: Expired Rates
+            view {
+                default: grid
+                settingsAreaExpanded: false
+            }
+            singleRowView {
+                displayedColumns: true
+            }
+            security {
+                authorizationScheme: mustNotBePublicUser
+            }
+
+            displayColumn (
+                column: @RATE_PK_ID
+                layout {
+                    sequence: 24
+                }
+            )
+
+            displayColumn (
+                column: @FROM_COUN_NAME
+                layout {
+                    width: 125.28
+                    sequence: 11
+                }
+            )
+
+            displayColumn (
+                column: @FROM_PORT_NAME
+                layout {
+                    width: 89.28
+                    sequence: 13
+                }
+            )
+
+            displayColumn (
+                column: @FROM_PORT_CODE
+                layout {
+                    sequence: 25
+                }
+            )
+
+            displayColumn (
+                column: @TO_COUN_NAME
+                layout {
+                    width: 139.64
+                    sequence: 14
+                }
+            )
+
+            displayColumn (
+                column: @TO_PORT_NAME
+                layout {
+                    width: 102.28
+                    sequence: 15
+                }
+            )
+
+            displayColumn (
+                column: @TO_PORT_CODE
+                layout {
+                    sequence: 26
+                }
+            )
+
+            displayColumn (
+                column: @CONT_TYPE_NAME
+                layout {
+                    width: 107.28
+                    sequence: 9
+                }
+            )
+
+            displayColumn (
+                column: @RATE
+                layout {
+                    width: 88.28
+                    sequence: 16
+                }
+            )
+
+            displayColumn (
+                column: @VENDOR_ID
+                layout {
+                    show: false
+                    sequence: 1
+                }
+            )
+
+            displayColumn (
+                column: @RATE_REF_NO
+                layout {
+                    show: false
+                    sequence: 2
+                }
+            )
+
+            displayColumn (
+                column: @RATE_FROM_COUN
+                layout {
+                    sequence: 3
+                }
+            )
+
+            displayColumn (
+                column: @RATE_FROM_PORT
+                layout {
+                    sequence: 4
+                }
+            )
+
+            displayColumn (
+                column: @RATE_TO_COUN
+                layout {
+                    sequence: 5
+                }
+            )
+
+            displayColumn (
+                column: @RATE_TO_PORT
+                layout {
+                    sequence: 6
+                }
+            )
+
+            displayColumn (
+                column: @FCL_LCL_FLAG
+                layout {
+                    width: 65.2
+                    sequence: 7
+                }
+            )
+
+            displayColumn (
+                column: @FCL_CONTAINER_TYPE
+                layout {
+                    sequence: 8
+                }
+            )
+
+            displayColumn (
+                column: @FCL_RATE
+                layout {
+                    sequence: 10
+                }
+            )
+
+            displayColumn (
+                column: @LCL_RATE
+                layout {
+                    sequence: 12
+                }
+            )
+
+            displayColumn (
+                column: @TRANSIT_TIME
+                layout {
+                    width: 89.28
+                    sequence: 17
+                }
+            )
+
+            displayColumn (
+                column: @VALID_FROM
+                layout {
+                    width: 88.28
+                    sequence: 18
+                }
+            )
+
+            displayColumn (
+                column: @VALID_TO
+                layout {
+                    width: 95.19999999999999
+                    sequence: 19
+                }
+            )
+
+            displayColumn (
+                column: @CUSER
+                layout {
+                    sequence: 20
+                }
+            )
+
+            displayColumn (
+                column: @CDATE
+                layout {
+                    sequence: 21
+                }
+            )
+
+            displayColumn (
+                column: @UUSER
+                layout {
+                    sequence: 22
+                }
+            )
+
+            displayColumn (
+                column: @UDATE
+                layout {
+                    sequence: 23
+                }
+            )
+
+            displayColumn (
+                column: @EDIT_RATE
+                layout {
+                    width: 115.03800000000001
+                    sequence: 27
+                }
+            )
+
+            filter (
+                column: @VALID_TO
+                operator: lessThan
+                value: 20260810000000
+            )
+
+        )
+
+        savedReport primary (
+            visibility: primary
+            view {
+                default: grid
+            }
+            singleRowView {
+                displayedColumns: true
+            }
+
+            displayColumn (
+                column: @SENT_TIME
+                layout {
+                    width: 100
+                    sequence: 28
+                }
+            )
+
+            displayColumn (
+                column: @RATE_PK_ID
+                layout {
+                    sequence: 24
+                }
+            )
+
+            displayColumn (
+                column: @FROM_COUN_NAME
+                layout {
+                    width: 125
+                    sequence: 11
+                }
+            )
+
+            displayColumn (
+                column: @FROM_PORT_NAME
+                layout {
+                    width: 89
+                    sequence: 13
+                }
+            )
+
+            displayColumn (
+                column: @FROM_PORT_CODE
+                layout {
+                    sequence: 25
+                }
+            )
+
+            displayColumn (
+                column: @TO_COUN_NAME
+                layout {
+                    width: 139
+                    sequence: 14
+                }
+            )
+
+            displayColumn (
+                column: @TO_PORT_NAME
+                layout {
+                    width: 102
+                    sequence: 15
+                }
+            )
+
+            displayColumn (
+                column: @TO_PORT_CODE
+                layout {
+                    sequence: 26
+                }
+            )
+
+            displayColumn (
+                column: @CONT_TYPE_NAME
+                layout {
+                    width: 106
+                    sequence: 9
+                }
+            )
+
+            displayColumn (
+                column: @RATE
+                layout {
+                    width: 88
+                    sequence: 16
+                }
+            )
+
+            displayColumn (
+                column: @VENDOR_ID
+                layout {
+                    show: false
+                    sequence: 1
+                }
+            )
+
+            displayColumn (
+                column: @RATE_REF_NO
+                layout {
+                    show: false
+                    sequence: 2
+                }
+            )
+
+            displayColumn (
+                column: @RATE_FROM_COUN
+                layout {
+                    sequence: 3
+                }
+            )
+
+            displayColumn (
+                column: @RATE_FROM_PORT
+                layout {
+                    sequence: 4
+                }
+            )
+
+            displayColumn (
+                column: @RATE_TO_COUN
+                layout {
+                    sequence: 5
+                }
+            )
+
+            displayColumn (
+                column: @RATE_TO_PORT
+                layout {
+                    sequence: 6
+                }
+            )
+
+            displayColumn (
+                column: @FCL_LCL_FLAG
+                layout {
+                    width: 47
+                    sequence: 7
+                }
+            )
+
+            displayColumn (
+                column: @FCL_CONTAINER_TYPE
+                layout {
+                    sequence: 8
+                }
+            )
+
+            displayColumn (
+                column: @FCL_RATE
+                layout {
+                    sequence: 10
+                }
+            )
+
+            displayColumn (
+                column: @LCL_RATE
+                layout {
+                    sequence: 12
+                }
+            )
+
+            displayColumn (
+                column: @TRANSIT_TIME
+                layout {
+                    width: 89
+                    sequence: 17
+                }
+            )
+
+            displayColumn (
+                column: @VALID_FROM
+                layout {
+                    width: 88
+                    sequence: 18
+                }
+            )
+
+            displayColumn (
+                column: @VALID_TO
+                layout {
+                    width: 95
+                    sequence: 19
+                }
+            )
+
+            displayColumn (
+                column: @CUSER
+                layout {
+                    sequence: 20
+                }
+            )
+
+            displayColumn (
+                column: @CDATE
+                layout {
+                    sequence: 21
+                }
+            )
+
+            displayColumn (
+                column: @UUSER
+                layout {
+                    sequence: 22
+                }
+            )
+
+            displayColumn (
+                column: @UDATE
+                layout {
+                    sequence: 23
+                }
+            )
+
+            displayColumn (
+                column: @EDIT_RATE
+                layout {
+                    width: 115.03800000000001
+                    sequence: 27
+                }
+            )
+
+            sort (
+                column: @SENT_TIME
+                sort {
+                    direction: desc
+                    nulls: first
+                    sequence: 1
+                }
+            )
+
+        )
+
+        column CDATE (
+            type: hidden
+            heading {
+                heading: Cdate
+            }
+            layout {
+                sequence: 170
+            }
+            source {
+                databaseColumn: CDATE
+                dataType: timestamp
+            }
+            exportPrinting {
+                includeInExportPrint: false
+            }
+        )
+
+        column CONT_TYPE_NAME (
+            type: textarea
+            heading {
+                heading: Container Type
+            }
+            layout {
+                sequence: 270
+            }
+            validation {
+                maxLength: 3000
+            }
+            source {
+                databaseColumn: CONT_TYPE_NAME
+                dataType: varchar2
+            }
+            columnFilter {
+                performanceImpactingOperators: [
+                    contains
+                    startsWith
+                    caseInsensitive
+                    regexp
+                ]
+            }
+            enableUsersTo {
+                sort: false
+            }
+        )
+
+        column CUSER (
+            type: hidden
+            heading {
+                heading: Cuser
+            }
+            layout {
+                sequence: 160
+            }
+            source {
+                databaseColumn: CUSER
+                dataType: varchar2
+            }
+            exportPrinting {
+                includeInExportPrint: false
+            }
+        )
+
+        column EDIT_RATE (
+            type: hidden
+            heading {
+                heading: Edit Rate
+            }
+            layout {
+                sequence: 290
+            }
+            source {
+                type: none
+            }
+        )
+
+        column FCL_CONTAINER_TYPE (
+            type: hidden
+            heading {
+                heading: Fcl Container Type
+            }
+            layout {
+                sequence: 100
+            }
+            source {
+                databaseColumn: FCL_CONTAINER_TYPE
+                dataType: number
+            }
+            exportPrinting {
+                includeInExportPrint: false
+            }
+        )
+
+        column FCL_LCL_FLAG (
+            type: textField
+            heading {
+                heading: Type
+            }
+            layout {
+                sequence: 90
+            }
+            validation {
+                maxLength: 30
+            }
+            source {
+                databaseColumn: FCL_LCL_FLAG
+                dataType: varchar2
+            }
+            columnFilter {
+                performanceImpactingOperators: [
+                    contains
+                    startsWith
+                    caseInsensitive
+                    regexp
+                ]
+            }
+        )
+
+        column FCL_RATE (
+            type: hidden
+            heading {
+                heading: Fcl Rate
+            }
+            layout {
+                sequence: 110
+            }
+            source {
+                databaseColumn: FCL_RATE
+                dataType: number
+            }
+            exportPrinting {
+                includeInExportPrint: false
+            }
+        )
+
+        column FROM_COUN_NAME (
+            type: textarea
+            heading {
+                heading: From Country
+            }
+            layout {
+                sequence: 210
+            }
+            validation {
+                maxLength: 3000
+            }
+            source {
+                databaseColumn: FROM_COUN_NAME
+                dataType: varchar2
+            }
+            columnFilter {
+                performanceImpactingOperators: [
+                    contains
+                    startsWith
+                    caseInsensitive
+                    regexp
+                ]
+            }
+            enableUsersTo {
+                sort: false
+            }
+        )
+
+        column FROM_PORT_CODE (
+            type: hidden
+            heading {
+                heading: From Port Code
+            }
+            layout {
+                sequence: 230
+            }
+            source {
+                databaseColumn: FROM_PORT_CODE
+                dataType: varchar2
+            }
+            exportPrinting {
+                includeInExportPrint: false
+            }
+        )
+
+        column FROM_PORT_NAME (
+            type: textarea
+            heading {
+                heading: From Port
+            }
+            layout {
+                sequence: 220
+            }
+            validation {
+                maxLength: 3000
+            }
+            source {
+                databaseColumn: FROM_PORT_NAME
+                dataType: varchar2
+            }
+            columnFilter {
+                performanceImpactingOperators: [
+                    contains
+                    startsWith
+                    caseInsensitive
+                    regexp
+                ]
+            }
+            enableUsersTo {
+                sort: false
+            }
+        )
+
+        column LCL_RATE (
+            type: hidden
+            heading {
+                heading: Lcl Rate
+            }
+            layout {
+                sequence: 120
+            }
+            source {
+                databaseColumn: LCL_RATE
+                dataType: number
+            }
+            exportPrinting {
+                includeInExportPrint: false
+            }
+        )
+
+        column RATE (
+            type: numberField
+            heading {
+                heading: Rate
+            }
+            layout {
+                sequence: 280
+            }
+            appearance {
+                formatMask: 999G999G999G999G990D00
+            }
+            source {
+                databaseColumn: RATE
+                dataType: number
+            }
+        )
+
+        column RATE_FROM_COUN (
+            type: hidden
+            heading {
+                heading: Rate From Coun
+            }
+            layout {
+                sequence: 50
+            }
+            source {
+                databaseColumn: RATE_FROM_COUN
+                dataType: number
+            }
+            exportPrinting {
+                includeInExportPrint: false
+            }
+        )
+
+        column RATE_FROM_PORT (
+            type: hidden
+            heading {
+                heading: Rate From Port
+            }
+            layout {
+                sequence: 60
+            }
+            source {
+                databaseColumn: RATE_FROM_PORT
+                dataType: number
+            }
+            exportPrinting {
+                includeInExportPrint: false
+            }
+        )
+
+        column RATE_PK_ID (
+            type: hidden
+            heading {
+                heading: Rate Pk Id
+            }
+            layout {
+                sequence: 200
+            }
+            source {
+                databaseColumn: RATE_PK_ID
+                dataType: number
+                primaryKey: true
+            }
+            exportPrinting {
+                includeInExportPrint: false
+            }
+        )
+
+        column RATE_REF_NO (
+            type: hidden
+            heading {
+                heading: Rate Ref No
+            }
+            layout {
+                sequence: 40
+            }
+            source {
+                databaseColumn: RATE_REF_NO
+                dataType: varchar2
+            }
+            exportPrinting {
+                includeInExportPrint: false
+            }
+        )
+
+        column RATE_TO_COUN (
+            type: hidden
+            heading {
+                heading: Rate To Coun
+            }
+            layout {
+                sequence: 70
+            }
+            source {
+                databaseColumn: RATE_TO_COUN
+                dataType: number
+            }
+            exportPrinting {
+                includeInExportPrint: false
+            }
+        )
+
+        column RATE_TO_PORT (
+            type: hidden
+            heading {
+                heading: Rate To Port
+            }
+            layout {
+                sequence: 80
+            }
+            source {
+                databaseColumn: RATE_TO_PORT
+                dataType: number
+            }
+            exportPrinting {
+                includeInExportPrint: false
+            }
+        )
+
+        column SENT_TIME (
+            type: datePicker
+            heading {
+                heading: Email Sent Date
+            }
+            layout {
+                sequence: 300
+            }
+            appearance {
+                formatMask: DD-MON-YYYY HH:MIPM
+            }
+            source {
+                databaseColumn: SENT_TIME
+                dataType: timestamp
+            }
+        )
+
+        column TO_COUN_NAME (
+            type: textarea
+            heading {
+                heading: To Country
+            }
+            layout {
+                sequence: 240
+            }
+            validation {
+                maxLength: 3000
+            }
+            source {
+                databaseColumn: TO_COUN_NAME
+                dataType: varchar2
+            }
+            columnFilter {
+                performanceImpactingOperators: [
+                    contains
+                    startsWith
+                    caseInsensitive
+                    regexp
+                ]
+            }
+            enableUsersTo {
+                sort: false
+            }
+        )
+
+        column TO_PORT_CODE (
+            type: hidden
+            heading {
+                heading: To Port Code
+            }
+            layout {
+                sequence: 260
+            }
+            source {
+                databaseColumn: TO_PORT_CODE
+                dataType: varchar2
+            }
+            exportPrinting {
+                includeInExportPrint: false
+            }
+        )
+
+        column TO_PORT_NAME (
+            type: textarea
+            heading {
+                heading: To Port
+            }
+            layout {
+                sequence: 250
+            }
+            validation {
+                maxLength: 3000
+            }
+            source {
+                databaseColumn: TO_PORT_NAME
+                dataType: varchar2
+            }
+            columnFilter {
+                performanceImpactingOperators: [
+                    contains
+                    startsWith
+                    caseInsensitive
+                    regexp
+                ]
+            }
+            enableUsersTo {
+                sort: false
+            }
+        )
+
+        column TRANSIT_TIME (
+            type: numberField
+            heading {
+                heading: Transit Time
+            }
+            layout {
+                sequence: 130
+            }
+            source {
+                databaseColumn: TRANSIT_TIME
+                dataType: number
+            }
+        )
+
+        column UDATE (
+            type: hidden
+            heading {
+                heading: Udate
+            }
+            layout {
+                sequence: 190
+            }
+            source {
+                databaseColumn: UDATE
+                dataType: timestamp
+            }
+            exportPrinting {
+                includeInExportPrint: false
+            }
+        )
+
+        column UUSER (
+            type: hidden
+            heading {
+                heading: Uuser
+            }
+            layout {
+                sequence: 180
+            }
+            source {
+                databaseColumn: UUSER
+                dataType: varchar2
+            }
+            exportPrinting {
+                includeInExportPrint: false
+            }
+        )
+
+        column VALID_FROM (
+            type: datePicker
+            heading {
+                heading: Valid From
+            }
+            layout {
+                sequence: 140
+            }
+            appearance {
+                formatMask: DD-MON-YYYY
+            }
+            source {
+                databaseColumn: VALID_FROM
+                dataType: date
+            }
+        )
+
+        column VALID_TO (
+            type: datePicker
+            heading {
+                heading: Valid To
+            }
+            layout {
+                sequence: 150
+            }
+            appearance {
+                formatMask: DD-MON-YYYY
+            }
+            source {
+                databaseColumn: VALID_TO
+                dataType: date
+            }
+        )
+
+        column VENDOR_ID (
+            type: hidden
+            heading {
+                heading: Vendor Id
+            }
+            layout {
+                sequence: 30
+            }
+            source {
+                databaseColumn: VENDOR_ID
+                dataType: number
+            }
+            exportPrinting {
+                includeInExportPrint: false
+            }
+        )
+
+        page {
+            borderWidth: 0.5
+            borderColor: #666666
+        }
+    )
+
+    region rate-views (
+        name: Rate Views
+        type: interactiveGrid
+        source {
+            location: localDatabase
+            type: sqlQuery
+            sqlQuery:
+                ```sql
+                select V.RATE_PK_ID,
+                       V.VENDOR_ID,
+                       V.RATE_REF_NO,
+                       V.RATE_FROM_COUN,
+                       V.FROM_COUN_NAME,
+                       V.RATE_FROM_PORT,
+                       V.FROM_PORT_NAME,
+                       V.FROM_PORT_CODE,
+                       V.RATE_TO_COUN,
+                       V.TO_COUN_NAME,
+                       V.RATE_TO_PORT,
+                       V.TO_PORT_NAME,
+                       V.TO_PORT_CODE,
+                       V.FCL_LCL_FLAG,
+                       V.FCL_CONTAINER_TYPE,
+                       V.CONT_TYPE_NAME,
+                       V.RATE,
+                       V.FCL_RATE,
+                       V.LCL_RATE,
+                       V.TRANSIT_TIME,
+                       V.VALID_FROM,
+                       V.VALID_TO,
+                       V.CUSER,
+                       V.CDATE,
+                       V.UUSER,
+                       V.UDATE
+                  from V_RATE_MST V
+                  JOIN RATE_SEARCH_RESULTS s ON V.RATE_PK_ID = s.RATE_PK_ID
+                 where (V.VENDOR_ID =:A_VENDOR_ID OR :APP_USER = 'ADMIN') 
+                ```
+        }
+        layout {
+            sequence: 60
+            slot: contentBody
+        }
+        appearance {
+            template: @/interactive-report
+            templateOptions: [
+                #DEFAULT#
+                t-IRR-region--hideHeader js-addHiddenHeadingRoleDesc
+            ]
+        }
+        serverSideCondition {
+            type: item=value
+            item: P16_TAG
+            value: 4
+        }
+        componentAppearance {
+            fixedRowHeight: false
+        }
+        pagination {
+            type: page
+        }
+        toolbar {
+            controls: [
+                searchCol
+                searchField
+                actionsMenu
+                resetButton
+                saveButton
+            ]
+        }
+        download {
+            formats: [
+                csv
+                html
+                excel
+                pdf
+            ]
+        }
+        advanced {
+            savedReportMappingIdentifier: 61778031091427978
+        }
+
+        savedReport primary (
+            visibility: primary
+            view {
+                default: grid
+            }
+            singleRowView {
+                displayedColumns: true
+            }
+
+            displayColumn (
+                column: @VENDOR_ID
+                layout {
+                    sequence: 1
+                }
+            )
+
+            displayColumn (
+                column: @RATE_REF_NO
+                layout {
+                    sequence: 2
+                }
+            )
+
+            displayColumn (
+                column: @RATE_FROM_COUN
+                layout {
+                    sequence: 3
+                }
+            )
+
+            displayColumn (
+                column: @RATE_FROM_PORT
+                layout {
+                    sequence: 4
+                }
+            )
+
+            displayColumn (
+                column: @RATE_TO_COUN
+                layout {
+                    sequence: 5
+                }
+            )
+
+            displayColumn (
+                column: @RATE_TO_PORT
+                layout {
+                    sequence: 6
+                }
+            )
+
+            displayColumn (
+                column: @FCL_LCL_FLAG
+                layout {
+                    sequence: 7
+                }
+            )
+
+            displayColumn (
+                column: @FCL_CONTAINER_TYPE
+                layout {
+                    sequence: 8
+                }
+            )
+
+            displayColumn (
+                column: @FCL_RATE
+                layout {
+                    sequence: 9
+                }
+            )
+
+            displayColumn (
+                column: @LCL_RATE
+                layout {
+                    sequence: 10
+                }
+            )
+
+            displayColumn (
+                column: @TRANSIT_TIME
+                layout {
+                    sequence: 11
+                }
+            )
+
+            displayColumn (
+                column: @VALID_FROM
+                layout {
+                    sequence: 12
+                }
+            )
+
+            displayColumn (
+                column: @VALID_TO
+                layout {
+                    sequence: 13
+                }
+            )
+
+            displayColumn (
+                column: @CUSER
+                layout {
+                    sequence: 14
+                }
+            )
+
+            displayColumn (
+                column: @CDATE
+                layout {
+                    sequence: 15
+                }
+            )
+
+            displayColumn (
+                column: @UUSER
+                layout {
+                    sequence: 16
+                }
+            )
+
+            displayColumn (
+                column: @UDATE
+                layout {
+                    sequence: 17
+                }
+            )
+
+            displayColumn (
+                column: @RATE_PK_ID
+                layout {
+                    sequence: 18
+                }
+            )
+
+            displayColumn (
+                column: @FROM_COUN_NAME
+                layout {
+                    sequence: 19
+                }
+            )
+
+            displayColumn (
+                column: @FROM_PORT_NAME
+                layout {
+                    sequence: 20
+                }
+            )
+
+            displayColumn (
+                column: @FROM_PORT_CODE
+                layout {
+                    sequence: 21
+                }
+            )
+
+            displayColumn (
+                column: @TO_COUN_NAME
+                layout {
+                    sequence: 22
+                }
+            )
+
+            displayColumn (
+                column: @TO_PORT_NAME
+                layout {
+                    sequence: 23
+                }
+            )
+
+            displayColumn (
+                column: @TO_PORT_CODE
+                layout {
+                    sequence: 24
+                }
+            )
+
+            displayColumn (
+                column: @CONT_TYPE_NAME
+                layout {
+                    sequence: 25
+                }
+            )
+
+            displayColumn (
+                column: @RATE
+                layout {
+                    sequence: 26
+                }
+            )
+
+            displayColumn (
+                column: @EDIT_RATE
+                layout {
+                    sequence: 27
+                }
+            )
+
+        )
+
+        column CDATE (
+            type: hidden
+            heading {
+                heading: Cdate
+            }
+            layout {
+                sequence: 150
+            }
+            source {
+                databaseColumn: CDATE
+                dataType: timestamp
+            }
+            exportPrinting {
+                includeInExportPrint: false
+            }
+        )
+
+        column CONT_TYPE_NAME (
+            type: textarea
+            heading {
+                heading: Container Type
+            }
+            layout {
+                sequence: 250
+            }
+            validation {
+                maxLength: 3000
+            }
+            source {
+                databaseColumn: CONT_TYPE_NAME
+                dataType: varchar2
+            }
+            columnFilter {
+                performanceImpactingOperators: [
+                    contains
+                    startsWith
+                    caseInsensitive
+                    regexp
+                ]
+            }
+            enableUsersTo {
+                sort: false
+            }
+        )
+
+        column CUSER (
+            type: hidden
+            heading {
+                heading: Cuser
+            }
+            layout {
+                sequence: 140
+            }
+            source {
+                databaseColumn: CUSER
+                dataType: varchar2
+            }
+            exportPrinting {
+                includeInExportPrint: false
+            }
+        )
+
+        column EDIT_RATE (
+            type: hidden
+            heading {
+                heading: Edit Rate
+            }
+            layout {
+                sequence: 270
+            }
+            source {
+                type: none
+            }
+        )
+
+        column FCL_CONTAINER_TYPE (
+            type: hidden
+            heading {
+                heading: Fcl Container Type
+            }
+            layout {
+                sequence: 80
+            }
+            source {
+                databaseColumn: FCL_CONTAINER_TYPE
+                dataType: number
+            }
+            exportPrinting {
+                includeInExportPrint: false
+            }
+        )
+
+        column FCL_LCL_FLAG (
+            type: textField
+            heading {
+                heading: Type
+            }
+            layout {
+                sequence: 70
+            }
+            validation {
+                maxLength: 30
+            }
+            source {
+                databaseColumn: FCL_LCL_FLAG
+                dataType: varchar2
+            }
+            columnFilter {
+                performanceImpactingOperators: [
+                    contains
+                    startsWith
+                    caseInsensitive
+                    regexp
+                ]
+            }
+        )
+
+        column FCL_RATE (
+            type: hidden
+            heading {
+                heading: Fcl Rate
+            }
+            layout {
+                sequence: 90
+            }
+            source {
+                databaseColumn: FCL_RATE
+                dataType: number
+            }
+            exportPrinting {
+                includeInExportPrint: false
+            }
+        )
+
+        column FROM_COUN_NAME (
+            type: textarea
+            heading {
+                heading: From Country
+            }
+            layout {
+                sequence: 190
+            }
+            validation {
+                maxLength: 3000
+            }
+            source {
+                databaseColumn: FROM_COUN_NAME
+                dataType: varchar2
+            }
+            columnFilter {
+                performanceImpactingOperators: [
+                    contains
+                    startsWith
+                    caseInsensitive
+                    regexp
+                ]
+            }
+            enableUsersTo {
+                sort: false
+            }
+        )
+
+        column FROM_PORT_CODE (
+            type: hidden
+            heading {
+                heading: From Port Code
+            }
+            layout {
+                sequence: 210
+            }
+            source {
+                databaseColumn: FROM_PORT_CODE
+                dataType: varchar2
+            }
+            exportPrinting {
+                includeInExportPrint: false
+            }
+        )
+
+        column FROM_PORT_NAME (
+            type: textarea
+            heading {
+                heading: From Port
+            }
+            layout {
+                sequence: 200
+            }
+            validation {
+                maxLength: 3000
+            }
+            source {
+                databaseColumn: FROM_PORT_NAME
+                dataType: varchar2
+            }
+            columnFilter {
+                performanceImpactingOperators: [
+                    contains
+                    startsWith
+                    caseInsensitive
+                    regexp
+                ]
+            }
+            enableUsersTo {
+                sort: false
+            }
+        )
+
+        column LCL_RATE (
+            type: hidden
+            heading {
+                heading: Lcl Rate
+            }
+            layout {
+                sequence: 100
+            }
+            source {
+                databaseColumn: LCL_RATE
+                dataType: number
+            }
+            exportPrinting {
+                includeInExportPrint: false
+            }
+        )
+
+        column RATE (
+            type: numberField
+            heading {
+                heading: Rate
+            }
+            layout {
+                sequence: 260
+            }
+            appearance {
+                formatMask: 999G999G999G999G990D00
+            }
+            source {
+                databaseColumn: RATE
+                dataType: number
+            }
+        )
+
+        column RATE_FROM_COUN (
+            type: hidden
+            heading {
+                heading: Rate From Coun
+            }
+            layout {
+                sequence: 30
+            }
+            source {
+                databaseColumn: RATE_FROM_COUN
+                dataType: number
+            }
+            exportPrinting {
+                includeInExportPrint: false
+            }
+        )
+
+        column RATE_FROM_PORT (
+            type: hidden
+            heading {
+                heading: Rate From Port
+            }
+            layout {
+                sequence: 40
+            }
+            source {
+                databaseColumn: RATE_FROM_PORT
+                dataType: number
+            }
+            exportPrinting {
+                includeInExportPrint: false
+            }
+        )
+
+        column RATE_PK_ID (
+            type: hidden
+            heading {
+                heading: Rate Pk Id
+            }
+            layout {
+                sequence: 180
+            }
+            source {
+                databaseColumn: RATE_PK_ID
+                dataType: number
+                primaryKey: true
+            }
+            exportPrinting {
+                includeInExportPrint: false
+            }
+        )
+
+        column RATE_REF_NO (
+            type: hidden
+            heading {
+                heading: Rate Ref No
+            }
+            layout {
+                sequence: 20
+            }
+            source {
+                databaseColumn: RATE_REF_NO
+                dataType: varchar2
+            }
+            exportPrinting {
+                includeInExportPrint: false
+            }
+        )
+
+        column RATE_TO_COUN (
+            type: hidden
+            heading {
+                heading: Rate To Coun
+            }
+            layout {
+                sequence: 50
+            }
+            source {
+                databaseColumn: RATE_TO_COUN
+                dataType: number
+            }
+            exportPrinting {
+                includeInExportPrint: false
+            }
+        )
+
+        column RATE_TO_PORT (
+            type: hidden
+            heading {
+                heading: Rate To Port
+            }
+            layout {
+                sequence: 60
+            }
+            source {
+                databaseColumn: RATE_TO_PORT
+                dataType: number
+            }
+            exportPrinting {
+                includeInExportPrint: false
+            }
+        )
+
+        column TO_COUN_NAME (
+            type: textarea
+            heading {
+                heading: To Country
+            }
+            layout {
+                sequence: 220
+            }
+            validation {
+                maxLength: 3000
+            }
+            source {
+                databaseColumn: TO_COUN_NAME
+                dataType: varchar2
+            }
+            columnFilter {
+                performanceImpactingOperators: [
+                    contains
+                    startsWith
+                    caseInsensitive
+                    regexp
+                ]
+            }
+            enableUsersTo {
+                sort: false
+            }
+        )
+
+        column TO_PORT_CODE (
+            type: hidden
+            heading {
+                heading: To Port Code
+            }
+            layout {
+                sequence: 240
+            }
+            source {
+                databaseColumn: TO_PORT_CODE
+                dataType: varchar2
+            }
+            exportPrinting {
+                includeInExportPrint: false
+            }
+        )
+
+        column TO_PORT_NAME (
+            type: textarea
+            heading {
+                heading: To Port
+            }
+            layout {
+                sequence: 230
+            }
+            validation {
+                maxLength: 3000
+            }
+            source {
+                databaseColumn: TO_PORT_NAME
+                dataType: varchar2
+            }
+            columnFilter {
+                performanceImpactingOperators: [
+                    contains
+                    startsWith
+                    caseInsensitive
+                    regexp
+                ]
+            }
+            enableUsersTo {
+                sort: false
+            }
+        )
+
+        column TRANSIT_TIME (
+            type: numberField
+            heading {
+                heading: Transit Time
+            }
+            layout {
+                sequence: 110
+            }
+            source {
+                databaseColumn: TRANSIT_TIME
+                dataType: number
+            }
+        )
+
+        column UDATE (
+            type: hidden
+            heading {
+                heading: Udate
+            }
+            layout {
+                sequence: 170
+            }
+            source {
+                databaseColumn: UDATE
+                dataType: timestamp
+            }
+            exportPrinting {
+                includeInExportPrint: false
+            }
+        )
+
+        column UUSER (
+            type: hidden
+            heading {
+                heading: Uuser
+            }
+            layout {
+                sequence: 160
+            }
+            source {
+                databaseColumn: UUSER
+                dataType: varchar2
+            }
+            exportPrinting {
+                includeInExportPrint: false
+            }
+        )
+
+        column VALID_FROM (
+            type: datePicker
+            heading {
+                heading: Valid From
+            }
+            layout {
+                sequence: 120
+            }
+            appearance {
+                formatMask: DD-MON-YYYY
+            }
+            source {
+                databaseColumn: VALID_FROM
+                dataType: date
+            }
+        )
+
+        column VALID_TO (
+            type: datePicker
+            heading {
+                heading: Valid To
+            }
+            layout {
+                sequence: 130
+            }
+            appearance {
+                formatMask: DD-MON-YYYY
+            }
+            source {
+                databaseColumn: VALID_TO
+                dataType: date
+            }
+        )
+
+        column VENDOR_ID (
+            type: hidden
+            heading {
+                heading: Vendor Id
+            }
+            layout {
+                sequence: 10
+            }
+            source {
+                databaseColumn: VENDOR_ID
+                dataType: number
+            }
+            exportPrinting {
+                includeInExportPrint: false
+            }
+        )
+
+        page {
+            borderWidth: 0.5
+            borderColor: #666666
+        }
+    )
+
+    region rates (
+        name: Rates
+        type: interactiveGrid
+        source {
+            location: localDatabase
+            type: sqlQuery
+            sqlQuery:
+                ```sql
+                select RATE_PK_ID,
+                       VENDOR_ID,
+                       RATE_REF_NO,
+                       RATE_FROM_COUN,
+                       FROM_COUN_NAME,
+                       RATE_FROM_PORT,
+                       FROM_PORT_NAME,
+                       FROM_PORT_CODE,
+                       RATE_TO_COUN,
+                       TO_COUN_NAME,
+                       RATE_TO_PORT,
+                       TO_PORT_NAME,
+                       TO_PORT_CODE,
+                       FCL_LCL_FLAG,
+                       FCL_CONTAINER_TYPE,
+                       CONT_TYPE_NAME,
+                       RATE,
+                       FCL_RATE,
+                       LCL_RATE,
+                       TRANSIT_TIME,
+                       VALID_FROM,
+                       VALID_TO,
+                       CUSER,
+                       CDATE,
+                       UUSER,
+                       UDATE
+                  from V_RATE_MST
+                 where (VENDOR_ID =:A_VENDOR_ID OR :APP_USER = 'ADMIN')
+                 AND TRUNC(SYSDATE) BETWEEN VALID_FROM AND VALID_TO
+                ```
+        }
+        layout {
+            sequence: 20
+            slot: contentBody
+        }
+        appearance {
+            template: @/interactive-report
+            templateOptions: [
+                #DEFAULT#
+                t-IRR-region--hideHeader js-addHiddenHeadingRoleDesc
+            ]
+        }
+        serverSideCondition {
+            type: item=value
+            item: P16_TAG
+            value: 1
+        }
+        componentAppearance {
+            fixedRowHeight: false
+        }
+        pagination {
+            type: page
+        }
+        toolbar {
+            controls: [
+                searchCol
+                searchField
+                actionsMenu
+                resetButton
+                saveButton
+            ]
+        }
+        download {
+            formats: [
+                csv
+                html
+                excel
+                pdf
+            ]
+        }
+        advanced {
+            savedReportMappingIdentifier: 28165999677708382
+        }
+
+        savedReport expired-rates (
+            visibility: alternative
+            name: Expired Rates
+            view {
+                default: grid
+                settingsAreaExpanded: false
+            }
+            singleRowView {
+                displayedColumns: true
+            }
+            security {
+                authorizationScheme: mustNotBePublicUser
+            }
+
+            displayColumn (
+                column: @RATE_PK_ID
+                layout {
+                    sequence: 24
+                }
+            )
+
+            displayColumn (
+                column: @FROM_COUN_NAME
+                layout {
+                    width: 125.28
+                    sequence: 11
+                }
+            )
+
+            displayColumn (
+                column: @FROM_PORT_NAME
+                layout {
+                    width: 89.28
+                    sequence: 13
+                }
+            )
+
+            displayColumn (
+                column: @FROM_PORT_CODE
+                layout {
+                    sequence: 25
+                }
+            )
+
+            displayColumn (
+                column: @TO_COUN_NAME
+                layout {
+                    width: 139.64
+                    sequence: 14
+                }
+            )
+
+            displayColumn (
+                column: @TO_PORT_NAME
+                layout {
+                    width: 102.28
+                    sequence: 15
+                }
+            )
+
+            displayColumn (
+                column: @TO_PORT_CODE
+                layout {
+                    sequence: 26
+                }
+            )
+
+            displayColumn (
+                column: @CONT_TYPE_NAME
+                layout {
+                    width: 107.28
+                    sequence: 9
+                }
+            )
+
+            displayColumn (
+                column: @RATE
+                layout {
+                    width: 88.28
+                    sequence: 16
+                }
+            )
+
+            displayColumn (
+                column: @VENDOR_ID
+                layout {
+                    show: false
+                    sequence: 1
+                }
+            )
+
+            displayColumn (
+                column: @RATE_REF_NO
+                layout {
+                    show: false
+                    sequence: 2
+                }
+            )
+
+            displayColumn (
+                column: @RATE_FROM_COUN
+                layout {
+                    sequence: 3
+                }
+            )
+
+            displayColumn (
+                column: @RATE_FROM_PORT
+                layout {
+                    sequence: 4
+                }
+            )
+
+            displayColumn (
+                column: @RATE_TO_COUN
+                layout {
+                    sequence: 5
+                }
+            )
+
+            displayColumn (
+                column: @RATE_TO_PORT
+                layout {
+                    sequence: 6
+                }
+            )
+
+            displayColumn (
+                column: @FCL_LCL_FLAG
+                layout {
+                    width: 65.2
+                    sequence: 7
+                }
+            )
+
+            displayColumn (
+                column: @FCL_CONTAINER_TYPE
+                layout {
+                    sequence: 8
+                }
+            )
+
+            displayColumn (
+                column: @FCL_RATE
+                layout {
+                    sequence: 10
+                }
+            )
+
+            displayColumn (
+                column: @LCL_RATE
+                layout {
+                    sequence: 12
+                }
+            )
+
+            displayColumn (
+                column: @TRANSIT_TIME
+                layout {
+                    width: 89.28
+                    sequence: 17
+                }
+            )
+
+            displayColumn (
+                column: @VALID_FROM
+                layout {
+                    width: 88.28
+                    sequence: 18
+                }
+            )
+
+            displayColumn (
+                column: @VALID_TO
+                layout {
+                    width: 95.19999999999999
+                    sequence: 19
+                }
+            )
+
+            displayColumn (
+                column: @CUSER
+                layout {
+                    sequence: 20
+                }
+            )
+
+            displayColumn (
+                column: @CDATE
+                layout {
+                    sequence: 21
+                }
+            )
+
+            displayColumn (
+                column: @UUSER
+                layout {
+                    sequence: 22
+                }
+            )
+
+            displayColumn (
+                column: @UDATE
+                layout {
+                    sequence: 23
+                }
+            )
+
+            displayColumn (
+                column: @EDIT_RATE
+                layout {
+                    width: 115.03800000000001
+                    sequence: 27
+                }
+            )
+
+            filter (
+                column: @VALID_TO
+                operator: lessThan
+                value: 20260810000000
+            )
+
+        )
+
+        savedReport primary (
+            visibility: primary
+            view {
+                default: grid
+            }
+            singleRowView {
+                displayedColumns: true
+            }
+
+            displayColumn (
+                column: @RATE_PK_ID
+                layout {
+                    sequence: 24
+                }
+            )
+
+            displayColumn (
+                column: @FROM_COUN_NAME
+                layout {
+                    width: 125.28
+                    sequence: 11
+                }
+            )
+
+            displayColumn (
+                column: @FROM_PORT_NAME
+                layout {
+                    width: 89.28
+                    sequence: 13
+                }
+            )
+
+            displayColumn (
+                column: @FROM_PORT_CODE
+                layout {
+                    sequence: 25
+                }
+            )
+
+            displayColumn (
+                column: @TO_COUN_NAME
+                layout {
+                    width: 139.64
+                    sequence: 14
+                }
+            )
+
+            displayColumn (
+                column: @TO_PORT_NAME
+                layout {
+                    width: 102.28
+                    sequence: 15
+                }
+            )
+
+            displayColumn (
+                column: @TO_PORT_CODE
+                layout {
+                    sequence: 26
+                }
+            )
+
+            displayColumn (
+                column: @CONT_TYPE_NAME
+                layout {
+                    width: 107.28
+                    sequence: 9
+                }
+            )
+
+            displayColumn (
+                column: @RATE
+                layout {
+                    width: 88.28
+                    sequence: 16
+                }
+            )
+
+            displayColumn (
+                column: @VENDOR_ID
+                layout {
+                    show: false
+                    sequence: 1
+                }
+            )
+
+            displayColumn (
+                column: @RATE_REF_NO
+                layout {
+                    show: false
+                    sequence: 2
+                }
+            )
+
+            displayColumn (
+                column: @RATE_FROM_COUN
+                layout {
+                    sequence: 3
+                }
+            )
+
+            displayColumn (
+                column: @RATE_FROM_PORT
+                layout {
+                    sequence: 4
+                }
+            )
+
+            displayColumn (
+                column: @RATE_TO_COUN
+                layout {
+                    sequence: 5
+                }
+            )
+
+            displayColumn (
+                column: @RATE_TO_PORT
+                layout {
+                    sequence: 6
+                }
+            )
+
+            displayColumn (
+                column: @FCL_LCL_FLAG
+                layout {
+                    width: 65.2
+                    sequence: 7
+                }
+            )
+
+            displayColumn (
+                column: @FCL_CONTAINER_TYPE
+                layout {
+                    sequence: 8
+                }
+            )
+
+            displayColumn (
+                column: @FCL_RATE
+                layout {
+                    sequence: 10
+                }
+            )
+
+            displayColumn (
+                column: @LCL_RATE
+                layout {
+                    sequence: 12
+                }
+            )
+
+            displayColumn (
+                column: @TRANSIT_TIME
+                layout {
+                    width: 89.28
+                    sequence: 17
+                }
+            )
+
+            displayColumn (
+                column: @VALID_FROM
+                layout {
+                    width: 88.28
+                    sequence: 18
+                }
+            )
+
+            displayColumn (
+                column: @VALID_TO
+                layout {
+                    width: 95.19999999999999
+                    sequence: 19
+                }
+            )
+
+            displayColumn (
+                column: @CUSER
+                layout {
+                    sequence: 20
+                }
+            )
+
+            displayColumn (
+                column: @CDATE
+                layout {
+                    sequence: 21
+                }
+            )
+
+            displayColumn (
+                column: @UUSER
+                layout {
+                    sequence: 22
+                }
+            )
+
+            displayColumn (
+                column: @UDATE
+                layout {
+                    sequence: 23
+                }
+            )
+
+            displayColumn (
+                column: @EDIT_RATE
+                layout {
+                    width: 115.03800000000001
+                    sequence: 27
+                }
+            )
+
+        )
+
+        column CDATE (
+            type: hidden
+            heading {
+                heading: Cdate
+            }
+            layout {
+                sequence: 170
+            }
+            source {
+                databaseColumn: CDATE
+                dataType: timestamp
+            }
+            exportPrinting {
+                includeInExportPrint: false
+            }
+        )
+
+        column CONT_TYPE_NAME (
+            type: textarea
+            heading {
+                heading: Container Type
+            }
+            layout {
+                sequence: 270
+            }
+            validation {
+                maxLength: 3000
+            }
+            source {
+                databaseColumn: CONT_TYPE_NAME
+                dataType: varchar2
+            }
+            columnFilter {
+                performanceImpactingOperators: [
+                    contains
+                    startsWith
+                    caseInsensitive
+                    regexp
+                ]
+            }
+            enableUsersTo {
+                sort: false
+            }
+        )
+
+        column CUSER (
+            type: hidden
+            heading {
+                heading: Cuser
+            }
+            layout {
+                sequence: 160
+            }
+            source {
+                databaseColumn: CUSER
+                dataType: varchar2
+            }
+            exportPrinting {
+                includeInExportPrint: false
+            }
+        )
+
+        column EDIT_RATE (
+            type: hidden
+            heading {
+                heading: Edit Rate
+            }
+            layout {
+                sequence: 290
+            }
+            source {
+                type: none
+            }
+        )
+
+        column FCL_CONTAINER_TYPE (
+            type: hidden
+            heading {
+                heading: Fcl Container Type
+            }
+            layout {
+                sequence: 100
+            }
+            source {
+                databaseColumn: FCL_CONTAINER_TYPE
+                dataType: number
+            }
+            exportPrinting {
+                includeInExportPrint: false
+            }
+        )
+
+        column FCL_LCL_FLAG (
+            type: textField
+            heading {
+                heading: Type
+            }
+            layout {
+                sequence: 90
+            }
+            validation {
+                maxLength: 30
+            }
+            source {
+                databaseColumn: FCL_LCL_FLAG
+                dataType: varchar2
+            }
+            columnFilter {
+                performanceImpactingOperators: [
+                    contains
+                    startsWith
+                    caseInsensitive
+                    regexp
+                ]
+            }
+        )
+
+        column FCL_RATE (
+            type: hidden
+            heading {
+                heading: Fcl Rate
+            }
+            layout {
+                sequence: 110
+            }
+            source {
+                databaseColumn: FCL_RATE
+                dataType: number
+            }
+            exportPrinting {
+                includeInExportPrint: false
+            }
+        )
+
+        column FROM_COUN_NAME (
+            type: textarea
+            heading {
+                heading: From Country
+            }
+            layout {
+                sequence: 210
+            }
+            validation {
+                maxLength: 3000
+            }
+            source {
+                databaseColumn: FROM_COUN_NAME
+                dataType: varchar2
+            }
+            columnFilter {
+                performanceImpactingOperators: [
+                    contains
+                    startsWith
+                    caseInsensitive
+                    regexp
+                ]
+            }
+            enableUsersTo {
+                sort: false
+            }
+        )
+
+        column FROM_PORT_CODE (
+            type: hidden
+            heading {
+                heading: From Port Code
+            }
+            layout {
+                sequence: 230
+            }
+            source {
+                databaseColumn: FROM_PORT_CODE
+                dataType: varchar2
+            }
+            exportPrinting {
+                includeInExportPrint: false
+            }
+        )
+
+        column FROM_PORT_NAME (
+            type: textarea
+            heading {
+                heading: From Port
+            }
+            layout {
+                sequence: 220
+            }
+            validation {
+                maxLength: 3000
+            }
+            source {
+                databaseColumn: FROM_PORT_NAME
+                dataType: varchar2
+            }
+            columnFilter {
+                performanceImpactingOperators: [
+                    contains
+                    startsWith
+                    caseInsensitive
+                    regexp
+                ]
+            }
+            enableUsersTo {
+                sort: false
+            }
+        )
+
+        column LCL_RATE (
+            type: hidden
+            heading {
+                heading: Lcl Rate
+            }
+            layout {
+                sequence: 120
+            }
+            source {
+                databaseColumn: LCL_RATE
+                dataType: number
+            }
+            exportPrinting {
+                includeInExportPrint: false
+            }
+        )
+
+        column RATE (
+            type: numberField
+            heading {
+                heading: Rate
+            }
+            layout {
+                sequence: 280
+            }
+            appearance {
+                formatMask: 999G999G999G999G990D00
+            }
+            source {
+                databaseColumn: RATE
+                dataType: number
+            }
+        )
+
+        column RATE_FROM_COUN (
+            type: hidden
+            heading {
+                heading: Rate From Coun
+            }
+            layout {
+                sequence: 50
+            }
+            source {
+                databaseColumn: RATE_FROM_COUN
+                dataType: number
+            }
+            exportPrinting {
+                includeInExportPrint: false
+            }
+        )
+
+        column RATE_FROM_PORT (
+            type: hidden
+            heading {
+                heading: Rate From Port
+            }
+            layout {
+                sequence: 60
+            }
+            source {
+                databaseColumn: RATE_FROM_PORT
+                dataType: number
+            }
+            exportPrinting {
+                includeInExportPrint: false
+            }
+        )
+
+        column RATE_PK_ID (
+            type: hidden
+            heading {
+                heading: Rate Pk Id
+            }
+            layout {
+                sequence: 200
+            }
+            source {
+                databaseColumn: RATE_PK_ID
+                dataType: number
+                primaryKey: true
+            }
+            exportPrinting {
+                includeInExportPrint: false
+            }
+        )
+
+        column RATE_REF_NO (
+            type: hidden
+            heading {
+                heading: Rate Ref No
+            }
+            layout {
+                sequence: 40
+            }
+            source {
+                databaseColumn: RATE_REF_NO
+                dataType: varchar2
+            }
+            exportPrinting {
+                includeInExportPrint: false
+            }
+        )
+
+        column RATE_TO_COUN (
+            type: hidden
+            heading {
+                heading: Rate To Coun
+            }
+            layout {
+                sequence: 70
+            }
+            source {
+                databaseColumn: RATE_TO_COUN
+                dataType: number
+            }
+            exportPrinting {
+                includeInExportPrint: false
+            }
+        )
+
+        column RATE_TO_PORT (
+            type: hidden
+            heading {
+                heading: Rate To Port
+            }
+            layout {
+                sequence: 80
+            }
+            source {
+                databaseColumn: RATE_TO_PORT
+                dataType: number
+            }
+            exportPrinting {
+                includeInExportPrint: false
+            }
+        )
+
+        column TO_COUN_NAME (
+            type: textarea
+            heading {
+                heading: To Country
+            }
+            layout {
+                sequence: 240
+            }
+            validation {
+                maxLength: 3000
+            }
+            source {
+                databaseColumn: TO_COUN_NAME
+                dataType: varchar2
+            }
+            columnFilter {
+                performanceImpactingOperators: [
+                    contains
+                    startsWith
+                    caseInsensitive
+                    regexp
+                ]
+            }
+            enableUsersTo {
+                sort: false
+            }
+        )
+
+        column TO_PORT_CODE (
+            type: hidden
+            heading {
+                heading: To Port Code
+            }
+            layout {
+                sequence: 260
+            }
+            source {
+                databaseColumn: TO_PORT_CODE
+                dataType: varchar2
+            }
+            exportPrinting {
+                includeInExportPrint: false
+            }
+        )
+
+        column TO_PORT_NAME (
+            type: textarea
+            heading {
+                heading: To Port
+            }
+            layout {
+                sequence: 250
+            }
+            validation {
+                maxLength: 3000
+            }
+            source {
+                databaseColumn: TO_PORT_NAME
+                dataType: varchar2
+            }
+            columnFilter {
+                performanceImpactingOperators: [
+                    contains
+                    startsWith
+                    caseInsensitive
+                    regexp
+                ]
+            }
+            enableUsersTo {
+                sort: false
+            }
+        )
+
+        column TRANSIT_TIME (
+            type: numberField
+            heading {
+                heading: Transit Time
+            }
+            layout {
+                sequence: 130
+            }
+            source {
+                databaseColumn: TRANSIT_TIME
+                dataType: number
+            }
+        )
+
+        column UDATE (
+            type: hidden
+            heading {
+                heading: Udate
+            }
+            layout {
+                sequence: 190
+            }
+            source {
+                databaseColumn: UDATE
+                dataType: timestamp
+            }
+            exportPrinting {
+                includeInExportPrint: false
+            }
+        )
+
+        column UUSER (
+            type: hidden
+            heading {
+                heading: Uuser
+            }
+            layout {
+                sequence: 180
+            }
+            source {
+                databaseColumn: UUSER
+                dataType: varchar2
+            }
+            exportPrinting {
+                includeInExportPrint: false
+            }
+        )
+
+        column VALID_FROM (
+            type: datePicker
+            heading {
+                heading: Valid From
+            }
+            layout {
+                sequence: 140
+            }
+            appearance {
+                formatMask: DD-MON-YYYY
+            }
+            source {
+                databaseColumn: VALID_FROM
+                dataType: date
+            }
+        )
+
+        column VALID_TO (
+            type: datePicker
+            heading {
+                heading: Valid To
+            }
+            layout {
+                sequence: 150
+            }
+            appearance {
+                formatMask: DD-MON-YYYY
+            }
+            source {
+                databaseColumn: VALID_TO
+                dataType: date
+            }
+        )
+
+        column VENDOR_ID (
+            type: hidden
+            heading {
+                heading: Vendor Id
+            }
+            layout {
+                sequence: 30
+            }
+            source {
+                databaseColumn: VENDOR_ID
+                dataType: number
+            }
+            exportPrinting {
+                includeInExportPrint: false
+            }
+        )
+
+        page {
+            borderWidth: 0.5
+            borderColor: #666666
+        }
+    )
+
+    region rates-2 (
+        name: Expiring Rates
+        type: interactiveGrid
+        source {
+            location: localDatabase
+            type: sqlQuery
+            sqlQuery:
+                ```sql
+                select RATE_PK_ID,
+                       VENDOR_ID,
+                       RATE_REF_NO,
+                       RATE_FROM_COUN,
+                       FROM_COUN_NAME,
+                       RATE_FROM_PORT,
+                       FROM_PORT_NAME,
+                       FROM_PORT_CODE,
+                       RATE_TO_COUN,
+                       TO_COUN_NAME,
+                       RATE_TO_PORT,
+                       TO_PORT_NAME,
+                       TO_PORT_CODE,
+                       FCL_LCL_FLAG,
+                       FCL_CONTAINER_TYPE,
+                       CONT_TYPE_NAME,
+                       RATE,
+                       FCL_RATE,
+                       LCL_RATE,
+                       TRANSIT_TIME,
+                       VALID_FROM,
+                       VALID_TO,
+                       CUSER,
+                       CDATE,
+                       UUSER,
+                       UDATE
+                  from V_RATE_MST
+                 where (VENDOR_ID =:A_VENDOR_ID OR :APP_USER = 'ADMIN')
+                 and TRUNC(valid_to) BETWEEN TRUNC(SYSDATE) AND TRUNC(SYSDATE) + 2
+                ```
+        }
+        layout {
+            sequence: 40
+            slot: contentBody
+        }
+        appearance {
+            template: @/interactive-report
+            templateOptions: [
+                #DEFAULT#
+                t-IRR-region--hideHeader js-addHiddenHeadingRoleDesc
+            ]
+        }
+        serverSideCondition {
+            type: item=value
+            item: P16_TAG
+            value: 2
+        }
+        componentAppearance {
+            fixedRowHeight: false
+        }
+        pagination {
+            type: page
+        }
+        toolbar {
+            controls: [
+                searchCol
+                searchField
+                actionsMenu
+                resetButton
+                saveButton
+            ]
+        }
+        download {
+            formats: [
+                csv
+                html
+                excel
+                pdf
+            ]
+        }
+        advanced {
+            savedReportMappingIdentifier: 44965808897560282
+        }
+
+        savedReport expired-rates (
+            visibility: alternative
+            name: Expired Rates
+            view {
+                default: grid
+                settingsAreaExpanded: false
+            }
+            singleRowView {
+                displayedColumns: true
+            }
+            security {
+                authorizationScheme: mustNotBePublicUser
+            }
+
+            displayColumn (
+                column: @RATE_PK_ID
+                layout {
+                    sequence: 24
+                }
+            )
+
+            displayColumn (
+                column: @FROM_COUN_NAME
+                layout {
+                    width: 125.28
+                    sequence: 11
+                }
+            )
+
+            displayColumn (
+                column: @FROM_PORT_NAME
+                layout {
+                    width: 89.28
+                    sequence: 13
+                }
+            )
+
+            displayColumn (
+                column: @FROM_PORT_CODE
+                layout {
+                    sequence: 25
+                }
+            )
+
+            displayColumn (
+                column: @TO_COUN_NAME
+                layout {
+                    width: 139.64
+                    sequence: 14
+                }
+            )
+
+            displayColumn (
+                column: @TO_PORT_NAME
+                layout {
+                    width: 102.28
+                    sequence: 15
+                }
+            )
+
+            displayColumn (
+                column: @TO_PORT_CODE
+                layout {
+                    sequence: 26
+                }
+            )
+
+            displayColumn (
+                column: @CONT_TYPE_NAME
+                layout {
+                    width: 107.28
+                    sequence: 9
+                }
+            )
+
+            displayColumn (
+                column: @RATE
+                layout {
+                    width: 88.28
+                    sequence: 16
+                }
+            )
+
+            displayColumn (
+                column: @VENDOR_ID
+                layout {
+                    show: false
+                    sequence: 1
+                }
+            )
+
+            displayColumn (
+                column: @RATE_REF_NO
+                layout {
+                    show: false
+                    sequence: 2
+                }
+            )
+
+            displayColumn (
+                column: @RATE_FROM_COUN
+                layout {
+                    sequence: 3
+                }
+            )
+
+            displayColumn (
+                column: @RATE_FROM_PORT
+                layout {
+                    sequence: 4
+                }
+            )
+
+            displayColumn (
+                column: @RATE_TO_COUN
+                layout {
+                    sequence: 5
+                }
+            )
+
+            displayColumn (
+                column: @RATE_TO_PORT
+                layout {
+                    sequence: 6
+                }
+            )
+
+            displayColumn (
+                column: @FCL_LCL_FLAG
+                layout {
+                    width: 65.2
+                    sequence: 7
+                }
+            )
+
+            displayColumn (
+                column: @FCL_CONTAINER_TYPE
+                layout {
+                    sequence: 8
+                }
+            )
+
+            displayColumn (
+                column: @FCL_RATE
+                layout {
+                    sequence: 10
+                }
+            )
+
+            displayColumn (
+                column: @LCL_RATE
+                layout {
+                    sequence: 12
+                }
+            )
+
+            displayColumn (
+                column: @TRANSIT_TIME
+                layout {
+                    width: 89.28
+                    sequence: 17
+                }
+            )
+
+            displayColumn (
+                column: @VALID_FROM
+                layout {
+                    width: 88.28
+                    sequence: 18
+                }
+            )
+
+            displayColumn (
+                column: @VALID_TO
+                layout {
+                    width: 95.19999999999999
+                    sequence: 19
+                }
+            )
+
+            displayColumn (
+                column: @CUSER
+                layout {
+                    sequence: 20
+                }
+            )
+
+            displayColumn (
+                column: @CDATE
+                layout {
+                    sequence: 21
+                }
+            )
+
+            displayColumn (
+                column: @UUSER
+                layout {
+                    sequence: 22
+                }
+            )
+
+            displayColumn (
+                column: @UDATE
+                layout {
+                    sequence: 23
+                }
+            )
+
+            displayColumn (
+                column: @EDIT_RATE
+                layout {
+                    width: 115.03800000000001
+                    sequence: 27
+                }
+            )
+
+            filter (
+                column: @VALID_TO
+                operator: lessThan
+                value: 20260810000000
+            )
+
+        )
+
+        savedReport primary (
+            visibility: primary
+            view {
+                default: grid
+            }
+            singleRowView {
+                displayedColumns: true
+            }
+
+            displayColumn (
+                column: @RATE_PK_ID
+                layout {
+                    sequence: 24
+                }
+            )
+
+            displayColumn (
+                column: @FROM_COUN_NAME
+                layout {
+                    width: 125.28
+                    sequence: 11
+                }
+            )
+
+            displayColumn (
+                column: @FROM_PORT_NAME
+                layout {
+                    width: 89.28
+                    sequence: 13
+                }
+            )
+
+            displayColumn (
+                column: @FROM_PORT_CODE
+                layout {
+                    sequence: 25
+                }
+            )
+
+            displayColumn (
+                column: @TO_COUN_NAME
+                layout {
+                    width: 139.64
+                    sequence: 14
+                }
+            )
+
+            displayColumn (
+                column: @TO_PORT_NAME
+                layout {
+                    width: 102.28
+                    sequence: 15
+                }
+            )
+
+            displayColumn (
+                column: @TO_PORT_CODE
+                layout {
+                    sequence: 26
+                }
+            )
+
+            displayColumn (
+                column: @CONT_TYPE_NAME
+                layout {
+                    width: 107.28
+                    sequence: 9
+                }
+            )
+
+            displayColumn (
+                column: @RATE
+                layout {
+                    width: 88.28
+                    sequence: 16
+                }
+            )
+
+            displayColumn (
+                column: @VENDOR_ID
+                layout {
+                    show: false
+                    sequence: 1
+                }
+            )
+
+            displayColumn (
+                column: @RATE_REF_NO
+                layout {
+                    show: false
+                    sequence: 2
+                }
+            )
+
+            displayColumn (
+                column: @RATE_FROM_COUN
+                layout {
+                    sequence: 3
+                }
+            )
+
+            displayColumn (
+                column: @RATE_FROM_PORT
+                layout {
+                    sequence: 4
+                }
+            )
+
+            displayColumn (
+                column: @RATE_TO_COUN
+                layout {
+                    sequence: 5
+                }
+            )
+
+            displayColumn (
+                column: @RATE_TO_PORT
+                layout {
+                    sequence: 6
+                }
+            )
+
+            displayColumn (
+                column: @FCL_LCL_FLAG
+                layout {
+                    width: 65.2
+                    sequence: 7
+                }
+            )
+
+            displayColumn (
+                column: @FCL_CONTAINER_TYPE
+                layout {
+                    sequence: 8
+                }
+            )
+
+            displayColumn (
+                column: @FCL_RATE
+                layout {
+                    sequence: 10
+                }
+            )
+
+            displayColumn (
+                column: @LCL_RATE
+                layout {
+                    sequence: 12
+                }
+            )
+
+            displayColumn (
+                column: @TRANSIT_TIME
+                layout {
+                    width: 89.28
+                    sequence: 17
+                }
+            )
+
+            displayColumn (
+                column: @VALID_FROM
+                layout {
+                    width: 88.28
+                    sequence: 18
+                }
+            )
+
+            displayColumn (
+                column: @VALID_TO
+                layout {
+                    width: 95.19999999999999
+                    sequence: 19
+                }
+            )
+
+            displayColumn (
+                column: @CUSER
+                layout {
+                    sequence: 20
+                }
+            )
+
+            displayColumn (
+                column: @CDATE
+                layout {
+                    sequence: 21
+                }
+            )
+
+            displayColumn (
+                column: @UUSER
+                layout {
+                    sequence: 22
+                }
+            )
+
+            displayColumn (
+                column: @UDATE
+                layout {
+                    sequence: 23
+                }
+            )
+
+            displayColumn (
+                column: @EDIT_RATE
+                layout {
+                    width: 115.03800000000001
+                    sequence: 27
+                }
+            )
+
+        )
+
+        column CDATE (
+            type: hidden
+            heading {
+                heading: Cdate
+            }
+            layout {
+                sequence: 170
+            }
+            source {
+                databaseColumn: CDATE
+                dataType: timestamp
+            }
+            exportPrinting {
+                includeInExportPrint: false
+            }
+        )
+
+        column CONT_TYPE_NAME (
+            type: textarea
+            heading {
+                heading: Container Type
+            }
+            layout {
+                sequence: 270
+            }
+            validation {
+                maxLength: 3000
+            }
+            source {
+                databaseColumn: CONT_TYPE_NAME
+                dataType: varchar2
+            }
+            columnFilter {
+                performanceImpactingOperators: [
+                    contains
+                    startsWith
+                    caseInsensitive
+                    regexp
+                ]
+            }
+            enableUsersTo {
+                sort: false
+            }
+        )
+
+        column CUSER (
+            type: hidden
+            heading {
+                heading: Cuser
+            }
+            layout {
+                sequence: 160
+            }
+            source {
+                databaseColumn: CUSER
+                dataType: varchar2
+            }
+            exportPrinting {
+                includeInExportPrint: false
+            }
+        )
+
+        column EDIT_RATE (
+            type: hidden
+            heading {
+                heading: Edit Rate
+            }
+            layout {
+                sequence: 290
+            }
+            source {
+                type: none
+            }
+        )
+
+        column FCL_CONTAINER_TYPE (
+            type: hidden
+            heading {
+                heading: Fcl Container Type
+            }
+            layout {
+                sequence: 100
+            }
+            source {
+                databaseColumn: FCL_CONTAINER_TYPE
+                dataType: number
+            }
+            exportPrinting {
+                includeInExportPrint: false
+            }
+        )
+
+        column FCL_LCL_FLAG (
+            type: textField
+            heading {
+                heading: Type
+            }
+            layout {
+                sequence: 90
+            }
+            validation {
+                maxLength: 30
+            }
+            source {
+                databaseColumn: FCL_LCL_FLAG
+                dataType: varchar2
+            }
+            columnFilter {
+                performanceImpactingOperators: [
+                    contains
+                    startsWith
+                    caseInsensitive
+                    regexp
+                ]
+            }
+        )
+
+        column FCL_RATE (
+            type: hidden
+            heading {
+                heading: Fcl Rate
+            }
+            layout {
+                sequence: 110
+            }
+            source {
+                databaseColumn: FCL_RATE
+                dataType: number
+            }
+            exportPrinting {
+                includeInExportPrint: false
+            }
+        )
+
+        column FROM_COUN_NAME (
+            type: textarea
+            heading {
+                heading: From Country
+            }
+            layout {
+                sequence: 210
+            }
+            validation {
+                maxLength: 3000
+            }
+            source {
+                databaseColumn: FROM_COUN_NAME
+                dataType: varchar2
+            }
+            columnFilter {
+                performanceImpactingOperators: [
+                    contains
+                    startsWith
+                    caseInsensitive
+                    regexp
+                ]
+            }
+            enableUsersTo {
+                sort: false
+            }
+        )
+
+        column FROM_PORT_CODE (
+            type: hidden
+            heading {
+                heading: From Port Code
+            }
+            layout {
+                sequence: 230
+            }
+            source {
+                databaseColumn: FROM_PORT_CODE
+                dataType: varchar2
+            }
+            exportPrinting {
+                includeInExportPrint: false
+            }
+        )
+
+        column FROM_PORT_NAME (
+            type: textarea
+            heading {
+                heading: From Port
+            }
+            layout {
+                sequence: 220
+            }
+            validation {
+                maxLength: 3000
+            }
+            source {
+                databaseColumn: FROM_PORT_NAME
+                dataType: varchar2
+            }
+            columnFilter {
+                performanceImpactingOperators: [
+                    contains
+                    startsWith
+                    caseInsensitive
+                    regexp
+                ]
+            }
+            enableUsersTo {
+                sort: false
+            }
+        )
+
+        column LCL_RATE (
+            type: hidden
+            heading {
+                heading: Lcl Rate
+            }
+            layout {
+                sequence: 120
+            }
+            source {
+                databaseColumn: LCL_RATE
+                dataType: number
+            }
+            exportPrinting {
+                includeInExportPrint: false
+            }
+        )
+
+        column RATE (
+            type: numberField
+            heading {
+                heading: Rate
+            }
+            layout {
+                sequence: 280
+            }
+            appearance {
+                formatMask: 999G999G999G999G990D00
+            }
+            source {
+                databaseColumn: RATE
+                dataType: number
+            }
+        )
+
+        column RATE_FROM_COUN (
+            type: hidden
+            heading {
+                heading: Rate From Coun
+            }
+            layout {
+                sequence: 50
+            }
+            source {
+                databaseColumn: RATE_FROM_COUN
+                dataType: number
+            }
+            exportPrinting {
+                includeInExportPrint: false
+            }
+        )
+
+        column RATE_FROM_PORT (
+            type: hidden
+            heading {
+                heading: Rate From Port
+            }
+            layout {
+                sequence: 60
+            }
+            source {
+                databaseColumn: RATE_FROM_PORT
+                dataType: number
+            }
+            exportPrinting {
+                includeInExportPrint: false
+            }
+        )
+
+        column RATE_PK_ID (
+            type: hidden
+            heading {
+                heading: Rate Pk Id
+            }
+            layout {
+                sequence: 200
+            }
+            source {
+                databaseColumn: RATE_PK_ID
+                dataType: number
+                primaryKey: true
+            }
+            exportPrinting {
+                includeInExportPrint: false
+            }
+        )
+
+        column RATE_REF_NO (
+            type: hidden
+            heading {
+                heading: Rate Ref No
+            }
+            layout {
+                sequence: 40
+            }
+            source {
+                databaseColumn: RATE_REF_NO
+                dataType: varchar2
+            }
+            exportPrinting {
+                includeInExportPrint: false
+            }
+        )
+
+        column RATE_TO_COUN (
+            type: hidden
+            heading {
+                heading: Rate To Coun
+            }
+            layout {
+                sequence: 70
+            }
+            source {
+                databaseColumn: RATE_TO_COUN
+                dataType: number
+            }
+            exportPrinting {
+                includeInExportPrint: false
+            }
+        )
+
+        column RATE_TO_PORT (
+            type: hidden
+            heading {
+                heading: Rate To Port
+            }
+            layout {
+                sequence: 80
+            }
+            source {
+                databaseColumn: RATE_TO_PORT
+                dataType: number
+            }
+            exportPrinting {
+                includeInExportPrint: false
+            }
+        )
+
+        column TO_COUN_NAME (
+            type: textarea
+            heading {
+                heading: To Country
+            }
+            layout {
+                sequence: 240
+            }
+            validation {
+                maxLength: 3000
+            }
+            source {
+                databaseColumn: TO_COUN_NAME
+                dataType: varchar2
+            }
+            columnFilter {
+                performanceImpactingOperators: [
+                    contains
+                    startsWith
+                    caseInsensitive
+                    regexp
+                ]
+            }
+            enableUsersTo {
+                sort: false
+            }
+        )
+
+        column TO_PORT_CODE (
+            type: hidden
+            heading {
+                heading: To Port Code
+            }
+            layout {
+                sequence: 260
+            }
+            source {
+                databaseColumn: TO_PORT_CODE
+                dataType: varchar2
+            }
+            exportPrinting {
+                includeInExportPrint: false
+            }
+        )
+
+        column TO_PORT_NAME (
+            type: textarea
+            heading {
+                heading: To Port
+            }
+            layout {
+                sequence: 250
+            }
+            validation {
+                maxLength: 3000
+            }
+            source {
+                databaseColumn: TO_PORT_NAME
+                dataType: varchar2
+            }
+            columnFilter {
+                performanceImpactingOperators: [
+                    contains
+                    startsWith
+                    caseInsensitive
+                    regexp
+                ]
+            }
+            enableUsersTo {
+                sort: false
+            }
+        )
+
+        column TRANSIT_TIME (
+            type: numberField
+            heading {
+                heading: Transit Time
+            }
+            layout {
+                sequence: 130
+            }
+            source {
+                databaseColumn: TRANSIT_TIME
+                dataType: number
+            }
+        )
+
+        column UDATE (
+            type: hidden
+            heading {
+                heading: Udate
+            }
+            layout {
+                sequence: 190
+            }
+            source {
+                databaseColumn: UDATE
+                dataType: timestamp
+            }
+            exportPrinting {
+                includeInExportPrint: false
+            }
+        )
+
+        column UUSER (
+            type: hidden
+            heading {
+                heading: Uuser
+            }
+            layout {
+                sequence: 180
+            }
+            source {
+                databaseColumn: UUSER
+                dataType: varchar2
+            }
+            exportPrinting {
+                includeInExportPrint: false
+            }
+        )
+
+        column VALID_FROM (
+            type: datePicker
+            heading {
+                heading: Valid From
+            }
+            layout {
+                sequence: 140
+            }
+            appearance {
+                formatMask: DD-MON-YYYY
+            }
+            source {
+                databaseColumn: VALID_FROM
+                dataType: date
+            }
+        )
+
+        column VALID_TO (
+            type: datePicker
+            heading {
+                heading: Valid To
+            }
+            layout {
+                sequence: 150
+            }
+            appearance {
+                formatMask: DD-MON-YYYY
+            }
+            source {
+                databaseColumn: VALID_TO
+                dataType: date
+            }
+        )
+
+        column VENDOR_ID (
+            type: hidden
+            heading {
+                heading: Vendor Id
+            }
+            layout {
+                sequence: 30
+            }
+            source {
+                databaseColumn: VENDOR_ID
+                dataType: number
+            }
+            exportPrinting {
+                includeInExportPrint: false
+            }
+        )
+
+        page {
+            borderWidth: 0.5
+            borderColor: #666666
+        }
+    )
+
+    pageItem P16_TAG (
+        type: hidden
+        settings {
+            valueProtected: false
+        }
+        layout {
+            sequence: 10
+            slot: contentBody
+        }
+    )
+
+)
+

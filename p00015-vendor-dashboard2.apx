@@ -1,6 +1,6 @@
-page 3 (
+page 15 (
     name: Vendor Dashboard
-    alias: VENDOR-DASHBOARD
+    alias: VENDOR-DASHBOARD2
     title: Vendor Dashboard
     appearance {
         pageTemplate: @/standard
@@ -186,16 +186,14 @@ page 3 (
                      else '' end as TREND_ICON,
                 case when ACTIVE_NOW > ACTIVE_30_DAYS_AGO then 'success'
                      when ACTIVE_NOW < ACTIVE_30_DAYS_AGO then 'danger'
-                     else 'info' end as trend_state,
-                     1 as tag
+                     else 'info' end as trend_state
                         
                 FROM V_ACTIVE_RATES
                 where vendor_id = :A_VENDOR_ID
                 
                 union all
                 
-                select 'Rates Expiring in 2 Days' as label, expiring_within_2_days, null, null, 'fa-warning' as icon, null, null,
-                2 as tag
+                select 'Rates Expiring in 2 Days' as label, expiring_within_2_days, null, null, 'fa-warning' as icon, null, null
                 from V_RATE_EXPIRING_SOON where vendor_id = :A_VENDOR_ID
                 
                 union all
@@ -207,8 +205,7 @@ page 3 (
                      else '' end as TREND_ICON,
                 case when enquiries_last_30_days > enquiries_prior_30_days then 'success'
                      when enquiries_last_30_days < enquiries_prior_30_days then 'danger'
-                     else 'info' end as TREND_state,
-                     3 as tag
+                     else 'info' end as TREND_state
                 
                 from V_VENDOR_ENQUIRY_TREND where vendor_id = :A_VENDOR_ID
                 
@@ -220,8 +217,7 @@ page 3 (
                      else '' end as TREND_ICON,
                 case when views_last_30_days > views_prior_30_days then 'success'
                      when views_last_30_days < views_prior_30_days then 'danger'
-                     else 'info' end as TREND_state,
-                     4 as tag
+                     else 'info' end as TREND_state
                 
                 from V_RATE_VIEWS_COUNT where vendor_id = :A_VENDOR_ID
                 ```
@@ -306,16 +302,6 @@ page 3 (
             }
         )
 
-        column TAG (
-            layout {
-                sequence: 90
-            }
-            source {
-                databaseColumn: TAG
-                dataType: number
-            }
-        )
-
         column TREND_ICON (
             layout {
                 sequence: 60
@@ -343,21 +329,6 @@ page 3 (
             source {
                 databaseColumn: TREND_STATE
                 dataType: varchar2
-            }
-        )
-
-        action action (
-            position: link
-            layout {
-                sequence: 10
-            }
-            behavior {
-                target: {
-                    page: 16
-                    items: {
-                        P16_TAG: &TAG.
-                    }
-                }
             }
         )
 
@@ -398,17 +369,17 @@ page 3 (
                        badge_state
                   from table ( apex_human_task.get_tasks (
                                    p_context            => 'MY_TASKS',
-                                   p_show_expired_tasks => :P3_SHOW_EXPIRED
+                                   p_show_expired_tasks => :P15_SHOW_EXPIRED
                                    --, p_application_id => :APP_ID
                                    ) ) t
                 ```
-            pageItemsToSubmit: P3_SHOW_EXPIRED
+            pageItemsToSubmit: P15_SHOW_EXPIRED
             optimizerHint: APEX$USE_NO_GROUPING_SETS
         }
         orderBy {
             type: item
             item: {
-                itemName: P3_SORT_BY
+                itemName: P15_SORT_BY
                 orderBys: {
                     CREATED_ON: created_on desc
                     DUE_ON: priority asc, due_on asc nulls last
@@ -896,232 +867,8 @@ page 3 (
             ]
         }
         advanced {
-            savedReportMappingIdentifier: 11378820869871148
+            savedReportMappingIdentifier: 28029740982576746
         }
-
-        savedReport expired-rates (
-            visibility: alternative
-            name: Expired Rates
-            view {
-                default: grid
-                settingsAreaExpanded: false
-            }
-            singleRowView {
-                displayedColumns: true
-            }
-            security {
-                authorizationScheme: mustNotBePublicUser
-            }
-
-            displayColumn (
-                column: @RATE_PK_ID
-                layout {
-                    sequence: 24
-                }
-            )
-
-            displayColumn (
-                column: @FROM_COUN_NAME
-                layout {
-                    width: 125.28
-                    sequence: 11
-                }
-            )
-
-            displayColumn (
-                column: @FROM_PORT_NAME
-                layout {
-                    width: 89.28
-                    sequence: 13
-                }
-            )
-
-            displayColumn (
-                column: @FROM_PORT_CODE
-                layout {
-                    sequence: 25
-                }
-            )
-
-            displayColumn (
-                column: @TO_COUN_NAME
-                layout {
-                    width: 139.64
-                    sequence: 14
-                }
-            )
-
-            displayColumn (
-                column: @TO_PORT_NAME
-                layout {
-                    width: 102.28
-                    sequence: 15
-                }
-            )
-
-            displayColumn (
-                column: @TO_PORT_CODE
-                layout {
-                    sequence: 26
-                }
-            )
-
-            displayColumn (
-                column: @CONT_TYPE_NAME
-                layout {
-                    width: 107.28
-                    sequence: 9
-                }
-            )
-
-            displayColumn (
-                column: @RATE
-                layout {
-                    width: 88.28
-                    sequence: 16
-                }
-            )
-
-            displayColumn (
-                column: @VENDOR_ID
-                layout {
-                    show: false
-                    sequence: 1
-                }
-            )
-
-            displayColumn (
-                column: @RATE_REF_NO
-                layout {
-                    show: false
-                    sequence: 2
-                }
-            )
-
-            displayColumn (
-                column: @RATE_FROM_COUN
-                layout {
-                    sequence: 3
-                }
-            )
-
-            displayColumn (
-                column: @RATE_FROM_PORT
-                layout {
-                    sequence: 4
-                }
-            )
-
-            displayColumn (
-                column: @RATE_TO_COUN
-                layout {
-                    sequence: 5
-                }
-            )
-
-            displayColumn (
-                column: @RATE_TO_PORT
-                layout {
-                    sequence: 6
-                }
-            )
-
-            displayColumn (
-                column: @FCL_LCL_FLAG
-                layout {
-                    width: 65.2
-                    sequence: 7
-                }
-            )
-
-            displayColumn (
-                column: @FCL_CONTAINER_TYPE
-                layout {
-                    sequence: 8
-                }
-            )
-
-            displayColumn (
-                column: @FCL_RATE
-                layout {
-                    sequence: 10
-                }
-            )
-
-            displayColumn (
-                column: @LCL_RATE
-                layout {
-                    sequence: 12
-                }
-            )
-
-            displayColumn (
-                column: @TRANSIT_TIME
-                layout {
-                    width: 89.28
-                    sequence: 17
-                }
-            )
-
-            displayColumn (
-                column: @VALID_FROM
-                layout {
-                    width: 88.28
-                    sequence: 18
-                }
-            )
-
-            displayColumn (
-                column: @VALID_TO
-                layout {
-                    width: 95.19999999999999
-                    sequence: 19
-                }
-            )
-
-            displayColumn (
-                column: @CUSER
-                layout {
-                    sequence: 20
-                }
-            )
-
-            displayColumn (
-                column: @CDATE
-                layout {
-                    sequence: 21
-                }
-            )
-
-            displayColumn (
-                column: @UUSER
-                layout {
-                    sequence: 22
-                }
-            )
-
-            displayColumn (
-                column: @UDATE
-                layout {
-                    sequence: 23
-                }
-            )
-
-            displayColumn (
-                column: @EDIT_RATE
-                layout {
-                    width: 115.03800000000001
-                    sequence: 27
-                }
-            )
-
-            filter (
-                column: @VALID_TO
-                operator: lessThan
-                value: 20260810000000
-            )
-
-        )
 
         savedReport primary (
             visibility: primary
@@ -1869,34 +1616,6 @@ page 3 (
         }
     )
 
-    region new_1 (
-        name: New
-        type: form
-        source {
-            location: localDatabase
-            tableName: VENDOR_MST
-        }
-        layout {
-            sequence: 10
-            parentRegion: @profile
-            slot: subRegions
-        }
-        appearance {
-            template: @/standard
-            templateOptions: [
-                #DEFAULT#
-                t-Region--noPadding
-                t-Region--removeHeader js-removeLandmark
-                t-Region--noUI
-                t-Region--scrollBody
-            ]
-        }
-        edit {
-            enabled: true
-            allowedOperations: update
-        }
-    )
-
     region overview (
         name: Overview
         type: staticContent
@@ -1969,10 +1688,7 @@ page 3 (
             orientation: horizontal
         }
         chartLayout {
-            height: 209
-        }
-        tooltip {
-            showSeriesName: false
+            height: 200
         }
         legend {
             show: false
@@ -2031,7 +1747,6 @@ page 3 (
             template: @/standard
             templateOptions: [
                 #DEFAULT#
-                js-showMaximizeButton
                 t-Region--scrollBody
             ]
         }
@@ -2083,12 +1798,10 @@ page 3 (
             sqlQuery:
                 ```sql
                 select R.PK_ID,
-                apex_util.get_since(R.SEARCH_TIME) AS SEARCH_TIME_ago,
+                       apex_util.get_since(R.SEARCH_TIME) AS SEARCH_TIME_AGO,
                        R.SEARCH_TIME,
                        R.ORIGIN_PORT_ID,
                        R.DESTINATION_PORT_ID,
-                       initcap(pfrom.port_name) || ' (' || pfrom.port_code || ') ' as from_port,
-                       initcap(pto.port_name) || ' (' || pto.port_code || ') ' as to_port,
                        R.SEARCH_TYPE,
                        
                        CASE WHEN R.SEARCH_TYPE = 'FCL' THEN to_char(C.CONT_TYPE)
@@ -2104,17 +1817,14 @@ page 3 (
                        R.WEIGHT
                   from RATE_SEARCH_LOG R
                   LEFT JOIN CONTAINER_MST C ON R.CONT_TYPE = C.PK_ID
-                LEFT JOIN PORT_DET pfrom ON R.ORIGIN_PORT_ID = pfrom.PK_ID
-                LEFT JOIN PORT_DET pto   ON R.DESTINATION_PORT_ID = pto.PK_ID
-                
                 ```
         }
         orderBy {
             type: staticValue
-            orderByClause: SEARCH_TIME desc
+            orderByClause: R.SEARCH_TIME
         }
         layout {
-            sequence: 60
+            sequence: 50
             parentRegion: @overview
             slot: subRegions
             startNewRow: false
@@ -2131,7 +1841,7 @@ page 3 (
             display: report
         }
         settings {
-            title: <p class="fb-search-lane">&FROM_PORT. <span>&rarr;</span> &TO_PORT.</p>
+            title: <p class="fb-search-lane">Quilon <span>&rarr;</span> Rotterdam</p>
             miscellaneous:
                 ```html
                       <p class="fb-search-meta">&SEARCH_TYPE. &middot; &SEARCH_DETS!RAW. &QTY!RAW. <span class="fb-sep">|</span> &SEARCH_TIME_AGO.</p>
@@ -2169,16 +1879,6 @@ page 3 (
             source {
                 databaseColumn: DIM_UNIT
                 dataType: number
-            }
-        )
-
-        column FROM_PORT (
-            layout {
-                sequence: 170
-            }
-            source {
-                databaseColumn: FROM_PORT
-                dataType: varchar2
             }
         )
 
@@ -2279,16 +1979,6 @@ page 3 (
             }
             source {
                 databaseColumn: SEARCH_TYPE
-                dataType: varchar2
-            }
-        )
-
-        column TO_PORT (
-            layout {
-                sequence: 180
-            }
-            source {
-                databaseColumn: TO_PORT
                 dataType: varchar2
             }
         )
@@ -2422,470 +2112,7 @@ page 3 (
         }
     )
 
-    pageItem P3_CDATE (
-        type: hidden
-        layout {
-            sequence: 10
-            region: @new_1
-            slot: regionBody
-        }
-        source {
-            formRegion: @new_1
-            column: CDATE
-            dataType: timestamp
-        }
-    )
-
-    pageItem P3_COMP_ADDRESS (
-        type: textField
-        label {
-            label: Company Address
-            alignment: left
-        }
-        layout {
-            sequence: 10
-            region: @new_1
-            slot: regionBody
-            alignment: left
-            startNewRow: false
-        }
-        appearance {
-            template: @/optional-above
-            templateOptions: [
-                #DEFAULT#
-                t-Form-fieldContainer--stretchInputs
-                t-Form-fieldContainer--large
-            ]
-            width: 30
-        }
-        source {
-            formRegion: @new_1
-            column: COMP_ADDRESS
-            dataType: varchar2
-        }
-    )
-
-    pageItem P3_COMP_CITY (
-        type: hidden
-        layout {
-            sequence: 10
-            region: @new_1
-            slot: regionBody
-        }
-        source {
-            formRegion: @new_1
-            column: COMP_CITY
-            dataType: varchar2
-        }
-    )
-
-    pageItem P3_COMP_COUNTRY (
-        type: hidden
-        layout {
-            sequence: 10
-            region: @new_1
-            slot: regionBody
-        }
-        source {
-            formRegion: @new_1
-            column: COMP_COUNTRY
-            dataType: varchar2
-        }
-    )
-
-    pageItem P3_COMP_DOCUMENT (
-        type: hidden
-        layout {
-            sequence: 10
-            region: @new_1
-            slot: regionBody
-        }
-        source {
-            formRegion: @new_1
-            column: COMP_DOCUMENT
-            dataType: blob
-        }
-    )
-
-    pageItem P3_COMP_DOCUMENT_FILENAME (
-        type: hidden
-        layout {
-            sequence: 10
-            region: @new_1
-            slot: regionBody
-        }
-        source {
-            formRegion: @new_1
-            column: COMP_DOCUMENT_FILENAME
-            dataType: varchar2
-        }
-    )
-
-    pageItem P3_COMP_DOCUMENT_MIME_TYPE (
-        type: hidden
-        layout {
-            sequence: 10
-            region: @new_1
-            slot: regionBody
-        }
-        source {
-            formRegion: @new_1
-            column: COMP_DOCUMENT_MIME_TYPE
-            dataType: varchar2
-        }
-    )
-
-    pageItem P3_COMP_EMAIL (
-        type: textField
-        label {
-            label: Company Email
-            alignment: left
-        }
-        settings {
-            subtype: email
-        }
-        layout {
-            sequence: 10
-            region: @new_1
-            slot: regionBody
-            alignment: left
-            startNewRow: false
-        }
-        appearance {
-            template: @/optional-above
-            templateOptions: [
-                #DEFAULT#
-                t-Form-fieldContainer--stretchInputs
-                t-Form-fieldContainer--large
-            ]
-            width: 30
-        }
-        validation {
-            maxLength: 3000
-        }
-        source {
-            formRegion: @new_1
-            column: COMP_EMAIL
-            dataType: varchar2
-        }
-    )
-
-    pageItem P3_COMP_LOGO (
-        type: hidden
-        layout {
-            sequence: 10
-            region: @new_1
-            slot: regionBody
-        }
-        source {
-            formRegion: @new_1
-            column: COMP_LOGO
-            dataType: blob
-        }
-    )
-
-    pageItem P3_COMP_LOGO_FILENAME (
-        type: hidden
-        layout {
-            sequence: 10
-            region: @new_1
-            slot: regionBody
-        }
-        source {
-            formRegion: @new_1
-            column: COMP_LOGO_FILENAME
-            dataType: varchar2
-        }
-    )
-
-    pageItem P3_COMP_LOGO_MIME_TYPE (
-        type: hidden
-        layout {
-            sequence: 10
-            region: @new_1
-            slot: regionBody
-        }
-        source {
-            formRegion: @new_1
-            column: COMP_LOGO_MIME_TYPE
-            dataType: varchar2
-        }
-    )
-
-    pageItem P3_COMP_NAME (
-        type: displayOnly
-        label {
-            label: Company Name
-            alignment: left
-        }
-        layout {
-            sequence: 10
-            region: @new_1
-            slot: regionBody
-            alignment: left
-        }
-        appearance {
-            template: @/optional-above
-            templateOptions: [
-                #DEFAULT#
-                t-Form-fieldContainer--stretchInputs
-                t-Form-fieldContainer--large
-            ]
-        }
-        source {
-            formRegion: @new_1
-            column: COMP_NAME
-            dataType: varchar2
-        }
-    )
-
-    pageItem P3_COMP_PHONE (
-        type: hidden
-        layout {
-            sequence: 10
-            region: @new_1
-            slot: regionBody
-        }
-        source {
-            formRegion: @new_1
-            column: COMP_PHONE
-            dataType: varchar2
-        }
-    )
-
-    pageItem P3_COMP_PRIM_CONT_EMAIL (
-        type: textField
-        label {
-            label: Primary Contact Email
-            alignment: left
-        }
-        layout {
-            sequence: 10
-            region: @new_1
-            slot: regionBody
-            alignment: left
-            startNewRow: false
-        }
-        appearance {
-            template: @/optional-above
-            templateOptions: [
-                #DEFAULT#
-                t-Form-fieldContainer--stretchInputs
-                t-Form-fieldContainer--large
-            ]
-            width: 30
-        }
-        source {
-            formRegion: @new_1
-            column: COMP_PRIM_CONT_EMAIL
-            dataType: varchar2
-        }
-    )
-
-    pageItem P3_COMP_PRIM_CONT_NAME (
-        type: textField
-        label {
-            label: Primary Contact
-            alignment: left
-        }
-        layout {
-            sequence: 10
-            region: @new_1
-            slot: regionBody
-            alignment: left
-            startNewRow: false
-        }
-        appearance {
-            template: @/optional-above
-            templateOptions: [
-                #DEFAULT#
-                t-Form-fieldContainer--stretchInputs
-                t-Form-fieldContainer--large
-            ]
-            width: 30
-        }
-        source {
-            formRegion: @new_1
-            column: COMP_PRIM_CONT_NAME
-            dataType: varchar2
-        }
-    )
-
-    pageItem P3_COMP_PRIM_CONT_PHONE (
-        type: textField
-        label {
-            label: Primary Contact No.
-            alignment: left
-        }
-        layout {
-            sequence: 10
-            region: @new_1
-            slot: regionBody
-            alignment: left
-            startNewRow: false
-        }
-        appearance {
-            template: @/optional-above
-            templateOptions: [
-                #DEFAULT#
-                t-Form-fieldContainer--stretchInputs
-                t-Form-fieldContainer--large
-            ]
-            width: 30
-        }
-        source {
-            formRegion: @new_1
-            column: COMP_PRIM_CONT_PHONE
-            dataType: varchar2
-        }
-    )
-
-    pageItem P3_COMP_REG_EXPIRY_DATE (
-        type: hidden
-        layout {
-            sequence: 10
-            region: @new_1
-            slot: regionBody
-        }
-        source {
-            formRegion: @new_1
-            column: COMP_REG_EXPIRY_DATE
-            dataType: date
-        }
-    )
-
-    pageItem P3_COMP_REG_ISSUE_DATE (
-        type: hidden
-        layout {
-            sequence: 10
-            region: @new_1
-            slot: regionBody
-        }
-        source {
-            formRegion: @new_1
-            column: COMP_REG_ISSUE_DATE
-            dataType: date
-        }
-    )
-
-    pageItem P3_COMP_REG_NO (
-        type: hidden
-        layout {
-            sequence: 10
-            region: @new_1
-            slot: regionBody
-        }
-        source {
-            formRegion: @new_1
-            column: COMP_REG_NO
-            dataType: varchar2
-        }
-    )
-
-    pageItem P3_COMP_REG_TYPE (
-        type: hidden
-        layout {
-            sequence: 10
-            region: @new_1
-            slot: regionBody
-        }
-        source {
-            formRegion: @new_1
-            column: COMP_REG_TYPE
-            dataType: varchar2
-        }
-    )
-
-    pageItem P3_COMP_STATE (
-        type: hidden
-        layout {
-            sequence: 10
-            region: @new_1
-            slot: regionBody
-        }
-        source {
-            formRegion: @new_1
-            column: COMP_STATE
-            dataType: varchar2
-        }
-    )
-
-    pageItem P3_COMP_WEBSITE (
-        type: textField
-        label {
-            label: Company Website
-            alignment: left
-        }
-        layout {
-            sequence: 10
-            region: @new_1
-            slot: regionBody
-            alignment: left
-        }
-        appearance {
-            template: @/optional-above
-            templateOptions: [
-                #DEFAULT#
-                t-Form-fieldContainer--stretchInputs
-                t-Form-fieldContainer--large
-            ]
-            width: 30
-        }
-        source {
-            formRegion: @new_1
-            column: COMP_WEBSITE
-            dataType: varchar2
-        }
-    )
-
-    pageItem P3_COMP_ZIP_CODE (
-        type: hidden
-        layout {
-            sequence: 10
-            region: @new_1
-            slot: regionBody
-        }
-        source {
-            formRegion: @new_1
-            column: COMP_ZIP_CODE
-            dataType: number
-        }
-    )
-
-    pageItem P3_CUSER (
-        type: hidden
-        layout {
-            sequence: 10
-            region: @new_1
-            slot: regionBody
-        }
-        source {
-            formRegion: @new_1
-            column: CUSER
-            dataType: varchar2
-        }
-    )
-
-    pageItem P3_PK_ID (
-        type: hidden
-        layout {
-            sequence: 10
-            region: @new_1
-            slot: regionBody
-        }
-        source {
-            formRegion: @new_1
-            column: PK_ID
-            dataType: number
-            queryOnly: true
-            primaryKey: true
-        }
-        security {
-            sessionStateProtection: checksumRequiredSessionLevel
-        }
-    )
-
-    pageItem P3_REJ_REASON (
+    pageItem P15_REJ_REASON (
         type: textarea
         label {
             label: Reason for Rejection
@@ -2913,21 +2140,7 @@ page 3 (
         }
     )
 
-    pageItem P3_REJ_REASON_1 (
-        type: hidden
-        layout {
-            sequence: 10
-            region: @new_1
-            slot: regionBody
-        }
-        source {
-            formRegion: @new_1
-            column: REJ_REASON
-            dataType: varchar2
-        }
-    )
-
-    pageItem P3_SHOW_EXPIRED (
+    pageItem P15_SHOW_EXPIRED (
         type: checkbox
         label {
             label: Show expired tasks
@@ -2961,7 +2174,7 @@ page 3 (
         }
     )
 
-    pageItem P3_SORT_BY (
+    pageItem P15_SORT_BY (
         type: selectList
         label {
             label: Sort by
@@ -2999,7 +2212,7 @@ page 3 (
         }
     )
 
-    pageItem P3_TASK_ID (
+    pageItem P15_TASK_ID (
         type: hidden
         settings {
             valueProtected: false
@@ -3014,62 +2227,6 @@ page 3 (
         }
         security {
             encryptSessionState: false
-        }
-    )
-
-    pageItem P3_UDATE (
-        type: hidden
-        layout {
-            sequence: 10
-            region: @new_1
-            slot: regionBody
-        }
-        source {
-            formRegion: @new_1
-            column: UDATE
-            dataType: timestamp
-        }
-    )
-
-    pageItem P3_UUSER (
-        type: hidden
-        layout {
-            sequence: 10
-            region: @new_1
-            slot: regionBody
-        }
-        source {
-            formRegion: @new_1
-            column: UUSER
-            dataType: varchar2
-        }
-    )
-
-    pageItem P3_VENDOR_APR_STATUS (
-        type: hidden
-        layout {
-            sequence: 10
-            region: @new_1
-            slot: regionBody
-        }
-        source {
-            formRegion: @new_1
-            column: VENDOR_APR_STATUS
-            dataType: varchar2
-        }
-    )
-
-    pageItem P3_VENDOR_REF_NO (
-        type: hidden
-        layout {
-            sequence: 10
-            region: @new_1
-            slot: regionBody
-        }
-        source {
-            formRegion: @new_1
-            column: VENDOR_REF_NO
-            dataType: varchar2
         }
     )
 
@@ -3120,26 +2277,6 @@ page 3 (
         }
     )
 
-    button save (
-        buttonName: SAVE
-        label: Save
-        layout {
-            sequence: 10
-            region: @profile
-            slot: edit
-        }
-        appearance {
-            buttonTemplate: @/text
-            hot: true
-            templateOptions: #DEFAULT#
-        }
-        behavior {
-            showProcessing: true
-            warnOnUnsavedChanges: doNotCheck
-            databaseAction: update
-        }
-    )
-
     button submit (
         buttonName: SUBMIT
         label: Submit Reason
@@ -3177,10 +2314,10 @@ page 3 (
                 plsqlCode:
                     ```plsql
                     apex_human_task.approve_task (
-                        p_task_id   => :P3_TASK_ID,
+                        p_task_id   => :P15_TASK_ID,
                         p_autoclaim => true );
                     ```
-                itemsToSubmit: P3_TASK_ID
+                itemsToSubmit: P15_TASK_ID
             }
             execution {
                 sequence: 30
@@ -3208,7 +2345,7 @@ page 3 (
             }
             affectedElements {
                 selectionType: items
-                items: P3_TASK_ID
+                items: P15_TASK_ID
             }
             execution {
                 sequence: 10
@@ -3246,10 +2383,10 @@ page 3 (
                 plsqlCode:
                     ```plsql
                     apex_human_task.claim_task (
-                        p_task_id   => :P3_TASK_ID );
+                        p_task_id   => :P15_TASK_ID );
                     
                     ```
-                itemsToSubmit: P3_TASK_ID
+                itemsToSubmit: P15_TASK_ID
             }
             execution {
                 sequence: 20
@@ -3277,7 +2414,7 @@ page 3 (
             }
             affectedElements {
                 selectionType: items
-                items: P3_TASK_ID
+                items: P15_TASK_ID
             }
             execution {
                 sequence: 10
@@ -3356,7 +2493,7 @@ page 3 (
             }
             affectedElements {
                 selectionType: items
-                items: P3_TASK_ID
+                items: P15_TASK_ID
             }
             execution {
                 sequence: 10
@@ -3422,20 +2559,20 @@ page 3 (
                     BEGIN
                     
                         apex_human_task.set_task_parameter_values(
-                            p_task_id            => :P3_TASK_ID,
+                            p_task_id            => :P15_TASK_ID,
                             p_parameters         => apex_human_task.t_task_parameters(
                                 1 => apex_human_task.t_task_parameter(static_id => 'P_REJ_REASON',
-                                                                        string_value => :P3_REJ_REASON)));
+                                                                        string_value => :P15_REJ_REASON)));
                     
                             apex_human_task.reject_task (
-                        p_task_id   => :P3_TASK_ID,
+                        p_task_id   => :P15_TASK_ID,
                         p_autoclaim => true );
                         
                     END;
                     ```
                 itemsToSubmit: [
-                    P3_TASK_ID
-                    P3_REJ_REASON
+                    P15_TASK_ID
+                    P15_REJ_REASON
                 ]
             }
             execution {
@@ -3512,56 +2649,7 @@ page 3 (
             point: beforeHeader
         }
         advanced {
-            executionMappingIdentifier: 3905325367550647
-        }
-    )
-
-    process initialize-form-vendor-dashboard (
-        name: Initialize form Vendor Dashboard
-        type: formInitialization
-        formRegion: @new_1
-        execution {
-            sequence: 30
-            point: beforeHeader
-        }
-        advanced {
-            executionMappingIdentifier: 16563453784321331
-        }
-    )
-
-    process process-form-new (
-        name: Process form New
-        type: formAutoRowProcessing
-        formRegion: @new_1
-        execution {
-            sequence: 10
-        }
-        advanced {
-            executionMappingIdentifier: 16718682260200014
-        }
-        serverSideCondition {
-            whenButtonPressed: @save
-        }
-    )
-
-    process set-vendor-id (
-        name: Set Vendor ID
-        type: executeCode
-        source {
-            plsqlCode:
-                ```plsql
-                BEGIN
-                SELECT VENDOR_ID INTO :P3_PK_ID FROM UTL_WEBUSERS WHERE UPPER(USER_NAME) = :APP_USER;
-                EXCEPTION WHEN OTHERS THEN NULL;
-                END;
-                ```
-        }
-        execution {
-            sequence: 20
-            point: beforeHeader
-        }
-        advanced {
-            executionMappingIdentifier: 16718497647200012
+            executionMappingIdentifier: 16699132346705665
         }
     )
 

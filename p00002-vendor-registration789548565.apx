@@ -209,7 +209,41 @@ page 2 (
         type: form
         source {
             location: localDatabase
-            tableName: VENDOR_MST
+            type: sqlQuery
+            sqlQuery:
+                ```sql
+                select PK_ID,
+                       VENDOR_REF_NO,
+                       COMP_NAME,
+                       COMP_EMAIL,
+                       COMP_ADDRESS,
+                       COMP_COUNTRY,
+                       COMP_STATE,
+                       COMP_CITY,
+                       COMP_ZIP_CODE,
+                       COMP_PHONE,
+                       COMP_WEBSITE,
+                       COMP_PRIM_CONT_NAME,
+                       COMP_PRIM_CONT_EMAIL,
+                       COMP_PRIM_CONT_PHONE,
+                       COMP_REG_TYPE,
+                       COMP_REG_NO,
+                       COMP_REG_ISSUE_DATE,
+                       COMP_REG_EXPIRY_DATE,
+                       COMP_DOCUMENT,
+                       COMP_LOGO,
+                       VENDOR_APR_STATUS,
+                       CUSER,
+                       CDATE,
+                       UUSER,
+                       UDATE,
+                       COMP_DOCUMENT_MIME_TYPE,
+                       COMP_LOGO_MIME_TYPE,
+                       REJ_REASON,
+                       COMP_DOCUMENT_FILENAME,
+                       COMP_LOGO_FILENAME
+                  from VENDOR_MST
+                ```
         }
         layout {
             sequence: 40
@@ -399,6 +433,7 @@ page 2 (
         }
         storage {
             mimeTypeColumn: COMP_DOCUMENT_MIME_TYPE
+            filenameColumn: COMP_DOCUMENT_FILENAME
             fileTypes: .pdf,.jpg,.png
             maxFileSize: 2048
         }
@@ -425,6 +460,40 @@ page 2 (
         }
         help {
             inlineHelpText: Please upload your business registration document (PDF, JPG, or PNG format). Must not exceed 2 MB.
+        }
+    )
+
+    pageItem P2_COMP_DOCUMENT_FILENAME (
+        type: hidden
+        settings {
+            valueProtected: false
+        }
+        layout {
+            sequence: 10
+            region: @registration-form
+            slot: regionBody
+        }
+        source {
+            formRegion: @registration-form
+            column: COMP_DOCUMENT_FILENAME
+            dataType: varchar2
+        }
+    )
+
+    pageItem P2_COMP_DOCUMENT_MIME_TYPE (
+        type: hidden
+        settings {
+            valueProtected: false
+        }
+        layout {
+            sequence: 10
+            region: @registration-form
+            slot: regionBody
+        }
+        source {
+            formRegion: @registration-form
+            column: COMP_DOCUMENT_MIME_TYPE
+            dataType: varchar2
         }
     )
 
@@ -472,6 +541,7 @@ page 2 (
         }
         storage {
             mimeTypeColumn: COMP_LOGO_MIME_TYPE
+            filenameColumn: COMP_LOGO_FILENAME
             fileTypes: .jpg,.png
             maxFileSize: 2048
         }
@@ -497,7 +567,41 @@ page 2 (
             dataType: blob
         }
         help {
-            inlineHelpText: Upload your company logo in PNG or JPG format. This will be displayed alongside your company name in search results. Must not exceed 2 MB.
+            inlineHelpText: Upload your company logo in PNG or JPG format. Must not exceed 2 MB.
+        }
+    )
+
+    pageItem P2_COMP_LOGO_FILENAME (
+        type: hidden
+        settings {
+            valueProtected: false
+        }
+        layout {
+            sequence: 10
+            region: @registration-form
+            slot: regionBody
+        }
+        source {
+            formRegion: @registration-form
+            column: COMP_LOGO_FILENAME
+            dataType: varchar2
+        }
+    )
+
+    pageItem P2_COMP_LOGO_MIME_TYPE (
+        type: hidden
+        settings {
+            valueProtected: false
+        }
+        layout {
+            sequence: 10
+            region: @registration-form
+            slot: regionBody
+        }
+        source {
+            formRegion: @registration-form
+            column: COMP_LOGO_MIME_TYPE
+            dataType: varchar2
         }
     )
 
@@ -934,6 +1038,23 @@ page 2 (
         }
         security {
             sessionStateProtection: checksumRequiredSessionLevel
+        }
+    )
+
+    pageItem P2_REJ_REASON (
+        type: hidden
+        settings {
+            valueProtected: false
+        }
+        layout {
+            sequence: 10
+            region: @registration-form
+            slot: regionBody
+        }
+        source {
+            formRegion: @registration-form
+            column: REJ_REASON
+            dataType: varchar2
         }
     )
 

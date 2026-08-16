@@ -713,6 +713,9 @@ page 5 (
                 t-BreadcrumbRegion--useRegionTitle
             ]
         }
+        componentAppearance {
+            breadcrumbTemplate: @/breadcrumb
+        }
     )
 
     pageItem P5_SHOW_EXPIRED (

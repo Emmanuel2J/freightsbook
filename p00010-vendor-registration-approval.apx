@@ -111,34 +111,6 @@ page 10 (
         }
     )
 
-    region company-information (
-        name: Company Information
-        title: Company Information
-        type: staticContent
-        source {
-            htmlCode: <p class ='head-sub-heading'>Please provide accurate information about your company and contact details</p>
-        }
-        layout {
-            sequence: 10
-            parentRegion: @registration-form
-            slot: regionBody
-        }
-        appearance {
-            template: @/standard
-            templateOptions: [
-                #DEFAULT#
-                t-Region--noPadding
-                t-Region--noUI
-                t-Region--scrollBody
-                margin-top-none
-                margin-bottom-none
-                margin-left-none
-                margin-right-none
-            ]
-            cssClasses: main-headings
-        }
-    )
-
     region new (
         name: Vendor Registration
         type: staticContent
@@ -405,6 +377,7 @@ page 10 (
         }
         storage {
             mimeTypeColumn: COMP_DOCUMENT_MIME_TYPE
+            filenameColumn: COMP_DOCUMENT_FILENAME
             fileTypes: .pdf,.jpg,.png
             maxFileSize: 2048
         }
@@ -478,6 +451,7 @@ page 10 (
         }
         storage {
             mimeTypeColumn: COMP_LOGO_MIME_TYPE
+            filenameColumn: COMP_LOGO_FILENAME
             fileTypes: .jpg,.png
             maxFileSize: 2048
         }

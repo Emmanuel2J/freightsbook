@@ -1708,19 +1708,6 @@ page 7 (
             }
         )
 
-        action native-disable-2 (
-            action: disable
-            affectedElements {
-                selectionType: button
-                button: @update-variable
-            }
-            execution {
-                sequence: 20
-                fireWhenEventResultIs: false
-                fireOnInit: false
-            }
-        )
-
     )
 
     dynamicAction edit-variable (

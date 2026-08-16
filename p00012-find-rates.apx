@@ -1,0 +1,1168 @@
+page 12 (
+    name: Find Rates
+    alias: FIND-RATES
+    title: Find Rates
+    appearance {
+        pageTemplate: @/standard
+        templateOptions: #DEFAULT#
+    }
+    navigation {
+        cursorFocus: doNotFocusCursor
+    }
+    css {
+        inline:
+            ```css
+            .t-Body-contentInner{
+                padding: 0.7rem;
+                
+            }
+            #summ-band{
+               border-radius: 1.125rem;
+            }
+            #edit-btn{
+                background-color: white!important;
+                color: #00688C !important;
+                border:1px solid;
+                border-color: #00688C;
+                font-weight: bold;
+                font-size: 0.8rem;
+            }
+            
+            #edit-btn:hover{
+                background-color:#00688C !important;
+                color:white !important;
+            
+            }
+            
+            
+            /* SUMMARY BAND CSS */
+            .fb-summary {
+              display: flex;
+              flex-wrap: wrap;
+              align-items: center;
+              gap: 16px 20px;
+              font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+              color: #1a2530;
+            }
+            
+            /* Origin / Destination */
+            .fb-endpoint {
+              display: inline-flex;
+              align-items: center;
+              gap: 12px;
+            }
+            
+            .fb-icon {
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              width: 44px;
+              height: 44px;
+              border-radius: 12px;
+              background: rgba(0, 104, 140, 0.10);
+              color: #00688c;
+              flex-shrink: 0;
+            }
+            
+            .fb-icon svg {
+              width: 20px;
+              height: 20px;
+            }
+            
+            .fb-endpoint-text {
+              line-height: 1.25;
+            }
+            
+            .fb-label {
+              font-size: 11px;
+              font-weight: 600;
+              text-transform: uppercase;
+              letter-spacing: 0.06em;
+              color: #6b7785;
+            }
+            
+            .fb-name {
+              font-size: 16px;
+              font-weight: 700;
+              color: #1a2530;
+            }
+            
+            .fb-code {
+              font-size: 14px;
+              font-weight: 400;
+              color: #6b7785;
+            }
+            
+            /* Arrow between endpoints */
+            .fb-arrow {
+              width: 20px;
+              height: 20px;
+              color: #6b7785; /* amber accent */
+              flex-shrink: 0;
+            }
+            
+            /* Vertical divider */
+            .fb-divider {
+              width: 1px;
+              height: 40px;
+              background: #e2e6ea;
+            }
+            
+            /* Container info */
+            .fb-container {
+              display: inline-flex;
+              align-items: center;
+              gap: 8px;
+              font-size: 14px;
+              font-weight: 600;
+              color: #1a2530;
+            }
+            
+            .fb-container svg {
+              width: 20px;
+              height: 20px;
+              color: #00688c;
+              flex-shrink: 0;
+            }
+            
+            /* Hide the divider on narrow screens */
+            @media (max-width: 640px) {
+              .fb-divider {
+                display: none;
+              }
+            }
+            
+            
+            /* CARD RESULTS STYLING */
+            .slim-card{
+                padding:0 !important;
+                border-radius: 12px;
+            }
+            .slim-card .a-CardView-header{
+                padding:0;
+            }
+            .fb-row {
+              display: flex;
+              flex-direction: column;
+              gap: 16px;
+              background: #ffffff;
+              border: 1px solid #e2e6ea;
+              border-radius: 12px;
+              padding: 16px 20px;
+              font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+              color: #1a2530;
+              transition: border-color .15s ease;
+            }
+            .fb-row:hover { border-color: rgba(0, 104, 140, .4); }
+            
+            /* Left block */
+            .fb-row-main { flex: 1; min-width: 0; }
+            
+            .fb-row-title {
+              display: flex;
+              flex-wrap: wrap;
+              align-items: center;
+              gap: 8px;
+            }
+            .fb-row-title h3 { margin: 0; font-size: 16px; font-weight: 600; }
+            
+            .fb-row-route { margin: 4px 0 0; font-size: 14px; color: #6b7785; }
+            
+            .fb-row-details { margin: 6px 0 0; font-size: 14px; color: #6b7785; }
+            
+            .fb-sep { margin: 0 8px; color: #d3d9de; }
+            
+            /* Tags */
+            .fb-tag {
+              display: inline-flex;
+              align-items: center;
+              padding: 3px 9px;
+              border-radius: 999px;
+              font-size: 10px;
+              font-weight: 700;
+              text-transform: uppercase;
+              letter-spacing: .04em;
+            }
+            .fb-tag--fastest  { background: #d1fae5; color: #065f46; }
+            .fb-tag--cheapest { background: #e0f2fe; color: #075985; }
+            .fb-tag--best     { background: #f3e8ff; color: #6b21a8; }
+            
+            /* Right block */
+            .fb-row-side {
+              display: flex;
+              align-items: center;
+              justify-content: space-between;
+              gap: 16px;
+            }
+            
+            .fb-price-block { line-height: 1.1; }
+            
+            .fb-total {
+              font-size: 20px;
+              font-weight: 700;
+              line-height: 1;
+              color: #1a2530;
+            }
+            
+            .fb-breakdown {
+              margin-top: 4px;
+              font-size: 12px;
+              color: #6b7785;
+            }
+            
+            /* Button */
+            .fb-btn {
+              display: inline-flex;
+              align-items: center;
+              gap: 6px;
+              white-space: nowrap;
+              padding: 8px 16px;
+              border: 0;
+              border-radius: 8px;
+              cursor: pointer;
+              background: #00688c;
+              color: #ffffff;
+              font-size: 14px;
+              font-weight: 600;
+              transition: background-color .15s ease;
+            }
+            .fb-btn:hover { background: #005775; }
+            .fb-btn svg   { width: 16px; height: 16px; }
+            
+            
+            
+             #P12_SORT input:checked+label, .apex-item-single-checkbox input:checked+label {
+                background-color: var(--ut-header-background-color);
+                outline: none !important;
+                border:none !important;
+                font-weight: 500!important;
+            }
+            
+            #P12_SORT > div > div{
+                display:grid !important;
+                grid-template-columns: 1fr 1fr !important;
+            }
+            ```
+    }
+    security {
+        authentication: public
+        pageAccessProtection: argumentsMustHaveChecksum
+        formAutoComplete: false
+    }
+
+    region available-freight-rates (
+        name: Available Freight Rates
+        type: staticContent
+        source {
+            htmlCode: Compare live rates from verified vendors. Contact any vendor directly to book — no fees.
+        }
+        layout {
+            sequence: 10
+            parentRegion: @parent
+            slot: subRegions
+        }
+        appearance {
+            template: @/hero
+            templateOptions: [
+                #DEFAULT#
+                t-HeroRegion--hideIcon
+            ]
+        }
+    )
+
+    region faceted-search (
+        name: Faceted Search
+        title: Filters
+        type: facetedSearch
+        source {
+            filteredRegion: @new_1
+        }
+        layout {
+            sequence: 20
+            slot: body
+            columnSpan: 2
+        }
+        appearance {
+            template: @/standard
+            templateOptions: [
+                #DEFAULT#
+                t-Region--noPadding
+                t-Region--showIcon
+                t-Region--scrollBody
+            ]
+            icon: fa-filter
+        }
+        settings {
+            compactNosThreshold: 10000
+            showCurrentFacets: selector
+            currentFacetsSelector: #chips
+            showCharts: false
+        }
+
+        facet P12_COMP_NAME (
+            type: checkboxGroup
+            label {
+                label: Vendor
+            }
+            lov {
+                type: distinctValues
+            }
+            layout {
+                sequence: 40
+            }
+            listEntries {
+                maxDisplayedEntries: 7
+            }
+            actionsMenu {
+                filter: false
+                chart: false
+            }
+            advanced {
+                collapsible: true
+            }
+            source {
+                databaseColumn: COMP_NAME
+            }
+        )
+
+        facet P12_SEARCH (
+            type: search
+            label {
+                label: Search
+            }
+            layout {
+                sequence: 10
+            }
+            config {
+                buildOption: @commented-out
+            }
+        )
+
+        facet P12_TOTAL_COST_AMT (
+            type: range
+            label {
+                label: Price Range
+            }
+            layout {
+                sequence: 20
+            }
+            advanced {
+                collapsible: true
+            }
+            source {
+                databaseColumn: TOTAL_COST_AMT
+                dataType: number
+            }
+        )
+
+        facet P12_TRANSIT_TIME (
+            type: range
+            label {
+                label: Transit Time
+            }
+            layout {
+                sequence: 30
+            }
+            advanced {
+                collapsible: true
+            }
+            source {
+                databaseColumn: TRANSIT_TIME
+                dataType: number
+            }
+        )
+
+    )
+
+    region new (
+        name: Band
+        type: staticContent
+        source {
+            htmlCode:
+                ```html
+                <div class="fb-summary">
+                  <!-- Origin -->
+                  <div class="fb-endpoint">
+                    <span class="fb-icon">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                           stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <path d="M20 10c0 4.993-5.539 10.193-7.399 11.799a1 1 0 0 1-1.202 0C9.539 20.193 4 14.993 4 10a8 8 0 0 1 16 0"/>
+                        <circle cx="12" cy="10" r="3"/>
+                      </svg>
+                    </span>
+                    <div class="fb-endpoint-text">
+                      <div class="fb-label">Origin</div>
+                      <div class="fb-name">&P12_ORIGIN_C_PORT. <span class="fb-code">(&P12_ORIGIN_PORT_CODE.)</span></div>
+                    </div>
+                  </div>
+                
+                  <!-- Arrow -->
+                  <svg class="fb-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                       stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <path d="M5 12h14"/>
+                    <path d="m12 5 7 7-7 7"/>
+                  </svg>
+                
+                  <!-- Destination -->
+                  <div class="fb-endpoint">
+                    <span class="fb-icon">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                           stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <path d="M12 22V8"/>
+                        <path d="M5 12H2a10 10 0 0 0 20 0h-3"/>
+                        <circle cx="12" cy="5" r="3"/>
+                      </svg>
+                    </span>
+                    <div class="fb-endpoint-text">
+                      <div class="fb-label">Destination</div>
+                      <div class="fb-name">&P12_DEST_C_PORT. <span class="fb-code">(&P12_DEST_PORT_CODE.)</span></div>
+                    </div>
+                  </div>
+                
+                  <!-- Divider -->
+                  <div class="fb-divider"></div>
+                
+                  <!-- Container info -->
+                  <div class="fb-container">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                         stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                      <path d="M22 7.7c0-.6-.4-1.2-.8-1.5l-6.3-3.9a1.72 1.72 0 0 0-1.7 0l-10.3 6c-.5.2-.9.8-.9 1.4v6.6c0 .5.4 1.2.8 1.5l6.3 3.9a1.72 1.72 0 0 0 1.7 0l10.3-6c.5-.3.9-.9.9-1.5Z"/>
+                      <path d="M10 21.9V14L2.1 9.1"/>
+                      <path d="m10 14 11.9-6.9"/>
+                      <path d="M14 19.8v-8.1"/>
+                      <path d="M18 17.5V9.4"/>
+                    </svg>
+                    <span>&P12_SEARCH_TYPE. · &P12_SEARCH_DETS.</span>
+                  </div>
+                </div>
+                ```
+        }
+        layout {
+            sequence: 10
+            parentRegion: @summary
+            slot: regionBody
+        }
+        appearance {
+            template: @/blank-with-attributes
+            templateOptions: #DEFAULT#
+        }
+    )
+
+    region new-2 (
+        name: Form
+        type: form
+        source {
+            location: localDatabase
+            tableName: RATE_SEARCH_LOG
+        }
+        layout {
+            sequence: 60
+            slot: body
+        }
+    )
+
+    region new_1 (
+        name: Results
+        type: cards
+        source {
+            location: localDatabase
+            type: sqlQuery
+            sqlQuery:
+                ```sql
+                SELECT from_port_name, FROM_PORT_CODE, to_port_name, TO_PORT_CODE,
+                COMP_NAME, FCL_LCL_FLAG,
+                 CONT_DETS,
+                    transit_time, VALID_TILL,
+                PER_QTY_RATE,
+                PER_QTY_UNIT,
+                ACT_QTY,
+                TO_CHAR(round(PER_QTY_RATE * ACT_QTY,2),'999,999,999.00') as TOTAL_COST,
+                round(PER_QTY_RATE * ACT_QTY,2) as total_cost_amt,
+                APEX_UTIL.PREPARE_URL(
+                    p_url => 'f?p=' || :APP_ID || ':13:' || :APP_SESSION) as url,
+                    RATE_PK_ID
+                FROM V_RATE_SEARCH_DETAILS 
+                where search_pk_id = :P12_PK_ID
+                order by case when :P12_SORT = 1 then round(PER_QTY_RATE * ACT_QTY,2)
+                        else transit_time end;
+                
+                ```
+            pageItemsToSubmit: [
+                P12_PK_ID
+                P12_SORT
+            ]
+        }
+        layout {
+            sequence: 40
+            slot: body
+            startNewRow: false
+            newColumn: false
+        }
+        appearance {
+            template: @/cards-container
+            templateOptions: [
+                #DEFAULT#
+                t-CardsRegion--hideHeader js-addHiddenHeadingRoleDesc
+            ]
+        }
+        componentAppearance {
+            layout: horizontal
+            cssClasses: slim-results
+        }
+        card {
+            cssClasses: slim-card
+        }
+        title {
+            advancedFormatting: true
+            htmlExpression:
+                ```html
+                <article class="fb-row">
+                  <div class="fb-row-main">
+                    <div class="fb-row-title">
+                      <h3>&COMP_NAME.</h3>
+                    </div>
+                    <p class="fb-row-route">&FROM_PORT_NAME. (&FROM_PORT_CODE.) → &TO_PORT_NAME. (&TO_PORT_CODE.)</p>
+                    <p class="fb-row-details">
+                      <span>&FCL_LCL_FLAG. &CONT_DETS.</span>
+                      <span class="fb-sep">|</span>
+                      <span>&TRANSIT_TIME. days transit</span>
+                      <span class="fb-sep">|</span>
+                      <span>Valid until &VALID_TILL.</span>
+                    </p>
+                  </div>
+                  <div class="fb-row-side">
+                    <div class="fb-price-block">
+                      <div class="fb-total">$&TOTAL_COST.</div>
+                      <div class="fb-breakdown">$&PER_QTY_RATE. &PER_QTY_UNIT. &times; &ACT_QTY.</div>
+                    </div>
+                    <button type="button"
+                        class="fb-btn"
+                        onclick="apex.page.submit({
+                            request: 'EMAIL',
+                            set: {
+                                'P12_SELECTED_RATE_PK_ID': '&RATE_PK_ID.'
+                            }
+                        });">
+                      Contact Vendor
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+                    </button>
+                  </div>
+                </article>
+                ```
+        }
+        messages {
+            whenNoDataFound: No Rates Found!
+        }
+    )
+
+    region new_2 (
+        name: Chips
+        type: staticContent
+        layout {
+            sequence: 30
+            slot: body
+            startNewRow: false
+        }
+        appearance {
+            template: @/blank-with-attributes
+            templateOptions: #DEFAULT#
+        }
+        advanced {
+            htmlDomId: chips
+        }
+    )
+
+    region parent (
+        name: Parent
+        type: staticContent
+        layout {
+            sequence: 10
+            slot: body
+        }
+        appearance {
+            template: @/standard
+            templateOptions: [
+                #DEFAULT#
+                t-Region--noPadding
+                t-Region--removeHeader js-removeLandmark
+                t-Region--noUI
+                t-Region--scrollBody
+            ]
+        }
+    )
+
+    region summary (
+        name: Summary
+        type: staticContent
+        layout {
+            sequence: 20
+            parentRegion: @parent
+            slot: subRegions
+        }
+        appearance {
+            template: @/standard
+            templateOptions: [
+                #DEFAULT#
+                t-Region--removeHeader js-removeLandmark
+                t-Region--scrollBody
+                margin-bottom-md
+            ]
+        }
+        advanced {
+            htmlDomId: summ-band
+        }
+    )
+
+    pageItem P12_CBM_1 (
+        type: hidden
+        settings {
+            valueProtected: false
+        }
+        layout {
+            sequence: 10
+            region: @new-2
+            slot: regionBody
+        }
+        source {
+            formRegion: @new-2
+            column: CBM
+            dataType: number
+        }
+    )
+
+    pageItem P12_CONT_TYPE (
+        type: hidden
+        settings {
+            valueProtected: false
+        }
+        layout {
+            sequence: 10
+            region: @new-2
+            slot: regionBody
+        }
+        source {
+            formRegion: @new-2
+            column: CONT_TYPE
+            dataType: number
+        }
+    )
+
+    pageItem P12_DESTINATION_PORT_ID (
+        type: hidden
+        settings {
+            valueProtected: false
+        }
+        layout {
+            sequence: 10
+            region: @new-2
+            slot: regionBody
+        }
+        source {
+            formRegion: @new-2
+            column: DESTINATION_PORT_ID
+            dataType: number
+        }
+    )
+
+    pageItem P12_DEST_C_PORT (
+        type: hidden
+        settings {
+            valueProtected: false
+        }
+        layout {
+            sequence: 30
+            region: @new-2
+            slot: regionBody
+        }
+    )
+
+    pageItem P12_DEST_PORT_CODE (
+        type: hidden
+        settings {
+            valueProtected: false
+        }
+        layout {
+            sequence: 50
+            region: @new-2
+            slot: regionBody
+        }
+    )
+
+    pageItem P12_DIM_UNIT_1 (
+        type: hidden
+        settings {
+            valueProtected: false
+        }
+        layout {
+            sequence: 10
+            region: @new-2
+            slot: regionBody
+        }
+        source {
+            formRegion: @new-2
+            column: DIM_UNIT
+            dataType: number
+        }
+    )
+
+    pageItem P12_ITEM_HEIGHT (
+        type: hidden
+        settings {
+            valueProtected: false
+        }
+        layout {
+            sequence: 10
+            region: @new-2
+            slot: regionBody
+        }
+        source {
+            formRegion: @new-2
+            column: ITEM_HEIGHT
+            dataType: number
+        }
+    )
+
+    pageItem P12_ITEM_LENGTH (
+        type: hidden
+        settings {
+            valueProtected: false
+        }
+        layout {
+            sequence: 10
+            region: @new-2
+            slot: regionBody
+        }
+        source {
+            formRegion: @new-2
+            column: ITEM_LENGTH
+            dataType: number
+        }
+    )
+
+    pageItem P12_ITEM_WIDTH (
+        type: hidden
+        settings {
+            valueProtected: false
+        }
+        layout {
+            sequence: 10
+            region: @new-2
+            slot: regionBody
+        }
+        source {
+            formRegion: @new-2
+            column: ITEM_WIDTH
+            dataType: number
+        }
+    )
+
+    pageItem P12_ORIGIN_C_PORT (
+        type: hidden
+        settings {
+            valueProtected: false
+        }
+        layout {
+            sequence: 20
+            region: @new-2
+            slot: regionBody
+        }
+    )
+
+    pageItem P12_ORIGIN_PORT_CODE (
+        type: hidden
+        settings {
+            valueProtected: false
+        }
+        layout {
+            sequence: 40
+            region: @new-2
+            slot: regionBody
+        }
+    )
+
+    pageItem P12_ORIGIN_PORT_ID (
+        type: hidden
+        settings {
+            valueProtected: false
+        }
+        layout {
+            sequence: 10
+            region: @new-2
+            slot: regionBody
+        }
+        source {
+            formRegion: @new-2
+            column: ORIGIN_PORT_ID
+            dataType: number
+        }
+    )
+
+    pageItem P12_PK_ID (
+        type: hidden
+        settings {
+            valueProtected: false
+        }
+        layout {
+            sequence: 10
+            region: @new-2
+            slot: regionBody
+        }
+        source {
+            formRegion: @new-2
+            column: PK_ID
+            dataType: number
+            queryOnly: true
+            primaryKey: true
+        }
+        sessionState {
+            storage: session
+        }
+    )
+
+    pageItem P12_QTY_1 (
+        type: hidden
+        settings {
+            valueProtected: false
+        }
+        layout {
+            sequence: 10
+            region: @new-2
+            slot: regionBody
+        }
+        source {
+            formRegion: @new-2
+            column: QTY
+            dataType: number
+        }
+    )
+
+    pageItem P12_SEARCH_DETS (
+        type: hidden
+        settings {
+            valueProtected: false
+        }
+        layout {
+            sequence: 60
+            region: @new-2
+            slot: regionBody
+        }
+    )
+
+    pageItem P12_SEARCH_TIME (
+        type: hidden
+        settings {
+            valueProtected: false
+        }
+        layout {
+            sequence: 10
+            region: @new-2
+            slot: regionBody
+        }
+        source {
+            formRegion: @new-2
+            column: SEARCH_TIME
+            dataType: timestamp
+        }
+    )
+
+    pageItem P12_SEARCH_TYPE (
+        type: hidden
+        settings {
+            valueProtected: false
+        }
+        layout {
+            sequence: 10
+            region: @new-2
+            slot: regionBody
+        }
+        source {
+            formRegion: @new-2
+            column: SEARCH_TYPE
+            dataType: varchar2
+        }
+    )
+
+    pageItem P12_SELECTED_RATE_PK_ID (
+        type: hidden
+        settings {
+            valueProtected: false
+        }
+        layout {
+            sequence: 70
+            slot: body
+        }
+    )
+
+    pageItem P12_SORT (
+        type: radioGroup
+        label {
+            label: Sort By
+            alignment: left
+        }
+        settings {
+            noOfCols: 2
+        }
+        lov {
+            type: staticValues
+            staticValues: STATIC2:Value;1,Transit Time;2
+            displayExtraValues: false
+            displayNullValue: false
+        }
+        layout {
+            sequence: 10
+            region: @new_1
+            slot: regionBody
+            alignment: left
+            column: 9
+        }
+        appearance {
+            template: @/optional
+            templateOptions: [
+                #DEFAULT#
+                t-Form-fieldContainer--stretchInputs
+                t-Form-fieldContainer--radioButtonGroup
+            ]
+        }
+    )
+
+    pageItem P12_WEIGHT_1 (
+        type: hidden
+        settings {
+            valueProtected: false
+        }
+        layout {
+            sequence: 10
+            region: @new-2
+            slot: regionBody
+        }
+        source {
+            formRegion: @new-2
+            column: WEIGHT
+            dataType: number
+        }
+    )
+
+    pageItem P12_WEI_UNIT_1 (
+        type: hidden
+        settings {
+            valueProtected: false
+        }
+        layout {
+            sequence: 10
+            region: @new-2
+            slot: regionBody
+        }
+        source {
+            formRegion: @new-2
+            column: WEI_UNIT
+            dataType: number
+        }
+    )
+
+    button edit (
+        buttonName: EDIT
+        label: Edit Search
+        layout {
+            sequence: 20
+            region: @summary
+            slot: regionBody
+            startNewRow: false
+            column: 12
+            columnCssClasses: u-align-self-center
+        }
+        appearance {
+            buttonTemplate: @/text-with-icon
+            templateOptions: [
+                #DEFAULT#
+                t-Button--iconLeft
+                t-Button--gapRight
+            ]
+            icon: fa-pencil
+        }
+        behavior {
+            action: redirectThisApp
+            target: {
+                page: 1
+            }
+        }
+        advanced {
+            htmlDomId: edit-btn
+        }
+    )
+
+    dynamicAction new (
+        name: New
+        execution {
+            sequence: 10
+        }
+        when {
+            selectionType: items
+            items: P12_SORT
+        }
+
+        action native-refresh (
+            action: refresh
+            affectedElements {
+                selectionType: region
+                region: @new_1
+            }
+            execution {
+                sequence: 10
+                fireOnInit: false
+            }
+        )
+
+    )
+
+    computation p12-dest-c-port (
+        itemName: P12_DEST_C_PORT
+        execution {
+            sequence: 20
+            point: afterHeader
+        }
+        computation {
+            sqlQuery:
+                ```sql
+                SELECT iNITCAP(PORT_NAME) || ', ' || COUN_NAME AS PORT_NAME
+                FROM V_COUN_WITH_PORT WHERE PORT_PK_ID = :P12_DESTINATION_PORT_ID;
+                
+                ```
+        }
+    )
+
+    computation p12-dest-port-code (
+        itemName: P12_DEST_PORT_CODE
+        execution {
+            sequence: 40
+            point: afterHeader
+        }
+        computation {
+            sqlQuery:
+                ```sql
+                SELECT PORT_CODE
+                FROM V_COUN_WITH_PORT WHERE PORT_PK_ID = :P12_DESTINATION_PORT_ID;
+                
+                ```
+        }
+    )
+
+    computation p12-origin-c-port (
+        itemName: P12_ORIGIN_C_PORT
+        execution {
+            sequence: 10
+            point: afterHeader
+        }
+        computation {
+            sqlQuery:
+                ```sql
+                SELECT iNITCAP(PORT_NAME) || ', ' || COUN_NAME AS PORT_NAME
+                FROM V_COUN_WITH_PORT WHERE PORT_PK_ID = :P12_ORIGIN_PORT_ID;
+                
+                ```
+        }
+    )
+
+    computation p12-origin-port-code (
+        itemName: P12_ORIGIN_PORT_CODE
+        execution {
+            sequence: 30
+            point: afterHeader
+        }
+        computation {
+            sqlQuery:
+                ```sql
+                SELECT PORT_CODE
+                FROM V_COUN_WITH_PORT WHERE PORT_PK_ID = :P12_ORIGIN_PORT_ID;
+                
+                ```
+        }
+    )
+
+    computation p12-search-dets (
+        itemName: P12_SEARCH_DETS
+        execution {
+            sequence: 50
+            point: afterHeader
+        }
+        computation {
+            type: functionBody
+            plsqlFunctionBody:
+                ```plsql
+                DECLARE
+                    v_char VARCHAR2(3000);
+                BEGIN
+                    IF :P12_SEARCH_TYPE = 'FCL' THEN
+                        SELECT GET_CONT_NAME(:P12_CONT_TYPE) || ' · Qty ' || 
+                               TO_CHAR(:P12_QTY_1, 'FM999G999G990')
+                        INTO v_char
+                        FROM dual;
+                    ELSE
+                        SELECT TO_CHAR(:P12_CBM_1, 'FM999G999G990D00') || ' CBM / ' || 
+                               TO_CHAR(:P12_WEIGHT_1, 'FM999G999G990D00') || ' kg'
+                        INTO v_char
+                        FROM dual;
+                    END IF;
+                
+                    RETURN v_char;
+                END;
+                ```
+        }
+    )
+
+    process clear-theme (
+        name: Clear Theme
+        type: executeCode
+        source {
+            plsqlCode:
+                ```plsql
+                apex_theme.clear_user_style(
+                    p_application_id => 100,
+                    p_user           => :APP_USER,
+                    p_theme_number   => 42
+                );
+                
+                ```
+        }
+        execution {
+            sequence: 10
+            point: beforeHeader
+        }
+        advanced {
+            executionMappingIdentifier: 15945901941363711
+        }
+    )
+
+    process initialize-form-home (
+        name: Initialize form Home
+        type: formInitialization
+        formRegion: @new-2
+        execution {
+            sequence: 20
+            point: beforeHeader
+        }
+        advanced {
+            executionMappingIdentifier: 15993672365987217
+        }
+    )
+
+    branch (
+        execution {
+            sequence: 10
+        }
+        behavior {
+            target: {
+                page: 13
+                items: {
+                    P13_SEARCH_PK_ID: &P12_PK_ID.
+                    P13_RATE_PK_ID: &P12_SELECTED_RATE_PK_ID.
+                }
+            }
+        }
+        serverSideCondition {
+            type: request=Value
+            value: EMAIL
+        }
+    )
+
+)
+
