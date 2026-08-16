@@ -1,6 +1,6 @@
 # FreightsBridge
 
-The trivago for shipping rates! Shipping, FreightBridge! Eh, doesn't got the same ring to it..
+The trivago for shipping rates! Shipping, FreightsBridge! Eh, doesn't got the same ring to it..
 
 <img width="1837" height="830" alt="image" src="https://github.com/user-attachments/assets/03132758-f75b-4519-952e-569ad59568db" />
 <img width="1916" height="858" alt="image" src="https://github.com/user-attachments/assets/79c7547b-d24d-4d54-9fbb-ed24f83a1b6a" />
