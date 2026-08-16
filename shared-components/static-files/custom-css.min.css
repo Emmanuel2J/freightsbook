@@ -1,0 +1,1 @@
+.t-Header-logo{grid-row:1/2 !important;}.t-Header-navBar{grid-row:1/2 !important;grid-column:1/4 !important;grid-template-areas:"navbar-center" !important;grid-template-columns:auto !important;justify-content: center !important;}li.t-NavigationBar-item > a > span.t-Button-label{font-size:0.8rem;}.t-Footer{display: none !important;}.apex_disabled{opacity: 80%;}

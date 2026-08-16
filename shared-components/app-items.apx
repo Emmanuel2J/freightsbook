@@ -1,0 +1,12 @@
+appItem A_VENDOR_ID (
+)
+
+appItem A_VEND_NAME (
+)
+
+appItem LOG_IN_TEXT (
+)
+
+appItem LOG_URL (
+)
+

@@ -1,0 +1,4 @@
+event fos-rangeslider-change (
+    name: FOS - Range Slider - Change
+)
+

@@ -1,0 +1,425 @@
+workflow vendor-registration (
+    name: Vendor Registration
+    title: Vendor Registration
+
+    parameter P_DOC_ID (
+        label {
+            label: Document ID
+        }
+        validation {
+            required: true
+        }
+    )
+
+    parameter P_DOC_REQ_ID (
+        label {
+            label: Document Primary Key ID
+        }
+        validation {
+            required: true
+        }
+    )
+
+    version 1.0 (
+        activity approved (
+            name: Approved?
+            type: switch
+            condition {
+                conditionType: workflowVarEqualsValue
+                workflowVar: TASK_OUTCOME
+                value: APPROVED
+            }
+            layout {
+                sequence: 80
+            }
+            advanced {
+                diagram: {"position":{"x":1690,"y":970},"z":9}
+            }
+
+            connection (
+                name: Approved
+                condition {
+                    when: true
+                }
+                activity {
+                    to: @send-success-mail
+                }
+                advanced {
+                    diagram: "{\"source\":{\"args\":{\"dx\":-10,\"dy\":0},\"name\":\"right\"},\"target\":{},\"vertices\":[],\"z\":10,\"label\":{\"distance\":0.5,\"offset\":0}}"
+                }
+            )
+
+            connection (
+                name: Rejected
+                condition {
+                    when: false
+                }
+                activity {
+                    to: @send-rejected-mail
+                }
+                advanced {
+                    diagram: "{\"source\":{\"name\":\"top\",\"args\":{\"dx\":0,\"dy\":10}},\"target\":{},\"vertices\":[],\"z\":11,\"label\":{\"distance\":0.5,\"offset\":0}}"
+                }
+            )
+
+        )
+
+        activity create-approvers (
+            name: Create Approvers
+            type: executeCode
+            source {
+                plsqlCode: DOC_APPROVAL_INS(:P_DOC_ID,:P_DOC_REQ_ID);
+            }
+            layout {
+                sequence: 20
+            }
+            advanced {
+                diagram: {"position":{"x":640,"y":970}}
+            }
+
+            connection (
+                name: New
+                activity {
+                    to: @vendor-approval
+                }
+                advanced {
+                    diagram: "{\"source\":{\"args\":{\"dx\":\"50%\",\"dy\":\"50%\",\"rotate\":true},\"name\":\"topLeft\"},\"target\":{},\"vertices\":[],\"z\":1,\"label\":{\"distance\":0.5,\"offset\":0}}"
+                }
+            )
+
+        )
+
+        activity create-user (
+            name: Create User
+            type: executeCode
+            source {
+                plsqlCode:
+                    ```plsql
+                    begin
+                    INSERT INTO UTL_WEBUSERS(USER_NAME, PWD, USER_GROUP_ID, VENDOR_ID)
+                    VALUES(:V_VENDOR_USER_NAME, :V_PASS, 2, :P_DOC_REQ_ID);
+                    apex_mail.push_queue;
+                    end;
+                    ```
+            }
+            layout {
+                sequence: 110
+            }
+            advanced {
+                diagram: {"position":{"x":2340,"y":970},"z":16}
+            }
+
+            connection (
+                name: New
+                activity {
+                    to: @end_1
+                }
+                advanced {
+                    diagram: "{\"source\":{\"name\":\"right\",\"args\":{\"dx\":-10,\"dy\":0}},\"target\":{\"name\":\"topLeft\",\"args\":{\"dx\":\"50%\",\"dy\":\"50%\",\"rotate\":true}},\"vertices\":[],\"z\":17,\"label\":{\"distance\":0.5,\"offset\":0}}"
+                }
+            )
+
+        )
+
+        activity end_1 (
+            name: End
+            type: workflowEnd
+            layout {
+                sequence: 30
+            }
+            advanced {
+                diagram: {"position":{"x":2660,"y":970}}
+            }
+        )
+
+        activity send-acknowledgment-email (
+            name: Send Acknowledgment Email
+            type: sendEMail
+            emailHeader {
+                to: &V_VENDOR_EMIAL.
+            }
+            emailTemplate {
+                emailTemplate: @vendor-registration-acknowledgement-mail
+                placeholderValues: {"VENDOR_NAME":"&V_VENDOR_COMP."}
+            }
+            emailDispatchMode {
+                sendImmediately: true
+            }
+            layout {
+                sequence: 70
+            }
+            advanced {
+                diagram: {"position":{"x":320,"y":960},"z":7}
+            }
+
+            connection (
+                name: New
+                activity {
+                    to: @create-approvers
+                }
+                advanced {
+                    diagram: "{\"source\":{\"name\":\"right\",\"args\":{\"dx\":-10,\"dy\":0}},\"target\":{\"name\":\"topLeft\",\"args\":{\"dx\":\"50%\",\"dy\":\"50%\",\"rotate\":true}},\"vertices\":[],\"z\":8,\"label\":{\"distance\":0.5,\"offset\":0}}"
+                }
+            )
+
+        )
+
+        activity send-rejected-mail (
+            name: Send Rejected Mail
+            type: sendEMail
+            emailHeader {
+                to: &V_VENDOR_EMIAL.
+            }
+            emailTemplate {
+                emailTemplate: @vendor-rejection-mail
+                placeholderValues: {"VENDOR_NAME":"&V_VENDOR_COMP.","REJ_REASON":"&V_REJ_REASON."}
+            }
+            layout {
+                sequence: 90
+            }
+            advanced {
+                diagram: {"position":{"x":1690,"y":820},"z":12}
+            }
+
+            connection (
+                name: New
+                activity {
+                    to: @end_1
+                }
+                advanced {
+                    diagram: "{\"source\":{\"name\":\"right\",\"args\":{\"dx\":-10,\"dy\":0}},\"target\":{\"name\":\"topLeft\",\"args\":{\"dx\":\"50%\",\"dy\":\"50%\",\"rotate\":true}},\"vertices\":[{\"x\":2380,\"y\":850}],\"router\":{\"name\":\"orthogonal\",\"args\":{\"padding\":20}},\"z\":13,\"label\":{\"distance\":0.5,\"offset\":0}}"
+                }
+            )
+
+        )
+
+        activity send-success-mail (
+            name: Send Success Mail
+            type: sendEMail
+            emailHeader {
+                to: &V_VENDOR_EMIAL.
+            }
+            emailTemplate {
+                emailTemplate: @vendor-acceptance-mail
+                placeholderValues: {"VENDOR_NAME":"&V_VENDOR_COMP.","USERNAME":"&V_VENDOR_USER_NAME.","PASS":"&V_PASS."}
+            }
+            layout {
+                sequence: 100
+            }
+            advanced {
+                diagram: {"position":{"x":2040,"y":970},"z":14}
+            }
+
+            connection (
+                name: New
+                activity {
+                    to: @create-user
+                }
+                advanced {
+                    diagram: "{\"source\":{\"name\":\"right\",\"args\":{\"dx\":-10,\"dy\":0}},\"target\":{},\"vertices\":[],\"z\":15,\"label\":{\"distance\":0.5,\"offset\":0}}"
+                }
+            )
+
+        )
+
+        activity start_1 (
+            name: Start
+            type: workflowStart
+            layout {
+                sequence: 10
+            }
+            advanced {
+                diagram: {"position":{"x":130,"y":970}}
+            }
+
+            connection (
+                name: New
+                activity {
+                    to: @send-acknowledgment-email
+                }
+                advanced {
+                    diagram: "{\"source\":{\"args\":{\"dx\":\"50%\",\"dy\":\"50%\",\"rotate\":true},\"name\":\"topLeft\"},\"target\":{},\"vertices\":[],\"z\":1,\"label\":{\"distance\":0.5,\"offset\":0}}"
+                }
+            )
+
+        )
+
+        activity update-status (
+            name: Update Status
+            type: executeCode
+            source {
+                plsqlCode:
+                    ```plsql
+                    DECLARE
+                    V_REJ_REASON VARCHAR2(3000);
+                    BEGIN
+                    V_REJ_REASON := apex_approval.get_task_parameter_value(p_task_id => :V_TASK_ID,
+                     p_param_static_id => 'P_REJ_REASON');
+                    
+                    UPDATE DOC_APPROVALS SET STATUS = initcap(:TASK_OUTCOME) WHERE DOC_REQ_ID = :P_DOC_REQ_ID;
+                    
+                    UPDATE VENDOR_MST SET VENDOR_APR_STATUS = INITCAP(:TASK_OUTCOME), REJ_REASON = V_REJ_REASON
+                    WHERE PK_ID = :P_DOC_REQ_ID;
+                    
+                    :V_REJ_REASON := V_REJ_REASON;
+                    
+                    END ;
+                    ```
+            }
+            layout {
+                sequence: 60
+            }
+            advanced {
+                diagram: {"position":{"x":1350,"y":970},"z":5}
+            }
+
+            connection (
+                name: New
+                activity {
+                    to: @approved
+                }
+                advanced {
+                    diagram: "{\"source\":{\"args\":{\"dx\":-10,\"dy\":0},\"name\":\"right\"},\"target\":{},\"vertices\":[],\"z\":6,\"label\":{\"distance\":0.5,\"offset\":0}}"
+                }
+            )
+
+        )
+
+        activity vendor-approval (
+            name: Vendor Approval
+            type: humanTaskCreate
+            humanTask {
+                definition: @vendor-approval-request
+                taskIdItem: V_TASK_ID
+            }
+            overrides {
+                initiatorCanComplete: true
+            }
+            result {
+                outcome: TASK_OUTCOME
+                owner: APPROVER
+            }
+            layout {
+                sequence: 40
+            }
+            advanced {
+                diagram: {"position":{"x":940,"y":970},"z":2}
+            }
+
+            connection (
+                name: New
+                activity {
+                    to: @update-status
+                }
+                advanced {
+                    diagram: "{\"source\":{},\"target\":{\"name\":\"topLeft\",\"args\":{\"dx\":\"9.091%\",\"dy\":\"50%\",\"rotate\":true}},\"vertices\":[],\"z\":3,\"label\":{\"distance\":0.5,\"offset\":0}}"
+                }
+            )
+
+            parameter (
+                name: @P_DOC_ID
+                value {
+                    type: item
+                    item: P_DOC_ID
+                }
+            )
+
+            parameter (
+                name: @P_DOC_REQ_ID
+                value {
+                    type: item
+                    item: P_DOC_REQ_ID
+                }
+            )
+
+            parameter (
+                name: @P_REJ_REASON
+                value {
+                    staticValue: #PLEASE_CHANGE#
+                }
+            )
+
+        )
+
+        variable APPROVER (
+            label {
+                label: Approver
+            }
+        )
+
+        variable TASK_OUTCOME (
+            label {
+                label: TaskOutcome
+            }
+        )
+
+        variable V_PASS (
+            label {
+                label: New
+            }
+            value {
+                type: sqlQuery
+                sqlQuery: SELECT random_str(10) FROM DUAL;
+            }
+        )
+
+        variable V_REJ_REASON (
+            label {
+                label: Rejection Reason
+            }
+        )
+
+        variable V_TASK_ID (
+            label {
+                label: Task ID
+            }
+            parameter {
+                dataType: number
+            }
+        )
+
+        variable V_VENDOR_COMP (
+            label {
+                label: Vendor Company
+            }
+            value {
+                type: sqlQuery
+                sqlQuery: SELECT COMP_NAME FROM VENDOR_MST WHERE PK_ID = :P_DOC_REQ_ID
+            }
+        )
+
+        variable V_VENDOR_EMIAL (
+            label {
+                label: Vendor Email
+            }
+            value {
+                type: sqlQuery
+                sqlQuery: SELECT COMP_PRIM_CONT_EMAIL FROM VENDOR_MST WHERE PK_ID = :P_DOC_REQ_ID
+            }
+        )
+
+        variable V_VENDOR_USER_NAME (
+            label {
+                label: Vendor Username
+            }
+            value {
+                type: sqlQuery
+                sqlQuery: SELECT REPLACE(COMP_NAME,' ','') FROM VENDOR_MST WHERE PK_ID = :P_DOC_REQ_ID
+            }
+        )
+
+        participant (
+            name: New
+            value {
+                staticValue:
+                    ```
+                    ADMIN
+                    
+                    ```
+            }
+        )
+
+    )
+
+)
+

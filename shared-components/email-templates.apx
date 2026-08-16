@@ -1,0 +1,284 @@
+emailTemplate vendor-acceptance-mail (
+    name: Vendor Acceptance Mail
+    emailSubject: Vendor Acceptance
+    htmlFormat {
+        header: <b style="font-size: 24px;">Application Status</b>
+        body:
+            ```html
+            Dear #VENDOR_NAME#,<br>
+            
+            Thank you for application! After careful review of your application and documents, our team has decided to include you in our list of vendors. Congragulations! Please use the username &
+            password below to enter and our application:
+            <br>
+            Username : #USERNAME#<br>
+            Password : #PASS#
+            
+            
+            ```
+    }
+    advanced {
+        versionNumber: 2
+        htmlTemplate:
+            ```html
+            <!DOCTYPE HTML>
+            <html>
+            <head>
+              <meta charset="utf-8">
+              <meta name="viewport" content="width=device-width">
+              <style>
+                body { background-color: #fdfdfd; color: #3e3e3e; margin: 0; padding: 0; min-width: 100%; -webkit-text-size-adjust: none; -ms-text-size-adjust: none; text-size-adjust: none; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Helvetica Neue", Roboto, Helvetica, Arial, sans-serif; line-height: 1.5; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+                table { border: 0; border-spacing: 0; border-collapse: collapse; mso-table-lspace: 0pt; mso-table-rspace: 0pt; }
+                table td { padding: 0; vertical-align: top; border-collapse: collapse; }
+                table, th, td { line-height: inherit; }
+                img { vertical-align: middle; text-decoration: none; outline: none; border: 0; -ms-interpolation-mode: bicubic; }
+                table.container { margin-right: auto; margin-left: auto; width: 600px; }
+                p { margin: 0 0 20px 0; }
+                a, .main a { color: #056abf; }
+                @media only screen and (max-width: 612px) {
+                  .mobile-hide { display: none !important; }
+                  .stack { display: block !important; width: auto !important; }
+                  table.container { width: 100% !important; }
+                  table td { text-align: left !important; }
+                }
+              </style>
+            </head>
+            <body yahoo="fix" style="background-color: #efefef; line-height: 1.5;">
+            <table class="body" border="0" width="100%">
+              <tr>
+                <td align="center" valign="top" style="background-color: #efefef;">
+                  <center>
+                    <table class="container" width="600">
+                      <tr>
+                        <td style="padding: 12px 6px;">
+            
+                          <!-- Header -->
+                          <table width="100%" style="background-color: #f8f8f8; border-radius: 4px 4px 0 0">
+                            <tr>
+                              <td style="text-align: left; padding: 20px 12px; border-bottom: 1px solid #eaeaea;">
+                                #HEADER#
+                              </td>
+                            </tr>
+                          </table>
+                          <!-- // Header -->
+            
+                          <!-- Main Body -->
+                          <table width="100%" style="background-color: #ffffff; border-radius: 0 0 4px 4px;">
+                            <tr>
+                              <td class="main" style="text-align: left; padding: 12px; font-size: 14px;">
+                              #BODY#
+                              </td>
+                            </tr>
+                          </table>
+                          <!-- // Main Body -->
+            
+                          <!-- Footer -->
+                          <table width="100%">
+                            <tr>
+                              <td style="font-size: 11px; padding: 12px;">
+                                #FOOTER#
+                              </td>
+                            </tr>
+                          </table>
+                          <!-- // Footer -->
+            
+                        </td>
+                      </tr>
+                    </table>
+                  </center>
+                </td>
+              </tr>
+            </table>
+            </body>
+            </html>
+            ```
+    }
+)
+
+emailTemplate vendor-registration-acknowledgement-mail (
+    name: Vendor Registration Acknowledgement Mail
+    emailSubject: Vendor Registration Acknowledgement
+    htmlFormat {
+        header: <b style="font-size: 24px;">Acknowledgment Mail</b>
+        body:
+            ```html
+            Dear #VENDOR_NAME#,<br>
+            
+            Thank you for application! Our team will now review your application, and get back to within 2-3 buisness days. 
+            
+            
+            ```
+    }
+    advanced {
+        versionNumber: 2
+        htmlTemplate:
+            ```html
+            <!DOCTYPE HTML>
+            <html>
+            <head>
+              <meta charset="utf-8">
+              <meta name="viewport" content="width=device-width">
+              <style>
+                body { background-color: #fdfdfd; color: #3e3e3e; margin: 0; padding: 0; min-width: 100%; -webkit-text-size-adjust: none; -ms-text-size-adjust: none; text-size-adjust: none; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Helvetica Neue", Roboto, Helvetica, Arial, sans-serif; line-height: 1.5; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+                table { border: 0; border-spacing: 0; border-collapse: collapse; mso-table-lspace: 0pt; mso-table-rspace: 0pt; }
+                table td { padding: 0; vertical-align: top; border-collapse: collapse; }
+                table, th, td { line-height: inherit; }
+                img { vertical-align: middle; text-decoration: none; outline: none; border: 0; -ms-interpolation-mode: bicubic; }
+                table.container { margin-right: auto; margin-left: auto; width: 600px; }
+                p { margin: 0 0 20px 0; }
+                a, .main a { color: #056abf; }
+                @media only screen and (max-width: 612px) {
+                  .mobile-hide { display: none !important; }
+                  .stack { display: block !important; width: auto !important; }
+                  table.container { width: 100% !important; }
+                  table td { text-align: left !important; }
+                }
+              </style>
+            </head>
+            <body yahoo="fix" style="background-color: #efefef; line-height: 1.5;">
+            <table class="body" border="0" width="100%">
+              <tr>
+                <td align="center" valign="top" style="background-color: #efefef;">
+                  <center>
+                    <table class="container" width="600">
+                      <tr>
+                        <td style="padding: 12px 6px;">
+            
+                          <!-- Header -->
+                          <table width="100%" style="background-color: #f8f8f8; border-radius: 4px 4px 0 0">
+                            <tr>
+                              <td style="text-align: left; padding: 20px 12px; border-bottom: 1px solid #eaeaea;">
+                                #HEADER#
+                              </td>
+                            </tr>
+                          </table>
+                          <!-- // Header -->
+            
+                          <!-- Main Body -->
+                          <table width="100%" style="background-color: #ffffff; border-radius: 0 0 4px 4px;">
+                            <tr>
+                              <td class="main" style="text-align: left; padding: 12px; font-size: 14px;">
+                              #BODY#
+                              </td>
+                            </tr>
+                          </table>
+                          <!-- // Main Body -->
+            
+                          <!-- Footer -->
+                          <table width="100%">
+                            <tr>
+                              <td style="font-size: 11px; padding: 12px;">
+                                #FOOTER#
+                              </td>
+                            </tr>
+                          </table>
+                          <!-- // Footer -->
+            
+                        </td>
+                      </tr>
+                    </table>
+                  </center>
+                </td>
+              </tr>
+            </table>
+            </body>
+            </html>
+            ```
+    }
+)
+
+emailTemplate vendor-rejection-mail (
+    name: Vendor Rejection Mail
+    emailSubject: Vendor Application Status
+    htmlFormat {
+        header: <b style="font-size: 24px;">Application Status</b>
+        body:
+            ```html
+            Dear #VENDOR_NAME#,<br>
+            
+            Thank you for application! After careful review of your application and documents, our team has decided not to include you in our list of vendors. The reason for that is given below :
+            <br>
+            #REJ_REASON#
+            
+            
+            
+            
+            ```
+    }
+    advanced {
+        versionNumber: 2
+        htmlTemplate:
+            ```html
+            <!DOCTYPE HTML>
+            <html>
+            <head>
+              <meta charset="utf-8">
+              <meta name="viewport" content="width=device-width">
+              <style>
+                body { background-color: #fdfdfd; color: #3e3e3e; margin: 0; padding: 0; min-width: 100%; -webkit-text-size-adjust: none; -ms-text-size-adjust: none; text-size-adjust: none; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Helvetica Neue", Roboto, Helvetica, Arial, sans-serif; line-height: 1.5; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+                table { border: 0; border-spacing: 0; border-collapse: collapse; mso-table-lspace: 0pt; mso-table-rspace: 0pt; }
+                table td { padding: 0; vertical-align: top; border-collapse: collapse; }
+                table, th, td { line-height: inherit; }
+                img { vertical-align: middle; text-decoration: none; outline: none; border: 0; -ms-interpolation-mode: bicubic; }
+                table.container { margin-right: auto; margin-left: auto; width: 600px; }
+                p { margin: 0 0 20px 0; }
+                a, .main a { color: #056abf; }
+                @media only screen and (max-width: 612px) {
+                  .mobile-hide { display: none !important; }
+                  .stack { display: block !important; width: auto !important; }
+                  table.container { width: 100% !important; }
+                  table td { text-align: left !important; }
+                }
+              </style>
+            </head>
+            <body yahoo="fix" style="background-color: #efefef; line-height: 1.5;">
+            <table class="body" border="0" width="100%">
+              <tr>
+                <td align="center" valign="top" style="background-color: #efefef;">
+                  <center>
+                    <table class="container" width="600">
+                      <tr>
+                        <td style="padding: 12px 6px;">
+            
+                          <!-- Header -->
+                          <table width="100%" style="background-color: #f8f8f8; border-radius: 4px 4px 0 0">
+                            <tr>
+                              <td style="text-align: left; padding: 20px 12px; border-bottom: 1px solid #eaeaea;">
+                                #HEADER#
+                              </td>
+                            </tr>
+                          </table>
+                          <!-- // Header -->
+            
+                          <!-- Main Body -->
+                          <table width="100%" style="background-color: #ffffff; border-radius: 0 0 4px 4px;">
+                            <tr>
+                              <td class="main" style="text-align: left; padding: 12px; font-size: 14px;">
+                              #BODY#
+                              </td>
+                            </tr>
+                          </table>
+                          <!-- // Main Body -->
+            
+                          <!-- Footer -->
+                          <table width="100%">
+                            <tr>
+                              <td style="font-size: 11px; padding: 12px;">
+                                #FOOTER#
+                              </td>
+                            </tr>
+                          </table>
+                          <!-- // Footer -->
+            
+                        </td>
+                      </tr>
+                    </table>
+                  </center>
+                </td>
+              </tr>
+            </table>
+            </body>
+            </html>
+            ```
+    }
+)
+

@@ -1,0 +1,205 @@
+list navigation-bar (
+    name: Navigation Bar
+
+    entry about (
+        label: About
+        layout {
+            sequence: 3
+        }
+        link {
+            target: {
+                anchor: :&SESSION.::&DEBUG.::::
+            }
+        }
+        userDefinedAttributes {
+            2: mid-items
+        }
+    )
+
+    entry app-user (
+        label: &APP_USER.
+        icon {
+            imageIconCssClasses: fa-user
+        }
+        layout {
+            sequence: 10
+        }
+        link {
+            target: {
+                type: url
+                url: #
+            }
+        }
+        userDefinedAttributes {
+            2: has-username
+        }
+        serverSideCondition {
+            type: never
+        }
+    )
+
+    entry contact (
+        label: Contact
+        layout {
+            sequence: 4
+        }
+        link {
+            target: {
+                anchor: :&SESSION.::&DEBUG.::::
+            }
+        }
+        userDefinedAttributes {
+            2: mid-items-last mid-items
+        }
+    )
+
+    entry for-vendors (
+        label: Apply to be a Vendor
+        layout {
+            sequence: 2
+        }
+        link {
+            target: {
+                page: 2
+            }
+        }
+        userDefinedAttributes {
+            2: mid-items
+        }
+    )
+
+    entry home (
+        label: Home
+        layout {
+            sequence: 1
+        }
+        link {
+            target: {
+                page: 1
+            }
+        }
+        userDefinedAttributes {
+            2: mid-items mid-item-first
+        }
+    )
+
+    entry list_item (
+        label: ---
+        layout {
+            sequence: 20
+            parentEntry: @app-user
+        }
+        link {
+            target: {
+                type: url
+                url: separator
+            }
+        }
+        serverSideCondition {
+            type: userIsAuthenticated
+        }
+    )
+
+    entry sep (
+        label: -------------------------------------------------------------------------------------------------
+        layout {
+            sequence: 6
+        }
+        link {
+            target: {
+                anchor: :&SESSION.::&DEBUG.::::
+            }
+        }
+        serverSideCondition {
+            type: never
+        }
+    )
+
+    entry sign-out (
+        label: Sign Out
+        icon {
+            imageIconCssClasses: fa-sign-out
+        }
+        layout {
+            sequence: 5
+            parentEntry: @app-user
+        }
+        link {
+            target: {
+                type: url
+                url: &LOGOUT_URL.
+            }
+        }
+    )
+
+    entry vendor-login (
+        label: &LOG_IN_TEXT.
+        layout {
+            sequence: 40
+        }
+        link {
+            target: {
+                type: url
+                url: &LOG_URL.
+            }
+        }
+        userDefinedAttributes {
+            2: ven-bar-item
+        }
+    )
+
+)
+
+list navigation-menu (
+    name: Navigation Menu
+
+    entry about (
+        label: About
+        layout {
+            sequence: 30
+        }
+        link {
+            target: {
+                anchor: :&SESSION.::&DEBUG.::::
+            }
+        }
+    )
+
+    entry apply-to-be-a-vendor (
+        label: Apply to be a Vendor
+        layout {
+            sequence: 20
+        }
+        link {
+            target: {
+                anchor: :&SESSION.::&DEBUG.::::
+            }
+        }
+    )
+
+    entry contact (
+        label: Contact
+        layout {
+            sequence: 40
+        }
+        link {
+            target: {
+                anchor: :&SESSION.::&DEBUG.::::
+            }
+        }
+    )
+
+    entry home (
+        label: Search Rates
+        layout {
+            sequence: 10
+        }
+        link {
+            target: {
+                page: 1
+            }
+        }
+    )
+
+)
+

@@ -1,0 +1,352 @@
+lov boolean (
+    name: BOOLEAN
+    source {
+        location: staticValues
+    }
+
+    entry false (
+        sequence: 2
+        display: No
+        return: FALSE
+    )
+
+    entry true (
+        sequence: 1
+        display: Yes
+        return: TRUE
+    )
+
+)
+
+lov countries (
+    name: COUNTRIES
+    source {
+        tableName: COUN_MST
+    }
+    columnMapping {
+        return: COUN_CODE
+        display: COUN_NAME
+        defaultSort: COUN_NAME
+    }
+)
+
+lov ports-with-couns (
+    name: PORTS_WITH_COUNS
+    source {
+        type: sqlQuery
+        sqlQuery:
+            ```sql
+            SELECT DISTINCT INITCAP(PORT_NAME) AS PORT_NAME, PORT_CODE, COUN_NAME, PORT_PK_ID,
+            INITCAP(PORT_NAME) || ' - ' || PORT_CODE || ' - ' || COUN_NAME as display_val
+            FROM V_COUN_WITH_PORT
+            order by COUN_NAME, PORT_NAME
+            ```
+    }
+    columnMapping {
+        return: PORT_PK_ID
+        display: DISPLAY_VAL
+    }
+
+    column COUN_NAME (
+        heading {
+            heading: Country
+        }
+        layout {
+            sequence: 40
+        }
+        source {
+            dataType: varchar2
+        }
+    )
+
+    column DISPLAY_VAL (
+        show: false
+        heading {
+            heading: Display Val
+        }
+        layout {
+            sequence: 10
+        }
+        source {
+            dataType: varchar2
+        }
+        advanced {
+            searchable: false
+        }
+    )
+
+    column PORT_CODE (
+        heading {
+            heading: Port Code
+        }
+        layout {
+            sequence: 30
+        }
+        source {
+            dataType: varchar2
+        }
+    )
+
+    column PORT_NAME (
+        heading {
+            heading: Port Name
+        }
+        layout {
+            sequence: 20
+        }
+        source {
+            dataType: varchar2
+        }
+    )
+
+    column PORT_PK_ID (
+        show: false
+        layout {
+            sequence: 10
+        }
+        source {
+            dataType: number
+        }
+        advanced {
+            searchable: false
+        }
+    )
+
+)
+
+lov unified-task-list-lov-due (
+    name: UNIFIED_TASK_LIST.LOV.DUE
+    source {
+        location: staticValues
+    }
+
+    entry 0 (
+        sequence: 1
+        display: Overdue
+        return: |0
+    )
+
+    entry 0-1 (
+        sequence: 2
+        display: Next hour
+        return: 0|1
+    )
+
+    entry 1-24 (
+        sequence: 3
+        display: Next 24 hours
+        return: 1|24
+    )
+
+    entry 168-720 (
+        sequence: 5
+        display: Next 30 days
+        return: 168|720
+    )
+
+    entry 24-168 (
+        sequence: 4
+        display: Next 7 days
+        return: 24|168
+    )
+
+    entry 720 (
+        sequence: 6
+        display: More than 30 days
+        return: 720|
+    )
+
+)
+
+lov unified-task-list-lov-initiated (
+    name: UNIFIED_TASK_LIST.LOV.INITIATED
+    source {
+        location: staticValues
+    }
+
+    entry 1 (
+        sequence: 1
+        display: Last hour
+        return: |1
+    )
+
+    entry 1-24 (
+        sequence: 2
+        display: Last 24 hours
+        return: 1|24
+    )
+
+    entry 168-720 (
+        sequence: 4
+        display: Last 30 days
+        return: 168|720
+    )
+
+    entry 24-168 (
+        sequence: 3
+        display: Last 7 days
+        return: 24|168
+    )
+
+    entry 720 (
+        sequence: 5
+        display: Older than 30 days
+        return: 720|
+    )
+
+)
+
+lov unified-task-list-lov-priority (
+    name: UNIFIED_TASK_LIST.LOV.PRIORITY
+    source {
+        type: sqlQuery
+        sqlQuery:
+            ```sql
+            select disp,
+                   val
+              from table ( apex_human_task.get_lov_priority )
+             order by insert_order
+            ```
+    }
+    columnMapping {
+        return: VAL
+        display: DISP
+    }
+)
+
+lov unified-task-list-lov-state (
+    name: UNIFIED_TASK_LIST.LOV.STATE
+    source {
+        type: sqlQuery
+        sqlQuery:
+            ```sql
+            select disp,
+                   val
+              from table ( apex_human_task.get_lov_state )
+             order by insert_order
+            ```
+    }
+    columnMapping {
+        return: VAL
+        display: DISP
+    }
+)
+
+lov unified-task-list-lov-type (
+    name: UNIFIED_TASK_LIST.LOV.TYPE
+    source {
+        type: sqlQuery
+        sqlQuery:
+            ```sql
+            select disp,
+                   val
+              from table ( apex_human_task.get_lov_type )
+             order by insert_order
+            ```
+    }
+    columnMapping {
+        return: VAL
+        display: DISP
+    }
+)
+
+lov vendor-reg-types (
+    name: VENDOR_REG_TYPES
+    source {
+        tableName: VENDOR_REG_TYPES
+    }
+    columnMapping {
+        return: PK_ID
+        display: TYPE_NAME
+        defaultSort: TYPE_NAME
+    }
+)
+
+lov workflow-charts-lov-time-unit (
+    name: WORKFLOW_CHARTS.LOV.TIME_UNIT
+    source {
+        location: staticValues
+    }
+
+    entry day (
+        sequence: 4
+        display: Days
+        return: DAY
+    )
+
+    entry hour (
+        sequence: 3
+        display: Hours
+        return: HOUR
+    )
+
+    entry min (
+        sequence: 2
+        display: Minutes
+        return: MIN
+    )
+
+    entry sec (
+        sequence: 1
+        display: Seconds
+        return: SEC
+    )
+
+)
+
+lov workflow-console-lov-initiated (
+    name: WORKFLOW_CONSOLE.LOV.INITIATED
+    source {
+        location: staticValues
+    }
+
+    entry 1 (
+        sequence: 1
+        display: Last hour
+        return: |1
+    )
+
+    entry 1-24 (
+        sequence: 2
+        display: Last 24 hours
+        return: 1|24
+    )
+
+    entry 168-720 (
+        sequence: 4
+        display: Last 30 days
+        return: 168|720
+    )
+
+    entry 24-168 (
+        sequence: 3
+        display: Last 7 days
+        return: 24|168
+    )
+
+    entry 720 (
+        sequence: 5
+        display: Older than 30 days
+        return: 720|
+    )
+
+)
+
+lov workflow-console-lov-workflow-state (
+    name: WORKFLOW_CONSOLE.LOV.WORKFLOW_STATE
+    source {
+        type: sqlQuery
+        sqlQuery:
+            ```sql
+            select disp,
+                   val
+              from table ( apex_workflow.get_lov_workflow_state )
+             order by insert_order
+            ```
+    }
+    columnMapping {
+        return: VAL
+        display: DISP
+    }
+)
+

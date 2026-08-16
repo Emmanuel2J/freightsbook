@@ -1,0 +1,51 @@
+taskDefinition vendor-approval-request (
+    name: Vendor Approval Request
+    type: approval
+    task {
+        subject: Request to Approve Vendor Registration
+        priority: 1
+        initiatorCanComplete: true
+    }
+    advanced {
+        detailsPage: {
+            page: 4
+            items: {
+                P4_TASK_ID: &TASK_ID.
+            }
+            clearCache: 4
+            action: resetPagination
+        }
+    }
+
+    parameter P_DOC_ID (
+        label: Document ID
+    )
+
+    parameter P_DOC_REQ_ID (
+        label: Document Request ID
+    )
+
+    parameter P_REJ_REASON (
+        label: P Rej Reason
+        validation {
+            required: false
+        }
+        advanced {
+            showOnTaskDetails: false
+            updatable: true
+        }
+    )
+
+    participant (
+        value {
+            type: sqlQuery
+            sqlQuery:
+                ```sql
+                SELECT APR_NAME FROM DOC_APPROVALS
+                WHERE DOC_ID = 1 AND DOC_REQ_ID = 1
+                ```
+        }
+    )
+
+)
+

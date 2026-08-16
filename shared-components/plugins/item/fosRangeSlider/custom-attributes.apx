@@ -1,0 +1,533 @@
+customAttribute attribute_01 (
+    apexlangName: type
+    attribute: 1
+    name: Type
+    type: selectList
+    validation {
+        required: true
+    }
+    appearance {
+        sequence: 10
+    }
+    default {
+        value: number
+    }
+    supports {
+        components: [
+            pageItems
+            interactiveGridColumns
+        ]
+    }
+    help {
+        helpText: The type of the slider - sets the data-type of the values the slider will be handling.
+    }
+
+    entry date (
+        sequence: 20
+        display: Date
+        return: date
+        help {
+            helpText: The slider will represent <i>Date</i> values.
+        }
+    )
+
+    entry number (
+        sequence: 10
+        display: Number
+        return: number
+        help {
+            helpText: The slider will represent <i>Number</i> values.
+        }
+    )
+
+)
+
+customAttribute attribute_02 (
+    apexlangName: handles
+    attribute: 2
+    name: Handles
+    type: selectList
+    validation {
+        required: true
+    }
+    appearance {
+        sequence: 20
+    }
+    default {
+        value: 1
+    }
+    supports {
+        components: [
+            pageItems
+            interactiveGridColumns
+        ]
+    }
+    help {
+        helpText: The number of handles/knobs (draggable heads which indicate and change the value) of the slider.
+    }
+
+    entry double (
+        sequence: 20
+        display: Double
+        return: 2
+        help {
+            helpText: The slider's <i>getValue()</i> will return a colon-separated string of two values.
+        }
+    )
+
+    entry single (
+        sequence: 10
+        display: Single
+        return: 1
+        help {
+            helpText: The slider's <i>getValue()</i> will return only one value (string).
+        }
+    )
+
+)
+
+customAttribute attribute_03 (
+    apexlangName: minimumValue
+    attribute: 3
+    name: Minimum  Value
+    type: number
+    validation {
+        required: true
+    }
+    appearance {
+        sequence: 30
+    }
+    supports {
+        components: [
+            pageItems
+            interactiveGridColumns
+        ]
+    }
+    dependingOn {
+        attribute: @attribute_01/component
+        conditionType: =
+        value: number
+    }
+    help {
+        helpText: The minimum value of the slider.
+    }
+)
+
+customAttribute attribute_04 (
+    apexlangName: maximumValue
+    attribute: 4
+    name: Maximum Value
+    type: number
+    validation {
+        required: true
+    }
+    appearance {
+        sequence: 40
+    }
+    supports {
+        components: [
+            pageItems
+            interactiveGridColumns
+        ]
+    }
+    dependingOn {
+        attribute: @attribute_01/component
+        conditionType: =
+        value: number
+    }
+    help {
+        helpText: The maximum value of the slider.
+    }
+)
+
+customAttribute attribute_05 (
+    apexlangName: minimumDate
+    attribute: 5
+    name: Minimum Date
+    validation {
+        required: true
+    }
+    appearance {
+        sequence: 50
+    }
+    builder {
+        translatable: true
+    }
+    supports {
+        components: [
+            pageItems
+            interactiveGridColumns
+        ]
+    }
+    dependingOn {
+        attribute: @attribute_01/component
+        conditionType: =
+        value: date
+    }
+    help {
+        helpText: The minimum date of the slider. Substitutions strings are supported. Please be aware that the specified date has to match the format mask of the item, or the display value format override, or if not set, the your application format mask (defined under Globalization) EXACTLY.
+    }
+)
+
+customAttribute attribute_06 (
+    apexlangName: maximumDate
+    attribute: 6
+    name: Maximum Date
+    validation {
+        required: true
+    }
+    appearance {
+        sequence: 60
+    }
+    builder {
+        translatable: true
+    }
+    supports {
+        components: [
+            pageItems
+            interactiveGridColumns
+        ]
+    }
+    dependingOn {
+        attribute: @attribute_01/component
+        conditionType: =
+        value: date
+    }
+    help {
+        helpText: The maximum date of the slider. Substitutions strings are supported. Please be aware that the specified date has to match the format mask of the item, or the display value format override, or if not set, the your application format mask (defined under Globalization) EXACTLY.
+    }
+)
+
+customAttribute attribute_07 (
+    apexlangName: dateSteps
+    attribute: 7
+    name: Date steps
+    type: selectList
+    validation {
+        required: true
+    }
+    appearance {
+        sequence: 70
+    }
+    default {
+        value: daily
+    }
+    supports {
+        components: [
+            pageItems
+            interactiveGridColumns
+        ]
+    }
+    dependingOn {
+        attribute: @attribute_01/component
+        conditionType: =
+        value: date
+    }
+    help {
+        helpText:
+            ```
+            Specifies the steps the handle(s) can be moved from one value to another.<br>
+            <br>
+            E.g. if this option is set to "weekly", dragging the handle will change the slider's value in weekly intervals. The user will be unable to set the value of the slider in-between these steps by dragging the handle(s):<br>
+            Current value: 2021.02.05 (yyyy.mm.dd)
+            Next possible value: 2021.02.12 (yyyy.mm.dd)
+            ```
+    }
+
+    entry daily (
+        sequence: 10
+        display: Daily
+        return: daily
+        help {
+            helpText: The interval you can move the <i>Handle(s)</i> will be <i>1 day</i>.
+        }
+    )
+
+    entry monthly (
+        sequence: 30
+        display: Monthly
+        return: monthly
+        help {
+            helpText: The interval you can move the <i>Handle(s)</i> will be <i>1 Month</i>.
+        }
+    )
+
+    entry weekly (
+        sequence: 20
+        display: Weekly
+        return: weekly
+        help {
+            helpText: The interval you can move the <i>Handle(s)</i> will be <i>1 week(7 days)</i>.
+        }
+    )
+
+    entry yearly (
+        sequence: 40
+        display: Yearly
+        return: yearly
+        help {
+            helpText: The interval you can move the <i>Handle(s)</i> will be <i>1 Year</i>.
+        }
+    )
+
+)
+
+customAttribute attribute_08 (
+    apexlangName: numberSteps
+    attribute: 8
+    name: Number Steps
+    type: number
+    appearance {
+        sequence: 80
+    }
+    default {
+        value: 1
+    }
+    supports {
+        components: [
+            pageItems
+            interactiveGridColumns
+        ]
+    }
+    dependingOn {
+        attribute: @attribute_01/component
+        conditionType: =
+        value: number
+    }
+    help {
+        helpText:
+            ```
+            Specifies the steps the handles(s) can be moved from one value to another.<br>
+            <br>
+            The user will be unable to set the value of the slider in-between these steps by dragging the handle(s).
+            ```
+    }
+)
+
+customAttribute attribute_09 (
+    apexlangName: orientation
+    attribute: 9
+    name: Orientation
+    type: selectList
+    validation {
+        required: true
+    }
+    appearance {
+        sequence: 90
+    }
+    default {
+        value: horizontal
+    }
+    supports {
+        components: [
+            pageItems
+            interactiveGridColumns
+        ]
+    }
+    help {
+        helpText: The orientation of the range slider.
+    }
+
+    entry horizontal (
+        sequence: 10
+        display: Horizontal
+        return: horizontal
+        help {
+            helpText: The item will be rendered horizontally, the <i>Handle(s)</i> can be moved sideway, left-and-right.
+        }
+    )
+
+    entry vertical (
+        sequence: 20
+        display: Vertical
+        return: vertical
+        help {
+            helpText: The item will be rendered vertically, the <i>Handle(s)</i> can be moved up-and-down.
+        }
+    )
+
+)
+
+customAttribute attribute_10 (
+    apexlangName: options
+    attribute: 10
+    name: Options
+    type: checkboxes
+    appearance {
+        sequence: 100
+    }
+    default {
+        value: enable-ticks
+    }
+    supports {
+        components: [
+            pageItems
+            interactiveGridColumns
+        ]
+    }
+    help {
+        helpText: A list of options you can apply on the item.
+    }
+
+    entry bindValueToItemS (
+        sequence: 30
+        display: Bind Value to Item(s)
+        return: bind-value-to-item
+        help {
+            helpText: One or two page items can be bound to the slider's value (based on the handle-count set). Whenever the page item value changes, the page item values will be updated automatically.
+        }
+    )
+
+    entry connectHandles (
+        sequence: 40
+        display: Connect Handles
+        return: connects-bar
+        help {
+            helpText: Connect the handles so both can be moved at the same time by dragging the bar between them. This will move both of them the same distance, changing their values but keeping the range between them.
+        }
+    )
+
+    entry customDisplayFormatMask (
+        sequence: 60
+        display: Custom Display Format Mask
+        return: custom-display-format-mask
+        help {
+            helpText: You can enter a display format that is different from the value format. This is so you can support displaying week numbers using the WW/IW format and still have an actual "to_date" formattable value returned.
+        }
+    )
+
+    entry enableTicks (
+        sequence: 10
+        display: Enable Ticks
+        return: enable-ticks
+        help {
+            helpText: Shows the tick-markers and their values below (or on the side - in case of vertical orientation) the slider.
+        }
+    )
+
+    entry enableTooltips (
+        sequence: 20
+        display: Enable Tooltips
+        return: enable-tooltip
+        help {
+            helpText: Displays a tooltip above the handle with its value.
+        }
+    )
+
+    entry flipRange (
+        sequence: 50
+        display: Flip Range
+        return: flip-range
+        help {
+            helpText: It doesn't constrain/limit the position of a handle based on the other handle. In other words, it allows moving handle 1 beyond handle 2 and/or handle 2 before handle 1.
+        }
+    )
+
+)
+
+customAttribute attribute_11 (
+    apexlangName: ticks
+    attribute: 11
+    name: Ticks
+    type: number
+    validation {
+        required: true
+    }
+    appearance {
+        sequence: 110
+    }
+    default {
+        value: 5
+    }
+    supports {
+        components: [
+            pageItems
+            interactiveGridColumns
+        ]
+    }
+    dependingOn {
+        attribute: @attribute_10/component
+        conditionType: inList
+        list: enable-ticks
+    }
+    help {
+        helpText:
+            ```
+            The distribution of the value-indicating markers below (or next to, in case of vertical) the range slider.<br>
+            <br>
+            E.g. if the slider's minimum value is 0, maximum value is 100 and the number of ticks is 5 then the displayed markers are at values: 0, 25, 50, 75, 100
+            ```
+    }
+)
+
+customAttribute attribute_12 (
+    apexlangName: setItemS
+    attribute: 12
+    name: Set Item(s)
+    type: pageItems
+    appearance {
+        sequence: 120
+    }
+    supports {
+        components: [
+            pageItems
+            interactiveGridColumns
+        ]
+    }
+    dependingOn {
+        attribute: @attribute_10/component
+        conditionType: inList
+        list: bind-value-to-item
+    }
+    help {
+        helpText: Specify the page items to bind their value to the slider's value. If you are using multiple handles then 2 page items are required. The first item will receive the lower range value and the second item will receive the upper range value.
+    }
+)
+
+customAttribute attribute_13 (
+    apexlangName: rangeColor
+    attribute: 13
+    name: Range Color
+    type: color
+    appearance {
+        sequence: 130
+    }
+    default {
+        value: #0076df
+    }
+    supports {
+        components: [
+            pageItems
+            interactiveGridColumns
+        ]
+    }
+    dependingOn {
+        attribute: @attribute_10/component
+        conditionType: inList
+        list: connects-bar
+    }
+    help {
+        helpText: Sets the color of the range, i.e. the background-color between the two handles.
+    }
+)
+
+customAttribute attribute_14 (
+    apexlangName: displayFormatMask
+    attribute: 14
+    name: Display Format Mask
+    validation {
+        required: true
+    }
+    appearance {
+        sequence: 140
+    }
+    dependingOn {
+        attribute: @attribute_10/component
+        conditionType: inList
+        list: custom-display-format-mask
+    }
+    help {
+        helpText: <p>Enter the format mask you would like to display on the range slider, the actual values will be returned in the format mask defined for the item.</p>
+    }
+)
+

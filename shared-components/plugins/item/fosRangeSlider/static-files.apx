@@ -1,0 +1,120 @@
+file "css/nouislider-core.css" (
+    mimeType: text/css
+    charSet: utf-8
+)
+
+file "css/nouislider-core.css.map" (
+    mimeType: application/json
+    charSet: utf-8
+)
+
+file "css/nouislider-core.min.css" (
+    mimeType: text/css
+    charSet: utf-8
+)
+
+file "css/nouislider-pips.css" (
+    mimeType: text/css
+    charSet: utf-8
+)
+
+file "css/nouislider-pips.css.map" (
+    mimeType: application/json
+    charSet: utf-8
+)
+
+file "css/nouislider-pips.min.css" (
+    mimeType: text/css
+    charSet: utf-8
+)
+
+file "css/nouislider-tooltips.css" (
+    mimeType: text/css
+    charSet: utf-8
+)
+
+file "css/nouislider-tooltips.css.map" (
+    mimeType: application/json
+    charSet: utf-8
+)
+
+file "css/nouislider-tooltips.min.css" (
+    mimeType: text/css
+    charSet: utf-8
+)
+
+file "css/style.css" (
+    mimeType: text/css
+    charSet: utf-8
+)
+
+file "css/style.css.map" (
+    mimeType: application/json
+    charSet: utf-8
+)
+
+file "css/style.min.css" (
+    mimeType: text/css
+    charSet: utf-8
+)
+
+file "js/script.js" (
+    mimeType: application/javascript
+    charSet: utf-8
+)
+
+file "js/script.js.map" (
+    mimeType: application/json
+    charSet: utf-8
+)
+
+file "js/script.min.js" (
+    mimeType: application/javascript
+    charSet: utf-8
+)
+
+file "libraries/moment.js" (
+    mimeType: application/javascript
+    charSet: utf-8
+)
+
+file "libraries/moment.js.map" (
+    mimeType: application/json
+    charSet: utf-8
+)
+
+file "libraries/moment.min.js" (
+    mimeType: application/javascript
+    charSet: utf-8
+)
+
+file "libraries/nouislider.js" (
+    mimeType: application/javascript
+    charSet: utf-8
+)
+
+file "libraries/nouislider.js.map" (
+    mimeType: application/json
+    charSet: utf-8
+)
+
+file "libraries/nouislider.min.js" (
+    mimeType: application/javascript
+    charSet: utf-8
+)
+
+file "libraries/wNumb.js" (
+    mimeType: application/javascript
+    charSet: utf-8
+)
+
+file "libraries/wNumb.js.map" (
+    mimeType: application/json
+    charSet: utf-8
+)
+
+file "libraries/wNumb.min.js" (
+    mimeType: application/javascript
+    charSet: utf-8
+)
+

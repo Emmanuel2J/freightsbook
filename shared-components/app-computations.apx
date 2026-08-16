@@ -1,0 +1,58 @@
+appComputation a-vend-name (
+    itemName: A_VEND_NAME
+    execution {
+        sequence: 10
+        point: beforeHeader
+    }
+    computation {
+        type: expression
+        plsqlExpression: GET_USER_VEND_NAME(:APP_USER)
+    }
+)
+
+appComputation a-vendor-id (
+    itemName: A_VENDOR_ID
+    execution {
+        sequence: 10
+        point: afterHeader
+    }
+    computation {
+        type: sqlQuerySingleValue
+        sqlQuery: SELECT VENDOR_ID FROM UTL_WEBUSERS WHERE UPPER(USER_NAME) = :APP_USER
+    }
+)
+
+appComputation log-in-text (
+    itemName: LOG_IN_TEXT
+    execution {
+        sequence: 10
+        point: beforeHeader
+    }
+    computation {
+        type: sqlQuerySingleValue
+        sqlQuery:
+            ```sql
+            SELECT CASE WHEN :APP_USER = 'nobody' THEN 'Vendor Login' ELSE 'Log Out' 
+            END AS LOGIN_TEXT FROM DUAL
+            ```
+    }
+)
+
+appComputation log-url (
+    itemName: LOG_URL
+    execution {
+        sequence: 10
+        point: beforeHeader
+    }
+    computation {
+        type: sqlQuerySingleValue
+        sqlQuery:
+            ```sql
+            SELECT CASE WHEN :APP_USER = 'nobody' THEN
+            'http://localhost:8080/ords/r/freights/freightsbridge/vendor-dashboard?session=' ||  APEX_CUSTOM_AUTH.GET_SESSION_ID
+            ELSE :LOGOUT_URL
+            END FROM DUAL
+            ```
+    }
+)
+
