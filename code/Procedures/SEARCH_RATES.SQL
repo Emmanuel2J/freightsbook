@@ -4,7 +4,7 @@ V_RATE_TYPE VARCHAR2(30);
 V_RATES_CHECK NUMBER;
 begin
     DELETE FROM RATE_SEARCH_RESULTS WHERE SEARCH_PK_ID = P_PK_ID; --Always refresh the rates for a given search pk_id
-
+--Testing Comments
     INSERT INTO RATE_SEARCH_RESULTS(
     SEARCH_PK_ID,
     RATE_PK_ID
