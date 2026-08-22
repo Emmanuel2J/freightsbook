@@ -191,7 +191,7 @@ page 1 (
         }
         layout {
             sequence: 20
-            slot: body
+            slot: regionBody
         }
         appearance {
             template: @/standard
@@ -609,7 +609,7 @@ page 1 (
         }
         layout {
             sequence: 30
-            slot: body
+            slot: regionBody
         }
         source {
             used: always
@@ -720,11 +720,37 @@ page 1 (
         }
     )
 
+    button add (
+        buttonName: ADD
+        label: Add Containers
+        layout {
+            sequence: 50
+            region: @fcl-items
+            slot: regionBody
+            startNewRow: false
+            columnSpan: 1
+            columnCssClasses: u-align-self-center
+        }
+        appearance {
+            buttonTemplate: @/icon
+            hot: true
+            templateOptions: [
+                #DEFAULT#
+                t-Button--stretch
+                t-Button--gapTop
+            ]
+            icon: fa-plus-square
+        }
+        behavior {
+            action: definedByDynamicAction
+        }
+    )
+
     button search (
         buttonName: SEARCH
         label: Search Rates
         layout {
-            sequence: 40
+            sequence: 60
             region: @fcl-items
             slot: regionBody
             startNewRow: false
@@ -1355,4 +1381,3 @@ page 1 (
     )
 
 )
-
